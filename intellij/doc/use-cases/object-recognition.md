@@ -1,31 +1,26 @@
 # Use case name, e.g., process sale
 
 ## 1. Primary actor and goals
-__User__: wants to sell items to a customer. Wants accurate, fast data entry, and no payment errors, as cash drawer shortages are deducted from their salary.
+__User__: Wants a fast responding speech text that is able to recognize what object is on camera
 
 
 ## 2. Other stakeholders and their goals
 
-* __Customer__: Wants fast service with minimal effort. Wants easily visible display of entered items and prices. Wants proof of purchase to support returns.
-* __Government tax agencies__: Want to collect correct amount of tax from every sale. There may be multiple agencies involved, e.g., at the federal, state, and county levels.
-
+* __User__: Wants a friendly user interface. Wants a fast responding and accurate description of objects.
 
 ## 2. Preconditions
 
 What must be true prior to the start of the use case.
-For example, for _process sale_:
 
-* Cashier is identified and authenticated.
+* We are not going to have a log-in system for the purpose of an easy-use and quick-access of the app
 
 ## 4. Postconditions
 
 What must be true upon successful completion of the use case.
-For example, for _process sale_:
 
-* Sale is saved.
-* Tax is correctly calculated.
-* Receipt is generated.
-* Payment authorization approvals are recorded.
+* Object is recognized.
+* The object is described in text.
+* There is a text-to-speech function that reads out the description.
 
 
 ## 4. Workflow
