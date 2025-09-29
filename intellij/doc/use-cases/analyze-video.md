@@ -1,17 +1,18 @@
 # Use case name
 
 ## 1. Primary actor and goals
-__User__: Wants a fast responding speech text that is able to recognize what object is on camera
+__User__: Wants a fast responding speech text that is able to recognize what object is on video stream from the camera
 
 ## 2. Other stakeholders and their goals
 
-* __User__: Wants a friendly user interface. Wants a fast responding and accurate description of objects.
+* __User__: Wants a friendly user interface. Wants a fast responding and accurate description of an object on the screen.
 
 ## 2. Preconditions
 
 What must be true prior to the start of the use case.
 
 * We are not going to have a log-in system for the purpose of an easy-use and quick-access of the app
+* The camera is working and is able to be accessed
 
 ## 3. Post-conditions
 
@@ -20,7 +21,6 @@ What must be true upon successful completion of the use case.
 * Object is recognized.
 * The object is described in text.
 * There is a text-to-speech function that reads out the description.
-
 
 ## 4. Workflow
 
@@ -34,7 +34,7 @@ The workflow can be specified at different levels of detail:
 
 Please be sure indicate what level of detail the workflow you include represents.
 
-For example, for _process sale_:
+For example, for _analyze-video_:
 
 ```plantuml
 @startuml
@@ -44,44 +44,18 @@ skin rose
 title Operate Camera (casual level)
 
 'define the lanes
-|#application|Customer|
-|#technology|Cashier|
+|#application|User|
 |#implementation|System|
 
-|Customer|
+|User|
 start
-:Arrive at checkout with items to purchase;
-
-|Cashier|
-while (More items?) is (yes)
-  :Enter item info (id and quantity);
-  |System|
-  :Validate line item;
-  :Record line item;
-  :Show line item detail and running total;
-  |Cashier|
-endwhile (no)
-
-
-:Ask for payment type;
-
-|Customer|
-:Indicate payment type;
-
-|Cashier|
-if (Payment type?) is  ( Cash ) then
-:Execute __Pay by cash__;
-else ( Card ) 
-:Execute __Pay by credit card__;
-endif
+:Open the app;
 
 |System|
-:Validate payment;
-:Record payment;
-:Print receipt;
-|Cashier|
-:Hand receipt to customer;
-stop
+:Open the camera and start video stream;
+:Automatically start detecting an object;
+:Read out object description;
+
 @enduml
 ```
 
