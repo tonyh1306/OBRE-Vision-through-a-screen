@@ -1,4 +1,4 @@
-# Use case name
+# Analyze video
 
 ## 1. Primary actor and goals
 __User__: Wants a fast responding speech text that is able to recognize what object is on video stream from the camera
