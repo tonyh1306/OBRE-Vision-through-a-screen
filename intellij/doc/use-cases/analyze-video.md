@@ -24,17 +24,8 @@ What must be true upon successful completion of the use case.
 
 ## 4. Workflow
 
-The sequence of steps involved in the execution of the use case, in the form of one or more activity diagrams (please feel free to decompose into multiple diagrams for readability).
 
-The workflow can be specified at different levels of detail:
-
-* __Brief__: main success scenario only;
-* __Casual__: most common scenarios and variations;
-* __Fully-dressed__: all scenarios and variations.
-
-Please be sure indicate what level of detail the workflow you include represents.
-
-For example, for _analyze-video_:
+for _analyze-video_:
 
 ```plantuml
 @startuml
@@ -54,6 +45,9 @@ start
 |System|
 :Open the camera and start video stream;
 :Automatically start detecting an object;
+while (object-detected?) is (no)
+:No object detected sound;
+endwhile(yes)
 :Read out object description;
 
 @enduml
