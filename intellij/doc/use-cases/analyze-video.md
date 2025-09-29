@@ -41,7 +41,7 @@ For example, for _analyze-video_:
 
 skin rose
 
-title Operate Camera (brief)
+title Operate Camera (Casual)
 
 'define the lanes
 |#application|User|
