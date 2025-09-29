@@ -1,4 +1,4 @@
-# Use case name
+# Process Image Upload
 
 ## 1. Primary actor and goals
 * __User__: Wants to process a photo to acquire its description and detect the focused object within it. 
@@ -18,7 +18,7 @@ What must be true prior to the start of the use case.
 What must be true upon successful completion of the use case.
 
 * Object is recognized.
-* ChatGPT describes the object closely in text.
+* Image is processed and ChatGPT describes the image closely in text.
 * There is a text-to-speech function that reads out the description.
 
 
@@ -55,8 +55,18 @@ while (Image?) is (no)
 endwhile(yes)
 
 :Pass the image through to processing algorithm;
-:Outputs the description;
-
+if (Output?) is ( yes ) then
+    :Display the description;
+    
+    |User|
+    if (Choose announce description?) then
+    |System|
+    :Speaks out loud description;
+    endif
+else ( no )
+:Displays error;
+:Ask for image reupload;
+endif
 stop
 @enduml
 ```

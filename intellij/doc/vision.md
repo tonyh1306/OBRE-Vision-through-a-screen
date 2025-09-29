@@ -38,13 +38,19 @@ package OBRE{
     usecase "Record videostream" as camera
     usecase "Recognize objects" as obre
     usecase "Notify user" as tts
-
+    usecase "Image upload" as image
+    usecase "Process image" as process
+    usecase "Display description" as describe 
 }
 
 ' list relationships between actors and use cases
 user --> camera
-obre -right-|> camera : <<extends>> \t
-tts -right-|> obre : <<extends>> \t
+obre --|> camera : \t<<extends>>\t
+tts --|> obre : \t<<extends>>\t
+
+image <-- user
+process --|> image : \t<<extends>>\t
+describe --|> process : \t<<extends>>\t
 
 @enduml
 ```
