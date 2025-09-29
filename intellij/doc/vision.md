@@ -1,5 +1,5 @@
 
-# NextGen Point Of Sale system - Vision document
+# OBRE System - Vision document
 
 ## 1. Introduction
 
@@ -16,12 +16,13 @@ aware of their surroundings just through pointing their camera at their
 environment.
 
 ## 3. Key functionality
-- Video feed capture 
-- Text-to-speech capability
-- Simple and visually-impaired-friendly User Interface.
+- Video feed capture with audible notification using Google Cloud's Text-to-speech API.
+- Text recognition with Text-to-speech capability.
+- Image upload for recognition through OpenAI's API.
+
 
 ## 4. Stakeholder goals summary
-
+- **Users**: recognize objects, reads out loud the object. 
 
 ## Use case diagram
 
@@ -42,8 +43,8 @@ package OBRE{
 
 ' list relationships between actors and use cases
 user --> camera
-obre -right-|> camera : <<extends>>
-tts -right-|> obre : <<extends>>
+obre -right-|> camera : <<extends>> \t
+tts -right-|> obre : <<extends>> \t
 
 @enduml
 ```

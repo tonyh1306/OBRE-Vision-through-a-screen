@@ -1,8 +1,7 @@
-# Use case name, e.g., process sale
+# Use case name
 
 ## 1. Primary actor and goals
 __User__: Wants a fast responding speech text that is able to recognize what object is on camera
-
 
 ## 2. Other stakeholders and their goals
 
@@ -14,7 +13,7 @@ What must be true prior to the start of the use case.
 
 * We are not going to have a log-in system for the purpose of an easy-use and quick-access of the app
 
-## 4. Postconditions
+## 3. Post-conditions
 
 What must be true upon successful completion of the use case.
 
