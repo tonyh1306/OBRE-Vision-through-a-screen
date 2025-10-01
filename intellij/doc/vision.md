@@ -34,23 +34,23 @@ skin rose
 actor "End user" as user
 
 ' list all use cases in package
-package OBRE{
-    usecase "Record videostream" as camera
-    usecase "Recognize objects" as obre
+package OBRE {
+    usecase "Recognize real-time object" as obre
     usecase "Notify user" as tts
-    usecase "Image upload" as image
     usecase "Process image" as process
-    usecase "Display description" as describe 
+    usecase "Acquire image description" as describe 
+    usecase "Real-time recording" as record
+    usecase "Real-time text recognition" as videotext
 }
 
 ' list relationships between actors and use cases
-user --> camera
-obre --|> camera : \t<<extends>>\t
+user --> obre
 tts --|> obre : \t<<extends>>\t
+record <-- obre : <<includes>>
+videotext --|> obre : <<extends>>
 
-image <-- user
-process --|> image : \t<<extends>>\t
-describe --|> process : \t<<extends>>\t
-
+describe <-- user
+describe <|-- process : <<extends>>
+tts --|> describe : <<extends>>
 @enduml
 ```
