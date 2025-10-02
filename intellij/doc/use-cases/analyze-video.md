@@ -13,6 +13,7 @@ What must be true prior to the start of the use case.
 
 * We are not going to have a log-in system for the purpose of an easy-use and quick-access of the app
 * The camera is working and is granted permission.
+* There's enough lighting and the object is visible and not obscure.
 
 ## 3. Post-conditions
 

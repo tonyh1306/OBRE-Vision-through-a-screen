@@ -1,4 +1,4 @@
-# Process Image Upload
+# Process Image Upload and generate Description
 
 ## 1. Primary actor and goals
 * __User__: Wants to process a photo to acquire its description and detect the focused object within it. 
