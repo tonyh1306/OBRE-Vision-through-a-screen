@@ -12,7 +12,7 @@ __User__: Wants a fast responding speech text that is able to recognize what obj
 What must be true prior to the start of the use case.
 
 * We are not going to have a log-in system for the purpose of an easy-use and quick-access of the app
-* The camera is working and is able to be accessed
+* The camera is working and is granted permission.
 
 ## 3. Post-conditions
 
@@ -35,8 +35,8 @@ skin rose
 title Operate Camera (Fully-dressed)
 
 'define the lanes
-|#application|User|
-|#implementation|System|
+|#implementation|User|
+|#technology|System|
 
 |User|
 start
@@ -48,8 +48,12 @@ start
 while (object-detected?) is (no)
 :No object detected sound;
 endwhile(yes)
-:Frame and lebel object;
+:Frame and label object;
+if (Audio output?) then (yes)
 :Read out object description;
+else (no)
+:Play audio file not found chime;
+endif
 stop
 @enduml
 ```

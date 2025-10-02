@@ -12,7 +12,8 @@
 What must be true prior to the start of the use case.
 
 * We are not going to have a log-in system for the purpose of an easy-use and quick-access of the app
-* User has a clear image prepared
+* User has a clear image prepared.
+* App is granted permission to access the gallery and the device is connected to the Internet.
 
 ## 4. Post-conditions
 
@@ -24,15 +25,6 @@ What must be true upon successful completion of the use case.
 
 
 ## 5. Workflow
-
-The sequence of steps involved in the execution of the use case, in the form of one or more activity diagrams (please feel free to decompose into multiple diagrams for readability).
-
-The workflow can be specified at different levels of detail:
-
-* __Brief__: main success scenario only;
-* __Casual__: most common scenarios and variations;
-* __Fully-dressed__: all scenarios and variations.
-
 ```plantuml
 @startuml
 

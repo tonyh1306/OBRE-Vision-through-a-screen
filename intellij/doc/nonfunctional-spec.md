@@ -1,6 +1,6 @@
 ## Performance
 - The system should process an image and provide an object recognition response in **under 5 seconds** on average.
-- Recognition accuracy should remain above **75%** in well-lit conditions.
+- Recognition accuracy should remain above **70%** in well-lit conditions.
 - The app should be optimized to work efficiently on devices with **mid-range hardware** so that the average person can use it
 
 ## User Interface (UI/UX)
@@ -21,10 +21,10 @@
 ## Usability
 - The app should require **minimal training** for first-time users.
 - Navigation must be **intuitive**.
-- Users could be able to customize voice speed, volume, and verbosity of responses.
+- Users should be able to customize voice speed, volume, and verbosity of responses.
 
 ## External Dependencies
 - OpenCV for **image processing** and **computer vision**.
-- YOLOv12 for real-time **object detection**.
+- Latest YOLO stable release for real-time **object detection**.
 - OpenAI's API for **processing image** and **vocal description**.
-- MaryTTS for generating **text-to-speech** audio files.
+- MaryTTS for generating on-device and offline **text-to-speech** audio files.
