@@ -12,6 +12,7 @@
 What must be true prior to the start of the use case.
 
 * We are not going to have a log-in system for the purpose of an easy-use and quick-access of the app
+* User has a clear image prepared
 
 ## 4. Post-conditions
 
@@ -19,7 +20,7 @@ What must be true upon successful completion of the use case.
 
 * Object is recognized.
 * Image is processed and ChatGPT describes the image closely in text.
-* There is a text-to-speech function that reads out the description.
+* App displays text-to-speech function that reads out the description.
 
 
 ## 5. Workflow
@@ -59,7 +60,7 @@ if (Output?) is ( yes ) then
     :Display the description;
     
     |User|
-    if (Choose announce description?) then
+    if (Announce description?) then
     |System|
     :Speaks out loud description;
     endif

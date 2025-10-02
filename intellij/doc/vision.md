@@ -35,22 +35,14 @@ actor "End user" as user
 
 ' list all use cases in package
 package OBRE {
-    usecase "Recognize real-time object" as obre
-    usecase "Notify user" as tts
-    usecase "Process image" as process
-    usecase "Acquire image description" as describe 
-    usecase "Real-time recording" as record
-    usecase "Real-time text recognition" as videotext
+    usecase "Real-time object recognition with TTS" as obre
+    usecase "Photo processing for image description" as describe 
+    usecase "Real-time text recognition with TTS" as videotext
 }
 
 ' list relationships between actors and use cases
 user --> obre
-tts --|> obre : \t<<extends>>\t
-record <-- obre : <<includes>>
 videotext --|> obre : <<extends>>
-
 describe <-- user
-describe <|-- process : <<extends>>
-tts --|> describe : <<extends>>
 @enduml
 ```

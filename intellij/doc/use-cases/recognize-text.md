@@ -1,11 +1,11 @@
 # Use case name
 
 ## 1. Primary actor and goals
-__User__: Wants a fast responding speech text that is able to recognize what object is on camera
+__User__: Wants a fast responding speech text that is able to recognize what text is on camera
 
 ## 2. Other stakeholders and their goals
 
-* __User__: Wants a friendly user interface. Wants a fast responding and accurate description of objects.
+* __User__: Wants a friendly user interface. Wants a fast responding and accurate text-to-speech capabilities.
 
 ## 2. Preconditions
 
