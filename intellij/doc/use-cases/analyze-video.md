@@ -32,7 +32,7 @@ for _analyze-video_:
 
 skin rose
 
-title Operate Camera (Casual)
+title Operate Camera (Fully-dressed)
 
 'define the lanes
 |#application|User|
