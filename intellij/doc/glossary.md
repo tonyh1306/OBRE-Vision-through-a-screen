@@ -1,9 +1,5 @@
 ## Glossary
 
-### Object Recognition - 
-The technique of identifying the object present in images and videos
-
-### OCR - 
-Optical Character Recognition technology that converts images of text into machine-readable, 
-editable digital text
-
+* **Object Recognition** - The technique of identifying the object present in images and videos
+* **OCR** - Optical Character Recognition
+* **Text-to-speech (TTS)**: Technology to audibly announce text appearing on-screen.
