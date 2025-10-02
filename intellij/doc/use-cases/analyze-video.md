@@ -48,8 +48,9 @@ start
 while (object-detected?) is (no)
 :No object detected sound;
 endwhile(yes)
+:Frame and lebel object;
 :Read out object description;
-
+stop
 @enduml
 ```
 

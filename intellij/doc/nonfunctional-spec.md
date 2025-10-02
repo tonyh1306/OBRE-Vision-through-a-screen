@@ -23,3 +23,8 @@
 - Navigation must be **intuitive**.
 - Users could be able to customize voice speed, volume, and verbosity of responses.
 
+## External Dependencies
+- OpenCV for **image processing** and **computer vision**.
+- YOLOv12 for real-time **object detection**.
+- OpenAI's API for **processing image** and **vocal description**.
+- MaryTTS for generating **text-to-speech** audio files.
