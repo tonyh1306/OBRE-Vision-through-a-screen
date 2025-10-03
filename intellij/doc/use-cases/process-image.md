@@ -13,6 +13,7 @@ What must be true prior to the start of the use case.
 
 * We are not going to have a log-in system for the purpose of an easy-use and quick-access of the app
 * User has a clear image prepared.
+* The app is open and running.
 * App is granted permission to access the gallery and the device is connected to the Internet.
 
 ## 4. Post-conditions
@@ -38,7 +39,6 @@ title Image Upload (fully-dressed)
 
 |User|
 start
-:Open app with an image prepared for upload;
 :Open image upload tab;
 
 |System|

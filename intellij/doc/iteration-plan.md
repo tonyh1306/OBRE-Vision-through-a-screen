@@ -4,7 +4,11 @@
 
 2.) process-image
 
+## Cutoff:
+
 3.) recognize-text
+
+## Clarification
 
 Real-time object recognition in live recording is our highest priority use case as it is the main function 
 of the app and decides its usability. After that, we want to focus on 

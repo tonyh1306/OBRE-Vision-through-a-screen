@@ -14,6 +14,7 @@ What must be true prior to the start of the use case.
 * We are not going to have a log-in system for the purpose of an easy-use and quick-access of the app
 * The camera is working and is granted permission.
 * There's enough lighting and the text is visible and clear.
+* The app is open and running.
 
 ## 3. Post-conditions
 
@@ -23,7 +24,6 @@ What must be true upon successful completion of the use case.
 * There is a text-to-speech function that reads out the text.
 
 ## 4. Workflow
-
 
 for _recognize-textt_:
 

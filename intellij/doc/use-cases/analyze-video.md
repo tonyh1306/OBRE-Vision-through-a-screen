@@ -21,6 +21,7 @@ What must be true upon successful completion of the use case.
 
 * Object is recognized.
 * The object is described in text.
+* The app is open and running.
 * There is a text-to-speech function that reads out the description.
 
 ## 4. Workflow
