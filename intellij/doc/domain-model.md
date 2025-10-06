@@ -10,7 +10,6 @@ class Video{}
 
 class ImageObject{
 name
-boundingbox
 category
 }
 
@@ -23,11 +22,17 @@ class OpenCVAlgo{
 class OtherAlgo{
 }
 
-class TextProcessing{
+class TesseractAlgo{
 }
+
+interface TextRecAlgo {
+}
+
 ObjRecAlgo<|..OpenCVAlgo
-ObjRecAlgo<|..OtherAlgo
-Image - ObjectAlgo: input >
-Video - ObjectAlgo: input > 
-ObjectAlgo - ImageObject: outputs >
+ObjRecAlgo<|.right.OtherAlgo
+Image -left- OpenCVAlgo: input >
+Video - OpenCVAlgo: input > 
+OpenCVAlgo -down- ImageObject: outputs >
+
+TesseractAlgo ..|> TextRecAlgo
 @enduml
