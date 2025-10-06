@@ -40,7 +40,6 @@ title Operate Text Detector (Fully-dressed)
 
 |User|
 start
-:Open the app;
 
 |System|
 :Open the camera and start video stream;

@@ -47,6 +47,12 @@ while (object-detected?) is (no)
 :No object detected sound;
 endwhile(yes)
 :Frame and label object;
+|User|
+if (Toggle sound?) is (on) then
+|System|
+:Speak aloud object;
+else (off)
+endif
 stop
 @enduml
 ```
