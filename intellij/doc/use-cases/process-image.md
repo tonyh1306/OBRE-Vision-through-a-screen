@@ -64,5 +64,19 @@ endif
 stop
 @enduml
 ```
+## 5. Sequence Diagram
+```plantuml
+@startuml
+hide footbox
+participant ": process" as process
+participant ": Sale" as sale
+participant "ImageObject" as imageobject
+[o-> process : image input
+process -> imageobject : doA
+sale ->  : doC
+sale -> sale : doD
+register ->> sale : doE
+@endunl
+
 
 
