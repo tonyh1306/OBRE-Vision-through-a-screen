@@ -3,26 +3,31 @@
 hide circle
 skin rose
 hide empty methods
-class Image{}
+class Image{
+}
 
 class Video{}
 
-class Imageobject{
+class ImageObject{
 name
-bounding-box
+boundingbox
 category
 }
 
-interface Obj-RecAlgo{
+interface ObjRecAlgo{
 }
 
-class OpenCV-Algo{
-}
-class otherAlgo{
+class OpenCVAlgo{
 }
 
-class text-processing{
+class OtherAlgo{
 }
-Obj-RecAlgo<|..OpenCV-Algo
 
+class TextProcessing{
+}
+ObjRecAlgo<|..OpenCVAlgo
+ObjRecAlgo<|..OtherAlgo
+Image - ObjectAlgo: input >
+Video - ObjectAlgo: input > 
+ObjectAlgo - ImageObject: outputs >
 @enduml
