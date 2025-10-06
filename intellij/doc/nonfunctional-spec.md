@@ -1,3 +1,6 @@
+## Key technology 
+- A Java-based Android app with a mobile interface. 
+
 ## Performance
 - The system should process an image and provide an object recognition response in **under 5 seconds** on average.
 - Recognition accuracy should remain above **70%** in well-lit conditions.
@@ -22,9 +25,3 @@
 - The app should require **minimal training** for first-time users.
 - Navigation must be **intuitive**.
 - Users should be able to customize voice speed, volume, and verbosity of responses.
-
-## External Dependencies
-- OpenCV for **image processing** and **computer vision**.
-- Latest YOLO stable release for real-time **object detection**.
-- OpenAI's API for **processing image** and **vocal description**.
-- MaryTTS for generating on-device and offline **text-to-speech** audio files.

@@ -41,8 +41,8 @@ title Image Upload (fully-dressed)
 start
 :Open image upload tab;
 
-|System|
 while (Image?) is (no) 
+|System|
   :Output error;
   :Ask for image;  
 endwhile(yes)
@@ -52,9 +52,10 @@ if (Output?) is ( yes ) then
     :Display the description;
     
     |User|
-    if (Announce description?) then
+    if (Announce description?) is (yes) then
     |System|
     :Speaks out loud description;
+    else (no)
     endif
 else ( no )
 :Displays error;

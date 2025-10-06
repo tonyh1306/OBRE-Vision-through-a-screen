@@ -1,11 +1,7 @@
 # Real-time Object Recognition
 
 ## 1. Primary actor and goals
-__User__: Wants a fast responding speech text that is able to recognize what object is on video stream from the camera
-
-## 2. Other stakeholders and their goals
-
-* __User__: Wants a friendly user interface. Wants a fast responding and accurate description of an object on the screen.
+__User__: Wants a fast responding speech text that is able to recognize what object is on video stream from the camera.
 
 ## 2. Preconditions
 
@@ -51,11 +47,6 @@ while (object-detected?) is (no)
 :No object detected sound;
 endwhile(yes)
 :Frame and label object;
-if (Audio output?) then (yes)
-:Read out object description;
-else (no)
-:Play audio file not found chime;
-endif
 stop
 @enduml
 ```

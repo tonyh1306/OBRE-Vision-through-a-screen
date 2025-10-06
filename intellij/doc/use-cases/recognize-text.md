@@ -25,7 +25,7 @@ What must be true upon successful completion of the use case.
 
 ## 4. Workflow
 
-for _recognize-textt_:
+for _recognize-text_:
 
 ```plantuml
 @startuml
