@@ -3,13 +3,9 @@
 hide circle
 skin rose
 hide empty methods
-class Image{
+class Image{}
 
-}
-
-class Video{
-
-}
+class Video{}
 
 class Imageobject{
 name
@@ -17,9 +13,16 @@ bounding-box
 category
 }
 
-class Obj-RecAlgo{
+interface Obj-RecAlgo{
+}
+
+class OpenCV-Algo{
+}
+class otherAlgo{
 }
 
 class text-processing{
 }
+Obj-RecAlgo<|..OpenCV-Algo
+
 @enduml
