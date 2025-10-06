@@ -3,7 +3,8 @@
 
 ## 1. Introduction
 
-We envision an Object Recognition Application that provides real-time notification from the video feed with 
+We envision an Object Recognition Application that provides accessibility for visually-impaired individuals
+real-time notification from the video feed with 
 a user-friendly and out-of-the-box experience.
 
 ## 2. Business case
@@ -43,6 +44,6 @@ package OBRE {
 ' list relationships between actors and use cases
 user --> obre
 videotext --|> obre : <<extends>>
-describe <-- user
+describe --|> obre : <<extends>>
 @enduml
 ```
