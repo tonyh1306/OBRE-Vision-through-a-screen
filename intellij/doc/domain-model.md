@@ -13,16 +13,17 @@ bounding-box
 category
 }
 
-interface Obj-RecAlgo{
+interface ObjRecAlgo{
 }
 
-class OpenCV-Algo{
+class OpenCVAlgo{
 }
+
 class otherAlgo{
 }
 
-class text-processing{
-}
-Obj-RecAlgo<|..OpenCV-Algo
+' associations
+ObjRecAlgo <|.. OpenCVAlgo 
+
 
 @enduml
