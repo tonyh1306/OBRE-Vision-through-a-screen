@@ -1,4 +1,3 @@
-
 # OBRE System - Vision document
 
 ## 1. Introduction

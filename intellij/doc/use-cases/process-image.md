@@ -67,7 +67,9 @@ stop
 ## 5. Sequence Diagram
 ```plantuml
 @startuml
+skin rose
 hide footbox
+
 participant ": process" as process
 participant ": Sale" as sale
 participant "ImageObject" as imageobject
