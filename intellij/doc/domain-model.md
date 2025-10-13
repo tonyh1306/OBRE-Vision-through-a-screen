@@ -4,7 +4,7 @@ hide circle
 skin rose
 hide empty methods
 
-class Image{
+class Image {
 String imagePath
 Mat image
 --
