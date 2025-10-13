@@ -11,8 +11,29 @@ public class CmdLineUI implements UI {
 
 
     public void startVideoStreaming(){
+        boolean running = true;
+        while(running){
         ps.println("Phone turned on, video stream started");
+        ps.println("options: upload_image, keep_video_streaming, exit");
+        String option = in.nextLine();
+
+        switch(option) {
+            case "upload_image":
+                break;
+            case "keep_video_streaming":
+                break;
+            case "exit":
+                running = false;
+                break;
+        }
+
+
+
+        }
+
     }
+
+
 
 
 
