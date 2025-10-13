@@ -6,6 +6,7 @@ hide empty methods
 class Image{
 Mat
 Net
+
 }
 
 class Video{}
