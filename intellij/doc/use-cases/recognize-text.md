@@ -44,14 +44,15 @@ start
 |System|
 :Open the camera and start video stream;
 :Automatically start detecting text;
-while (text-detected?) is (no)
+while (Text detected?) is (no)
 :No text detected sound;
 endwhile(yes)
-:Frame and label object;
-if (Audio output?) then (yes)
-:Read out text;
-else (no)
-:Play audio file not found chime;
+:Frame text;
+|User|
+if (Toggle sound?) is (on) then
+|System|
+:Speak aloud object;
+else (off)
 endif
 stop
 @enduml

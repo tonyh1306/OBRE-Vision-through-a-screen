@@ -67,12 +67,13 @@ stop
 ## 5. Sequence Diagram
 ```plantuml
 @startuml
-hide footbox
 skin rose
+hide footbox
 
 participant ": Image" as process
 participant ": OpenCVAlgo" as opencv
 participant ": OpenAI API" as gpt
+
 [o-> process : image input
 process -> opencv : pre-process image
 opencv -> opencv : run recognition algorithm
