@@ -68,14 +68,16 @@ stop
 ```plantuml
 @startuml
 hide footbox
-participant ": process" as process
-participant ": Sale" as sale
-participant "ImageObject" as imageobject
+skin rose
+
+participant ": Image" as process
+participant ": OpenCVAlgo" as opencv
+participant ": OpenAI API" as gpt
 [o-> process : image input
-process -> imageobject : doA
-sale ->  : doC
-sale -> sale : doD
-register ->> sale : doE
+process -> opencv : pre-process image
+opencv -> opencv : run recognition algorithm
+<- opencv : return object recognition
+<- gpt : return image description
 @endunl
 
 
