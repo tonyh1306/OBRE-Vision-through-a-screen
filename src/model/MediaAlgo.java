@@ -1,5 +1,5 @@
 package model;
 
-public interface ImageAlgo {
+public interface MediaAlgo {
     public void runAlgorithm();
 }
