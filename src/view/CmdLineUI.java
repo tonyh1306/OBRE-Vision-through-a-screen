@@ -1,5 +1,7 @@
 package src.view;
 
+import src.controller.Controller;
+
 import java.io.PrintStream;
 import java.util.Scanner;
 
@@ -33,9 +35,10 @@ public class CmdLineUI implements UI {
 
     }
 
+    @Override
+    public void setListener(Controller ctrl) {
 
-
-
+    }
 
 
 }

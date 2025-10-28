@@ -7,7 +7,6 @@ public interface UI {
 
     void setListener(Controller ctrl);
 
-    void
 
     interface Listener {
         void analyze_video();
