@@ -1,15 +1,16 @@
-package src.view;
+package view;
 
-import src.controller.Controller;
+import controller.Controller;
 
 public interface UI {
-    void startVideoStreaming();
-
-    void setListener(Controller ctrl);
-
-
-    interface Listener {
-        void analyze_video();
-
-    }
+//    void startVideoStreaming();
+//
+//    void setListener(Controller ctrl);
+//
+//    void
+//
+//    interface Listener {
+//        void analyze_video();
+//
+//    }
 }
