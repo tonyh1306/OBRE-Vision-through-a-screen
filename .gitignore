@@ -1,0 +1,8 @@
+
+# Ignored files from the environment/build
+.DS_Store
+/out/
+/.idea/
+*.class
+*.iml
+.opencv/

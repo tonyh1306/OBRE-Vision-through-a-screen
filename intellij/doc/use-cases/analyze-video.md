@@ -42,11 +42,11 @@ start
 
 |System|
 :Open the camera and start video stream;
-if (Recognition type) is (object) then
-:Automatically start detecting an object;
-else (text) 
+if (Recognition type) is (text) then
 :Execute __Recognize text__;
-endif
+else (default) 
+:Automatically start detecting an object;
+endif 
 while (object-detected?) is (no)
 :No object detected sound;
 endwhile(yes)
