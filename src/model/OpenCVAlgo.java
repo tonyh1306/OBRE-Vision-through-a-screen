@@ -9,6 +9,8 @@ import org.opencv.imgproc.Imgproc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.opencv.imgproc.Imgproc.*;
+
 public class OpenCVAlgo implements MediaAlgo {
     static String MODEL_NAME = ResourceUtils.getResourcePath("yolo12n.onnx");
     public MediaSource mediaSource;
@@ -81,7 +83,7 @@ public class OpenCVAlgo implements MediaAlgo {
         }
 
         // 1) Resize once per frame
-        Imgproc.resize(image, resizedImage, netSize);
+        resize(image, resizedImage, netSize);
 
         // 2) Blob from resized
         Mat inputBlob = Dnn.blobFromImage(resizedImage, 1.0 / 255.0, netSize,
@@ -158,8 +160,8 @@ public class OpenCVAlgo implements MediaAlgo {
             String name = COCO_CLASSES[classIds.get(idx)];
             Point p1 = new Point(b.x, b.y);
             Point p2 = new Point(b.x + b.width, b.y + b.height);
-            Imgproc.rectangle(resizedImage, p1, p2, new Scalar(0, 165, 255), 2);
-            Imgproc.putText(resizedImage, name, new Point(b.x, Math.max(0, b.y - 5)),
+            rectangle(resizedImage, p1, p2, new Scalar(0, 165, 255), 2);
+            putText(resizedImage, name, new Point(b.x, Math.max(0, b.y - 5)),
                     Imgproc.FONT_HERSHEY_SIMPLEX, 0.7, new Scalar(0, 165, 255), 2);
         }
 
@@ -179,7 +181,7 @@ public class OpenCVAlgo implements MediaAlgo {
         final Scalar color = new Scalar(0, 0, 255); // bright red (BGR)
 
         int[] baseLine = new int[1];
-        Size textSize = Imgproc.getTextSize(msg, font, fontScale, thickness, baseLine);
+        Size textSize = getTextSize(msg, font, fontScale, thickness, baseLine);
 
         int x = (int) Math.round((frame.cols() - textSize.width) / 2.0);
         int y = (int) Math.round((frame.rows() + textSize.height) / 2.0);
@@ -187,9 +189,9 @@ public class OpenCVAlgo implements MediaAlgo {
         // Optional: a faint rectangle behind text for readability
         Point tl = new Point(x - 10, y - textSize.height - 10);
         Point br = new Point(x + textSize.width + 10, y + baseLine[0] + 10);
-        Imgproc.rectangle(frame, tl, br, new Scalar(0, 0, 0), -1); // filled black box
+        rectangle(frame, tl, br, new Scalar(0, 0, 0), -1); // filled black box
 
-        Imgproc.putText(frame, msg, new Point(x, y), font, fontScale, color, thickness);
+        putText(frame, msg, new Point(x, y), font, fontScale, color, thickness);
     }
 
     private static final String[] COCO_CLASSES = {

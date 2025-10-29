@@ -1,7 +1,5 @@
 package view;
 
-import controller.Controller;
-
 public interface UI {
 //    void startVideoStreaming();
 //

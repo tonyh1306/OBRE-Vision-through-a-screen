@@ -1,6 +1,6 @@
 package controller;
-import src.view.CmdLineUI;
-import src.view.UI;
+import view.CmdLineUI;
+import view.UI;
 
 import model.ImageSource;
 import model.MediaSource;
@@ -9,31 +9,44 @@ import model.VideoSource;
 import org.opencv.core.Core;
 import org.opencv.imgcodecs.Imgcodecs;
 
+import java.util.List;
+
 public class Controller {
+    private view.CmdLineUI ui;
+
+    public void setListener() {
+        ui.setListener(this);
+    }
+
+    public void processImageFile(String filename) {
+        try {
+            MediaSource imageSource = new ImageSource(filename);
+            System.out.println("Prcoessing image from:"+ filename);
+            //Give the open cv algo the image source object
+            OpenCVAlgo algo = new OpenCVAlgo(imageSource);
+            algo.runAlgorithm();
+
+            //detects the detections
+            //List<String> detections = algo.detectObjects(imageSource);
+            //ui.displayDetections(detections);
+
+        }
+        catch (Exception e) {System.out.println("Error occured:"+ e);}
+
+    }
+
+
     public static void main(String[] args) {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-        MediaSource img = new VideoSource("vase-vid.mp4",0);
-//        MediaSource img = new ImageSource("vase.jpg");
+        MediaSource vd = new VideoSource("vase-vid.mp4",0);
+        MediaSource img = new ImageSource("vase.jpg");
         OpenCVAlgo cv = new OpenCVAlgo(img);
         cv.runAlgorithm();
-        final UI ui = new CmdLineUI();
-        final Controller ctrl = new Controller(ui);
+        final UI ui = (UI) new CmdLineUI();
+        final Controller ctrl = new Controller();
         ctrl.ui.setListener(ctrl);
         ctrl.ui.startVideoStreaming();
     }
 }
 
-public class Controller implements UI.Listener{
-    private final UI ui;
-
-    @Override
-    public void analyze_video() {
-
-    }
-
-    public void onProcessImage(){
-
-    }
-
-}
