@@ -25,14 +25,12 @@ public class Controller {
             //Give the open cv algo the image source object
             OpenCVAlgo algo = new OpenCVAlgo(imageSource);
             algo.runAlgorithm();
-
             //detects the detections
-            //List<String> detections = algo.detectObjects(imageSource);
-            //ui.displayDetections(detections);
-
+            //the method name may change when the OpenCVAlgo is changed
+            List<String> detections = algo.detectObjects(imageSource);
+            ui.displayDetections(detections);
         }
         catch (Exception e) {System.out.println("Error occured:"+ e);}
-
     }
 
 

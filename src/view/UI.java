@@ -1,14 +1,18 @@
 package view;
 
+import java.util.List;
+
 public interface UI {
-//    void startVideoStreaming();
-//
-//    void setListener(Controller ctrl);
-//
-//    void
-//
-//    interface Listener {
-//        void analyze_video();
-//
-//    }
+    void startVideoStreaming();
+
+    void setListener();
+
+    void displayMessage(String message);
+
+    interface Listener {
+        void analyze_video();
+
+    }
+
+    public void displayDetections(List<String> detections);
 }
