@@ -7,6 +7,8 @@ public interface UI {
 
     void setListener();
 
+    void startDetecting();
+
     void displayMessage(String message);
 
     interface Listener {

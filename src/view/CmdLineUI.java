@@ -22,12 +22,12 @@ public class CmdLineUI implements UI {
                 return;
             }
             ps.println("Phone turned on, video stream started");
-            ps.println("options: upload_image, keep_video_streaming, exit");
+            ps.println("options: upload_image, keep_video_streaming, scan_for_text, exit");
             String option = in.nextLine().toLowerCase();
 
             switch(option) {
                 case "upload_image":
-                    ps.print("Enter filename (e.g., resources/cat-dog.jpg): ");
+                    ps.print("Enter a filename (e.g., resources/cat-dog.jpg): ");
                     String filename = in.nextLine().trim();
                         if (filename.isEmpty()) {
                             ps.println("Error: Filename cannot be empty. Returning to main menu.");
@@ -37,6 +37,16 @@ public class CmdLineUI implements UI {
                     break;
                 case "keep_video_streaming":
                     break;
+                case "scan_for_text":
+                    System.out.println("Enter image file to scan for text:");
+                    String file = in.nextLine();
+                    while (!isValidImageFile(file)) {
+                        System.out.println("Please provide a .jpg or .png image.");
+                        file = in.nextLine();
+                    }
+                    controller.processTextRecognition(file);
+                    break;
+
                 case "exit":
                     ps.println("Exiting the Prototype");
                     running = false;
@@ -48,6 +58,10 @@ public class CmdLineUI implements UI {
     @Override
     public void startVideoStreaming() {
 
+    }
+
+    private boolean isValidImageFile(String filename) {
+        return filename.toLowerCase().endsWith(".jpg") || filename.toLowerCase().endsWith(".png");
     }
     @Override
     public void setListener() {

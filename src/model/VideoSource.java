@@ -55,7 +55,7 @@ public class VideoSource implements MediaSource {
             }
             return frame;
         }
-        return frames.getFirst();
+        return frames.get(0);
     }
 
     public ArrayList<Mat> getFrameArray() {

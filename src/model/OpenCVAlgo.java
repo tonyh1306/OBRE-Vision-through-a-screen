@@ -12,7 +12,8 @@ import java.util.List;
 import static org.opencv.imgproc.Imgproc.*;
 
 public class OpenCVAlgo implements MediaAlgo {
-    static String MODEL_NAME = ResourceUtils.getResourcePath("yolo12n.onnx");
+
+    static String MODEL_NAME = ResourceUtils.getResourcePath("./yolo12n.onnx");
     public MediaSource mediaSource;
     public static int IMG_SIZE = 640;
     Net net = Dnn.readNetFromONNX(MODEL_NAME);
@@ -162,7 +163,7 @@ public class OpenCVAlgo implements MediaAlgo {
             Point p2 = new Point(b.x + b.width, b.y + b.height);
             rectangle(resizedImage, p1, p2, new Scalar(0, 165, 255), 2);
             putText(resizedImage, name, new Point(b.x, Math.max(0, b.y - 5)),
-                    Imgproc.FONT_HERSHEY_SIMPLEX, 0.7, new Scalar(0, 165, 255), 2);
+                    0, 0.7, new Scalar(0, 165, 255), 2); //replaced Imgproc.FONT_HERSHEY_SIMPLEX for fontface
         }
 
         HighGui.imshow("Image", resizedImage);
@@ -177,7 +178,7 @@ public class OpenCVAlgo implements MediaAlgo {
         final String msg = "No objects detected";
         final double fontScale = 1.2; // bigger
         final int thickness = 2;
-        final int font = Imgproc.FONT_HERSHEY_SIMPLEX;
+        final int font = 0; //replaced Imgproc.FONT_HERSHEY_SIMPLEX bc it was not working
         final Scalar color = new Scalar(0, 0, 255); // bright red (BGR)
 
         int[] baseLine = new int[1];
