@@ -40,6 +40,10 @@ public class CmdLineUI implements UI {
                         if (filename.isEmpty()) {
                             ps.println("Error: Filename cannot be empty. Returning to main menu.");
                             break;}
+                    while (!isValidImageFile(filename)) {
+                        System.out.println("Please provide a .jpg or .png image.");
+                        filename = in.nextLine();
+                    }
                     controller.processImageFile(filename);
 
                     break;

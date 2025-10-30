@@ -31,8 +31,13 @@ Test outcome: Success output is as expected
 **Feature:** Input validation and error handling  
 **Input:** Random string (`nonsense`)  
 **Expected Output:**  
-The application should display an error message and not crash:
+The application should display an error message and exit the program
 
+Output:
+The system asks again and again until the input is valid 
+or the user wants the exit the prototype. This is true for the text-recognition as well as the image_recognotion. If the input is 
+empty then the prototype exits and stops.
+Test Outcome: Success output is as expected. 
 
 
 ## Conclusion
