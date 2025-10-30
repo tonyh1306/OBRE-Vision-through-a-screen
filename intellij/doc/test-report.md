@@ -32,3 +32,8 @@ Test outcome: Success output is as expected
 **Input:** Random string (`nonsense`)  
 **Expected Output:**  
 The application should display an error message and not crash:
+
+
+
+## Conclusion
+All command-line system tests passed successfully.

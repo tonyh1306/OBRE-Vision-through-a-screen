@@ -1,18 +1,26 @@
 package view;
 
 import controller.Controller;
-
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Command-line interface for the Object Recognition App.It handles
+ * user input and displays output for both object and text recognition in the command line.
+ * It implements the UI Interface
+ */
 public class CmdLineUI implements UI {
 
     PrintStream ps = System.out;
     final Scanner in = new Scanner(System.in);
     private Controller controller;
 
-
+    /**
+     * this function starts the main detection loop.
+     * It prompts the user to input an image filename for text recognition.
+     * It also validates the input and forwards requests to the controller.
+     */
     public void startDetecting(){
         boolean running = true;
         while(running){
@@ -59,7 +67,14 @@ public class CmdLineUI implements UI {
     public void startVideoStreaming() {
 
     }
-
+    /**
+     * This function checks whether a filename ends with a supported image extension
+     * (for right now the options are
+     * .jpg or .png).
+     *
+     * @param filename The filename.
+     * @return true if the file is a valid image, false otherwise.
+     */
     private boolean isValidImageFile(String filename) {
         return filename.toLowerCase().endsWith(".jpg") || filename.toLowerCase().endsWith(".png");
     }
@@ -78,10 +93,19 @@ public class CmdLineUI implements UI {
         }
     }
 
+    /**
+     * Sets the controller listener.
+     * @paramcontroller
+     */
     public void setListener(Controller ctrl) {
         this.controller = ctrl;
 
     }
+
+    /**
+     * Displays recognized text output in the console.
+     * @param, The text to display.
+     */
     @Override
     public void displayMessage(String message) {
         ps.println(message);
