@@ -16,42 +16,44 @@ public class OpenCVAlgo implements MediaAlgo {
     public MediaSource mediaSource;
     public static int IMG_SIZE = 640;
     Net net = Dnn.readNetFromONNX(MODEL_NAME);
+    List<String> detectedObjects;
 
     public OpenCVAlgo(MediaSource mediaSource) {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         this.mediaSource = mediaSource;
         net.setPreferableBackend(Dnn.DNN_BACKEND_OPENCV);
         net.setPreferableTarget(Dnn.DNN_TARGET_CPU);
+        detectedObjects = new ArrayList<>();
     }
 
     @Override
-    public void runAlgorithm() {
+    public List<String> runAlgorithm() {
         final Size NET_SIZE = new Size(IMG_SIZE, IMG_SIZE);
         Mat resizedImage = new Mat();
 
         // Detect source type
-        boolean imageMode = (mediaSource instanceof ImageSource);
         ArrayList<Mat> media = null;
         boolean cameraMode = false;
 
-        if (!imageMode) {
             try {
-                media = mediaSource.getFrameArray(); // video file mode (finite frames)
+                // video file mode (finite frames)
+                media = mediaSource.getFrameArray();
             } catch (UnsupportedOperationException ex) {
-                cameraMode = true;                   // live camera mode (infinite stream)
+                // live camera mode (infinite stream)
+                cameraMode = true;
             }
-        }
-
-        if (imageMode) {
-            Mat image = mediaSource.getFrame();
-            if (image == null || image.empty()) {
-                System.err.println("ImageSource returned empty frame.");
-                return;
-            }
-            processFrame(image, resizedImage, NET_SIZE);
-            HighGui.imshow("Image", resizedImage);
-            HighGui.waitKey(0);
-        } else if (!cameraMode) {
+//
+//        if (imageMode) {
+//            Mat image = mediaSource.getFrame();
+//            if (image == null || image.empty()) {
+//                System.err.println("ImageSource returned empty frame.");
+//                return detectedObjects;
+//            }
+//            processFrame(image, resizedImage, NET_SIZE);
+//            HighGui.imshow("Image", resizedImage);
+//            HighGui.waitKey(0);
+//        }
+        if (!cameraMode) {
             for (Mat frame : media) {
                 if (!processFrame(frame, resizedImage, NET_SIZE)) break;
             }
@@ -65,9 +67,8 @@ public class OpenCVAlgo implements MediaAlgo {
                 if (!processFrame(frame, resizedImage, NET_SIZE)) break;
             }
         }
-
         HighGui.destroyAllWindows();
-        System.exit(0);
+        return detectedObjects;
     }
 
 
@@ -131,7 +132,7 @@ public class OpenCVAlgo implements MediaAlgo {
             classIds.add(bestId);
         }
 
-        // 6) NMS (safe for empty)
+        // NMS
         if (boxes.isEmpty()) {
             drawNoDetectionsOverlay(resizedImage);     // centered red message
             HighGui.imshow("Image", resizedImage);
@@ -153,7 +154,7 @@ public class OpenCVAlgo implements MediaAlgo {
             return !(key == 'q' || key == 27);
         }
 
-        // 7) Draw kept boxes
+        // Draw kept boxes
         int[] keptIdx = keep.toArray();
         for (int idx : keptIdx) {
             Rect2d b = boxes.get(idx);
@@ -163,6 +164,7 @@ public class OpenCVAlgo implements MediaAlgo {
             rectangle(resizedImage, p1, p2, new Scalar(0, 165, 255), 2);
             putText(resizedImage, name, new Point(b.x, Math.max(0, b.y - 5)),
                     Imgproc.FONT_HERSHEY_SIMPLEX, 0.7, new Scalar(0, 165, 255), 2);
+            detectedObjects.add(name);
         }
 
         HighGui.imshow("Image", resizedImage);
@@ -186,7 +188,6 @@ public class OpenCVAlgo implements MediaAlgo {
         int x = (int) Math.round((frame.cols() - textSize.width) / 2.0);
         int y = (int) Math.round((frame.rows() + textSize.height) / 2.0);
 
-        // Optional: a faint rectangle behind text for readability
         Point tl = new Point(x - 10, y - textSize.height - 10);
         Point br = new Point(x + textSize.width + 10, y + baseLine[0] + 10);
         rectangle(frame, tl, br, new Scalar(0, 0, 0), -1); // filled black box

@@ -1,5 +1,6 @@
 package model;
+import java.util.List;
 
 public interface MediaAlgo {
-    public void runAlgorithm();
+    public List<String> runAlgorithm();
 }

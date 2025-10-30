@@ -1,7 +1,6 @@
 package view;
 
 import controller.Controller;
-
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
@@ -52,6 +51,7 @@ public class CmdLineUI implements UI {
     @Override
     public void setListener() {
     }
+
     @Override
     public void displayDetections(List<String> detections) {
         if (detections.isEmpty()) {
