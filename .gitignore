@@ -5,4 +5,6 @@
 /.idea/
 *.class
 *.iml
-.opencv/
+opencv/
+out/
+opencv2/
