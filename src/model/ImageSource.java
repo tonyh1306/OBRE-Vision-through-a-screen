@@ -19,7 +19,9 @@ public class ImageSource implements MediaSource {
             }
             frames.add(image);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            System.out.println(
+                    "Image file not found at: " + ResourceUtils.getResourcePath(imageAddress)
+            );;
         } catch (RuntimeException e) {
             System.out.println(e.getMessage()
                     + "\nImage address: " + imageAddress);

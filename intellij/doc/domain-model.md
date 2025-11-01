@@ -29,9 +29,9 @@ ArrayList<Mat> getFrameArray();
 }
 
 class LLMAlgo{
-Image img
+ImageSource imageSource
 --
-String showsDescription()
+List<String> runAlgorithm()
 }
 
 interface MediaAlgo{

@@ -35,6 +35,9 @@ ArrayList<Mat> getFrameArray();
 }
 
 class ImageSource {
+    Mat image
+    ArrayList<Mat> frames
+    --
   ImageSource(String filePath)
   getMediaAddress() : String
   readFrame() : Object
@@ -43,17 +46,18 @@ class ImageSource {
 MediaSource <|.. ImageSource
 
 interface MediaAlgo <<Interface>> {
-    + {static} COCO_CLASSES : List<String>
-Net net
-+ {static} IMG_SIZE : int
-List<String> detectObjects(MediaSource source)
-MediaSource mediaSource
-+ {static} String MODEL_NAME : String
 --
 runAlgorithm(Mat frame) : List<String>
 }
 
 class OpenCVAlgo {
++ {static} COCO_CLASSES : List<String>
+Net net
++ {static} IMG_SIZE : int
+List<String> detectObjects(MediaSource source)
+MediaSource mediaSource
++ {static} MODEL_NAME : String
+--
   OpenCVAlgo()
   detectObjects(MediaSource source) : List<String>
 }

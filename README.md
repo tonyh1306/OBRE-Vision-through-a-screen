@@ -7,7 +7,7 @@ The prototype demonstrates basic MVC architecture with a controller, model, and 
 - Object recognition (placeholder for future OpenCV integration)
 - Text recognition (mock prototype, simulates OCR output)
 - Command-line interface for user input and output
-- 
+
 ## Description
 An Object Recognition Application that provides accessibility for visually-impaired individuals
 real-time notification from the video feed with
@@ -30,17 +30,19 @@ a user-friendly and out-of-the-box experience. With additional options to upload
     - Validates input file types and displays errors for invalid files.
     - Provides placeholder outputs for both object and text recognition.
 
----
-## Visuals
-
 ## Installation
 
 1. Clone the repository
-2. Compile the source files 
-3. Run the Application 
-   1. java -cp out/production/team-c controller.Controller
-4.
-
+2. Download dependencies:
+   1. OpenCV (Follow OpenCV installation instructions for your OS from their official documentation.)
+      1. Set up VM options to include OpenCV native libraries. (e.g., `-Djava.library.path=/path/to/opencv/build/java/x64`)
+      2. Add OpenCV jar files to your project dependencies.
+   2. YOLOv12
+      1. If the app is not working, please refer to the 
+      YOLOv12 instructions on how to export the model to .onnx format and 
+      include it in the project in the `/resources/` directory from this documentation: https://docs.ultralytics.com/modes/export/#key-features-of-export-mode
+3. Compile the source files 
+4. Run the Application
 
 ## Usage
 currently being implemented as a CLI prototype
@@ -50,8 +52,6 @@ Some limitations include:
 1. Text recognition is simulated and so no real OCR is performed.
 2. It is Command-line interface only. There is no GUI. 
 3. Currently supports only .jpg and .png images.
-
-If you have ideas for releases in the future, it is a good idea to list them in the README.
 
 ## Authors and acknowledgment
 Authors: Maya Laidler and Tony Nguyen

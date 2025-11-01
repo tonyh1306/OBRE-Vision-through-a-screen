@@ -67,6 +67,9 @@ public class OpenCVAlgo implements MediaAlgo {
             }
         }
         HighGui.destroyAllWindows();
+        if (detectedObjects.isEmpty()) {
+            detectedObjects.add("No objects detected");
+        }
         return detectedObjects;
     }
 
@@ -150,7 +153,7 @@ public class OpenCVAlgo implements MediaAlgo {
             drawNoDetectionsOverlay(resizedImage);     // centered red message
             HighGui.imshow("Image", resizedImage);
             int key = HighGui.waitKey(1);
-            return !(key == 'q' || key == 27);
+            return true;
         }
 
         // Draw kept boxes

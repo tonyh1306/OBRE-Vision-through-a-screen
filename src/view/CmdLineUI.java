@@ -35,11 +35,12 @@ public class CmdLineUI implements UI {
 
             switch(option) {
                 case "upload_image":
-                    ps.print("Enter a filename (e.g., resources/cat-dog.jpg): ");
+                    ps.print("Enter a filename (e.g., cat-dog.jpg): ");
                     String filename = in.nextLine().trim();
                         if (filename.isEmpty()) {
                             ps.println("Error: Filename cannot be empty. Returning to main menu.");
-                            break;}
+                            break;
+                        }
                     while (!isValidImageFile(filename)) {
                         System.out.println("Please provide a .jpg or .png image.");
                         filename = in.nextLine();
@@ -60,8 +61,12 @@ public class CmdLineUI implements UI {
                     break;
 
                 case "exit":
-                    ps.println("Exiting the Prototype");
+                    ps.println("Exiting the Prototype.");
                     running = false;
+                    break;
+
+                default:
+                    ps.println("Invalid option. Please try again. \n");;
                     break;
             }
         }

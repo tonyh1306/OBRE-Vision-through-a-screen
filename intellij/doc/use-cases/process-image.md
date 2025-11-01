@@ -70,16 +70,29 @@ stop
 skin rose
 hide footbox
 
-participant ": Image" as process
-participant ": OpenCVAlgo" as opencv
-participant ": OpenAI API" as gpt
+actor User
 
-[o-> process : image input
+participant "UI" as ui
+participant "Controller" as controller
+participant ": ImageSource" as process
+participant ": OpenCVAlgo" as opencv
+participant ": LLMAlgo" as gpt
+
+User -> ui : select / upload image
+ui -> controller : pass image file
+controller -> process : load image
+
 process -> opencv : pre-process image
 opencv -> opencv : run recognition algorithm
-<- opencv : return object recognition
-<- gpt : return image description
-@endunl
+opencv --> controller : return detected objects
+
+controller -> gpt : send object data for description
+gpt --> controller : return image description
+
+controller -> ui : display results (objects + description)
+
+@enduml
+
 
 
 

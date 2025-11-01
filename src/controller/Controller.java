@@ -11,6 +11,25 @@ public class Controller {
 
     private CmdLineUI ui;
 
+
+    enum Options {
+        UPLOAD_IMAGE("upload_image"),
+        KEEP_VIDEO_STREAMING("keep_video_streaming"),
+        SCAN_FOR_TEXT("scan_for_text"),
+        EXIT("exit");
+
+        String option;
+        Options(String option) {
+            this.option = option;
+        }
+
+        String getOption() {
+            return option;
+        }
+    }
+
+    Options option = Options.KEEP_VIDEO_STREAMING;
+
     /**
      * Constructs a Controller with the given CmdLineUI.
      * @param ui The command-line user interface.
@@ -25,18 +44,21 @@ public class Controller {
      * @param filename The path to the image file.
      */
     public void processImageFile(String filename) {
+        this.option = Options.UPLOAD_IMAGE;
         try {
             MediaSource imageSource = new ImageSource(filename);
-            System.out.println("Processing image from:"+ filename);
+            System.out.println("Processing image from: "+ filename + "\n");
             //Give the open cv algo the image source object
             OpenCVAlgo algo = new OpenCVAlgo(imageSource);
             algo.runAlgorithm().forEach(System.out::println);
+            System.out.println("\nProcessing complete. \n");
             //detects the detections
             //the method name may change when the OpenCVAlgo is changed
             //List<String> detections = algo.detectObjects(imageSource);
             //ui.displayDetections(detections);
         }
-        catch (Exception e) {System.out.println("Error occured:"+ e);}
+        catch (Exception e) {System.out.println("Error occured: "+ e +"\n");}
+        this.option = Options.KEEP_VIDEO_STREAMING;
     }
 
     /**
