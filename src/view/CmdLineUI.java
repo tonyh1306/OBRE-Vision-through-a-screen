@@ -31,7 +31,7 @@ public class CmdLineUI implements UI {
             }
             ps.println("Phone turned on, video stream started");
             ps.println("options: upload_image, keep_video_streaming, scan_for_text, exit");
-            String option = in.nextLine().toLowerCase();
+            String option = in.nextLine().toLowerCase().trim();
 
             switch(option) {
                 case "upload_image":
@@ -80,7 +80,10 @@ public class CmdLineUI implements UI {
      * @return true if the file is a valid image, false otherwise.
      */
     private boolean isValidImageFile(String filename) {
-        return filename.toLowerCase().endsWith(".jpg") || filename.toLowerCase().endsWith(".png");
+        return filename.toLowerCase().trim().endsWith(".jpg")
+                || filename.toLowerCase().trim().endsWith(".png")
+                || filename.toLowerCase().trim().endsWith(".jpeg")
+                || filename.toLowerCase().trim().endsWith(".mp4");
     }
     @Override
     public void setListener() {

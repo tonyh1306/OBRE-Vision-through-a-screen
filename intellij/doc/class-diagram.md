@@ -30,7 +30,8 @@ Controller ..> UI : <<uses>>
 CmdLineUI ..> Controller : <<sends commands>>
 
 interface MediaSource <<Interface>> {
-  readFrame() : Object
+Mat getFrame();
+ArrayList<Mat> getFrameArray();
 }
 
 class ImageSource {
@@ -41,8 +42,15 @@ class ImageSource {
 
 MediaSource <|.. ImageSource
 
-interface ObjRecAlgo <<Interface>> {
-    detectObjects(MediaSource) : List<String>
+interface MediaAlgo <<Interface>> {
+    + {static} COCO_CLASSES : List<String>
+Net net
++ {static} IMG_SIZE : int
+List<String> detectObjects(MediaSource source)
+MediaSource mediaSource
++ {static} String MODEL_NAME : String
+--
+runAlgorithm(Mat frame) : List<String>
 }
 
 class OpenCVAlgo {
@@ -52,8 +60,8 @@ class OpenCVAlgo {
 
 
 Controller --> MediaSource : <<uses>>
-Controller --> ObjRecAlgo : <<uses>>
-ObjRecAlgo <|.. OpenCVAlgo
+Controller --> MediaAlgo : <<uses>>
+MediaAlgo <|.. OpenCVAlgo
 Controller ..> ImageSource : <<creates>>
 Controller ..> OpenCVAlgo : <<creates>>
 @enduml

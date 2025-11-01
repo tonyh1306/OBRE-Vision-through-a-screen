@@ -4,44 +4,53 @@ hide circle
 skin rose
 hide empty methods
 
-class Image {
-String imagePath
-Mat image
+interface MediaSource {
 --
-resize()
+Mat getFrame();
+ArrayList<Mat> getFrameArray();
 }
 
-class Video {
-String videoPath
+class ImageSource {
+Mat image
+ArrayList<Mat> frames
+--
+Mat getFrame();
+ArrayList<Mat> getFrameArray();
 }
 
-class ImageObject{
-String name
-frame
-String category
+
+class VideoSource {
+boolean cameraMode
+VideoCapture vd
+ArrayList<Mat> frames
+--
+Mat getFrame();
+ArrayList<Mat> getFrameArray();
 }
 
-class OpenAI{
+class LLMAlgo{
 Image img
 --
 String showsDescription()
 }
 
-interface ObjRecAlgo{
-void showMedia()
-
+interface MediaAlgo{
+List<String> runAlgorithm()
 }
 
 class OpenCVAlgo{
 + {static} COCO_CLASSES : List<String>
-Mat image
-Mat video 
+Net net
++ {static} IMG_SIZE : int
+List<String> detectObjects(MediaSource source)
+MediaSource mediaSource
++ {static} MODEL_NAME : String
 --
-void showMedia()
+List<String> runAlgorithm(Mat frame)
+boolean processFrame(Mat frame)
 }
 
 class OtherAlgo{
-
 
 }
 
@@ -49,12 +58,14 @@ class OtherAlgo{
 
 ' interface TextRecAlgo {}
 
-ObjRecAlgo<|..OpenCVAlgo
-ObjRecAlgo<|.right.OtherAlgo
-Image -left- OpenCVAlgo: input >
-Video - OpenCVAlgo: input > 
-OpenCVAlgo -down- ImageObject: outputs >
-Image -down- OpenAI : input >
+MediaAlgo<|..OpenCVAlgo
+MediaAlgo<|.right.OtherAlgo
+ImageSource -left- OpenCVAlgo: input >
+ImageSource -- LLMAlgo: input >
+VideoSource - OpenCVAlgo: input > 
+ImageSource ..|> MediaSource
+VideoSource ..|> MediaSource
+OpenCVAlgo ..> MediaSource : <<uses>>
 
 ' TesseractAlgo ..|> TextRecAlgo
 @enduml

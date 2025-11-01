@@ -5,7 +5,6 @@ import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class ImageSource implements MediaSource {
     private Mat image;
@@ -34,19 +33,5 @@ public class ImageSource implements MediaSource {
     public ArrayList<Mat> getFrameArray() {
         return frames;
     }
-
-//    public Iterator<Mat> iterator() {
-//        return new Iterator<Mat>() {
-//            @Override
-//            public boolean hasNext() {
-//                return image != null;
-//            }
-//
-//            @Override
-//            public Mat next() {
-//                return image;
-//            }
-//        };
-//    }
 
 }

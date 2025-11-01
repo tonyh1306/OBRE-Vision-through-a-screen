@@ -61,7 +61,6 @@ public class OpenCVAlgo implements MediaAlgo {
             while (true) {
                 Mat frame = mediaSource.getFrame();
                 if (frame == null || frame.empty()) {
-                    if (HighGui.waitKey(10) == 'q') break;
                     continue;
                 }
                 if (!processFrame(frame, resizedImage, NET_SIZE)) break;
@@ -167,9 +166,9 @@ public class OpenCVAlgo implements MediaAlgo {
             detectedObjects.add(name);
         }
 
-        HighGui.imshow("Image", resizedImage);
-        int key = HighGui.waitKey(1);
-        return !(key == 'q' || key == 27);
+//        HighGui.imshow("Image", resizedImage);
+//        int key = HighGui.waitKey(1);
+        return true;
     }
 
     /**
