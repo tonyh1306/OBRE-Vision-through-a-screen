@@ -48,14 +48,9 @@ public class Controller {
         try {
             MediaSource imageSource = new ImageSource(filename);
             System.out.println("Processing image from: "+ filename + "\n");
-            //Give the open cv algo the image source object
             OpenCVAlgo algo = new OpenCVAlgo(imageSource);
             algo.runAlgorithm().forEach(System.out::println);
             System.out.println("\nProcessing complete. \n");
-            //detects the detections
-            //the method name may change when the OpenCVAlgo is changed
-            //List<String> detections = algo.detectObjects(imageSource);
-            //ui.displayDetections(detections);
         }
         catch (Exception e) {System.out.println("Error occured: "+ e +"\n");}
         this.option = Options.KEEP_VIDEO_STREAMING;
@@ -84,7 +79,7 @@ public class Controller {
 
         CmdLineUI ui = new CmdLineUI();
         Controller ctrl = new Controller(ui);
-        ui.startDetecting();
+        ctrl.ui.startDetecting();
     }
 }
 

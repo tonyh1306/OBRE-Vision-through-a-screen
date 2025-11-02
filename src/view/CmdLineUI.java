@@ -87,8 +87,7 @@ public class CmdLineUI implements UI {
     private boolean isValidImageFile(String filename) {
         return filename.toLowerCase().trim().endsWith(".jpg")
                 || filename.toLowerCase().trim().endsWith(".png")
-                || filename.toLowerCase().trim().endsWith(".jpeg")
-                || filename.toLowerCase().trim().endsWith(".mp4");
+                || filename.toLowerCase().trim().endsWith(".jpeg");
     }
     @Override
     public void setListener() {
