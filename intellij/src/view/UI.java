@@ -15,7 +15,7 @@ public interface UI {
     /**
      * sets the listener
      */
-    void setListener();
+    void setListener(final Listener listener);
 
     /**
      * starts the main loop of the program. Begins the prompt to the user
@@ -28,7 +28,7 @@ public interface UI {
      * function for when the user requests to analyze video.
      */
     interface Listener {
-        void analyze_video();
+        void onUploadImage(String fileName);
 
     }
 

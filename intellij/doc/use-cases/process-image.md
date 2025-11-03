@@ -75,17 +75,17 @@ actor User
 participant "UI" as ui
 participant "Controller" as controller
 participant ": ImageSource" as process
-participant ": OpenCVAlgo" as opencv
+participant ": MediaAlgo" as opencv
 participant ": LLMAlgo" as gpt
 
 User -> ui : select / upload image
 ui -> controller : pass image file
 controller -> process : load image
 
-process -> opencv : pre-process image
+process -> controller : return pre-processed image
 opencv -> opencv : run recognition algorithm
 opencv --> controller : return detected objects
-
+process -> opencv : loads pre-processed image
 controller -> gpt : send object data for description
 gpt --> controller : return image description
 

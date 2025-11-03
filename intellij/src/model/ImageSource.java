@@ -11,19 +11,15 @@ public class ImageSource implements MediaSource {
     private Mat image;
     private ArrayList<Mat> frames;
 
-    public ImageSource(String imageAddress) {
+    public ImageSource(String imageAddress) throws FileNotFoundException {
         frames = new ArrayList<>();
         try {
             File file = new File(ResourceUtils.getResourcePath(imageAddress));
             if (!file.exists()) {
-                throw new FileNotFoundException(ResourceUtils.getResourcePath(imageAddress));
+                throw new FileNotFoundException("Image file not found at: " + ResourceUtils.getResourcePath(imageAddress));
             }
             image = Imgcodecs.imread(ResourceUtils.getResourcePath(imageAddress));
             frames.add(image);
-        } catch (FileNotFoundException e) {
-            System.out.println(
-                    "Image file not found at: " + ResourceUtils.getResourcePath(imageAddress)
-            );;
         } catch (RuntimeException e) {
             System.out.println(e.getMessage()
                     + "\nImage address: " + imageAddress);

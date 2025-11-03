@@ -42,17 +42,7 @@ public class OpenCVAlgo implements MediaAlgo {
                 // live camera mode (infinite stream)
                 cameraMode = true;
             }
-//
-//        if (imageMode) {
-//            Mat image = mediaSource.getFrame();
-//            if (image == null || image.empty()) {
-//                System.err.println("ImageSource returned empty frame.");
-//                return detectedObjects;
-//            }
-//            processFrame(image, resizedImage, NET_SIZE);
-//            HighGui.imshow("Image", resizedImage);
-//            HighGui.waitKey(0);
-//        }
+
         if (!cameraMode) {
             for (Mat frame : media) {
                 if (!processFrame(frame, resizedImage, NET_SIZE)) break;
@@ -72,7 +62,6 @@ public class OpenCVAlgo implements MediaAlgo {
         }
         return detectedObjects;
     }
-
 
     /**
      * Shared per-frame detection pipeline.
@@ -169,8 +158,6 @@ public class OpenCVAlgo implements MediaAlgo {
             detectedObjects.add(name);
         }
 
-//        HighGui.imshow("Image", resizedImage);
-//        int key = HighGui.waitKey(1);
         return true;
     }
 

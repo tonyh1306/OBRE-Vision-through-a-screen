@@ -6,10 +6,11 @@ import model.MediaSource;
 import model.OpenCVAlgo;
 import org.opencv.core.Core;
 import model.TextRecognizer;
+import view.UI;
 
-public class Controller {
+public class Controller implements UI.Listener {
 
-    private CmdLineUI ui;
+    private UI ui;
 
 
     enum Options {
@@ -43,14 +44,12 @@ public class Controller {
      * Processes an image file for object recognition.
      * @param filename The path to the image file.
      */
-    public void processImageFile(String filename) {
+    public void onUploadImage(String filename) {
         this.option = Options.UPLOAD_IMAGE;
         try {
             MediaSource imageSource = new ImageSource(filename);
-            System.out.println("Processing image from: "+ filename + "\n");
             OpenCVAlgo algo = new OpenCVAlgo(imageSource);
-            algo.runAlgorithm().forEach(System.out::println);
-            System.out.println("\nProcessing complete. \n");
+            ui.displayDetections(algo.runAlgorithm());
         }
         catch (Exception e) {System.out.println("Error occured: "+ e +"\n");}
         this.option = Options.KEEP_VIDEO_STREAMING;
@@ -79,6 +78,7 @@ public class Controller {
 
         CmdLineUI ui = new CmdLineUI();
         Controller ctrl = new Controller(ui);
+        ctrl.ui.setListener(ctrl);
         ctrl.ui.startDetecting();
     }
 }

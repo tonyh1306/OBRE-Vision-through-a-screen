@@ -14,7 +14,7 @@ public class CmdLineUI implements UI {
 
     PrintStream ps = System.out;
     final Scanner in = new Scanner(System.in);
-    private Controller controller;
+    private UI.Listener listener;
 
     /**
      * this function starts the main detection loop.
@@ -25,7 +25,7 @@ public class CmdLineUI implements UI {
         boolean running = true;
         while(running){
 
-            if (controller == null) {
+            if (listener == null) {
                 ps.println("Error: Controller listener not set");
                 return;
             }
@@ -34,7 +34,7 @@ public class CmdLineUI implements UI {
             String option = in.nextLine().toLowerCase().trim();
 
             switch(option) {
-                case "upload_image":
+                case "upload_image", "ui", "upload image":
                     ps.print("Enter a filename (e.g., cat-dog.jpg): ");
                     String filename = in.nextLine().trim();
                         if (filename.isEmpty()) {
@@ -45,22 +45,22 @@ public class CmdLineUI implements UI {
                         System.out.println("Please provide a .jpg or .png image.");
                         filename = in.nextLine();
                     }
-                    controller.processImageFile(filename);
+                    listener.onUploadImage(filename);
 
                     break;
-                case "keep_video_streaming":
+                case "keep_video_streaming", "video", "keep", "kvs", "v":
                     break;
-                case "scan_for_text":
+                case "scan_for_text", "text", "t", "scan":
                     System.out.println("Enter image file to scan for text:");
                     String file = in.nextLine();
                     while (!isValidImageFile(file)) {
                         System.out.println("Please provide a .jpg or .png image.");
                         file = in.nextLine();
                     }
-                    controller.processTextRecognition(file);
+                    listener.onUploadImage(file);
                     break;
 
-                case "exit":
+                case "exit", "e":
                     ps.println("Exiting the Prototype.");
                     running = false;
                     break;
@@ -89,8 +89,10 @@ public class CmdLineUI implements UI {
                 || filename.toLowerCase().trim().endsWith(".png")
                 || filename.toLowerCase().trim().endsWith(".jpeg");
     }
+
     @Override
-    public void setListener() {
+    public void setListener(Listener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -103,6 +105,8 @@ public class CmdLineUI implements UI {
         for (int i = 0; i < detections.size(); i++) {
             ps.printf("%d. %s%n", (i + 1), detections.get(i));
         }
+        ps.println("Process complete. Returning to main menu.");
+        ps.println();
     }
 
     /**
@@ -110,7 +114,7 @@ public class CmdLineUI implements UI {
      * @paramcontroller
      */
     public void setListener(Controller ctrl) {
-        this.controller = ctrl;
+        this.listener = ctrl;
 
     }
 
