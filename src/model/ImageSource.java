@@ -3,6 +3,7 @@ package model;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
@@ -13,10 +14,11 @@ public class ImageSource implements MediaSource {
     public ImageSource(String imageAddress) {
         frames = new ArrayList<>();
         try {
-            image = Imgcodecs.imread(ResourceUtils.getResourcePath(imageAddress));
-            if (image.empty()) {
+            File file = new File(ResourceUtils.getResourcePath(imageAddress));
+            if (!file.exists()) {
                 throw new FileNotFoundException(ResourceUtils.getResourcePath(imageAddress));
             }
+            image = Imgcodecs.imread(ResourceUtils.getResourcePath(imageAddress));
             frames.add(image);
         } catch (FileNotFoundException e) {
             System.out.println(
