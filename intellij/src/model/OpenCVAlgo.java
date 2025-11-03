@@ -35,13 +35,13 @@ public class OpenCVAlgo implements MediaAlgo {
         ArrayList<Mat> media = null;
         boolean cameraMode = false;
 
-            try {
-                // video file mode (finite frames)
-                media = mediaSource.getFrameArray();
-            } catch (UnsupportedOperationException ex) {
-                // live camera mode (infinite stream)
-                cameraMode = true;
-            }
+        try {
+            // video file mode (finite frames)
+            media = mediaSource.getFrameArray();
+        } catch (UnsupportedOperationException ex) {
+            // live camera mode (infinite stream)
+            cameraMode = true;
+        }
 
         if (!cameraMode) {
             for (Mat frame : media) {
