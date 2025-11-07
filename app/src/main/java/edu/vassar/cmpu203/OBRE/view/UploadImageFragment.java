@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.android.R;
+import edu.vassar.cmpu203.OBRE.R;
 
 /**
  * A simple {@link Fragment} subclass.

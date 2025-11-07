@@ -1,4 +1,4 @@
-package edu.vassar.cmpu203.OBRE.controller;
+package edu.vassar.cmpu203.OBRE;
 
 import android.os.Bundle;
 
