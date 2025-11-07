@@ -3,7 +3,7 @@ package edu.vassar.cmpu203.OBRE.model;
 import org.opencv.core.*;
 import org.opencv.dnn.Dnn;
 import org.opencv.dnn.Net;
-import org.opencv.highgui.HighGui;
+//import org.opencv.highgui.HighGui;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class OpenCVAlgo implements MediaAlgo {
                 if (!processFrame(frame, resizedImage, NET_SIZE)) break;
             }
         }
-        HighGui.destroyAllWindows();
+//        HighGui.destroyAllWindows();
         if (detectedObjects.isEmpty()) {
             detectedObjects.add("No objects detected");
         }
@@ -70,7 +70,7 @@ public class OpenCVAlgo implements MediaAlgo {
     private boolean processFrame(Mat image, Mat resizedImage, Size netSize) {
         if (image == null || image.empty()) {
             // Show a blank-ish tick so window stays responsive
-            if (HighGui.waitKey(1) == 'q') return false;
+//            if (HighGui.waitKey(1) == 'q') return false;
             return true;
         }
 
@@ -126,9 +126,9 @@ public class OpenCVAlgo implements MediaAlgo {
         // NMS
         if (boxes.isEmpty()) {
             drawNoDetectionsOverlay(resizedImage);     // centered red message
-            HighGui.imshow("Image", resizedImage);
-            int key = HighGui.waitKey(1);
-            return !(key == 'q' || key == 27);
+//            HighGui.imshow("Image", resizedImage);
+//            int key = HighGui.waitKey(1);
+            return true;
         }
 
         MatOfRect2d nmsBoxes = new MatOfRect2d();
@@ -140,8 +140,8 @@ public class OpenCVAlgo implements MediaAlgo {
 
         if (keep.empty()) {
             drawNoDetectionsOverlay(resizedImage);     // centered red message
-            HighGui.imshow("Image", resizedImage);
-            int key = HighGui.waitKey(1);
+//            HighGui.imshow("Image", resizedImage);
+//            int key = HighGui.waitKey(1);
             return true;
         }
 
