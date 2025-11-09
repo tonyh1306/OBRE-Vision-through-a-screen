@@ -1,7 +1,0 @@
-.idea/**/workspace.xml
-.idea/**/usage.statistics.xml
-out/**
-out/
-*.class
-*.iml
-libs/*.jar
