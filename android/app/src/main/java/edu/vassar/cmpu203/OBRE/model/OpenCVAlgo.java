@@ -3,9 +3,7 @@ package edu.vassar.cmpu203.OBRE.model;
 import org.opencv.core.*;
 import org.opencv.dnn.Dnn;
 import org.opencv.dnn.Net;
-//import org.opencv.highgui.HighGui;
 import org.opencv.imgproc.Imgproc;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +14,7 @@ public class OpenCVAlgo implements MediaAlgo {
     public MediaSource mediaSource;
     public static int IMG_SIZE = 640;
     Net net = Dnn.readNetFromONNX(MODEL_NAME);
-    List<String> detectedObjects;
+    List<DetectedObject> detectedObjects;
 
     public OpenCVAlgo(MediaSource mediaSource) {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -27,7 +25,7 @@ public class OpenCVAlgo implements MediaAlgo {
     }
 
     @Override
-    public List<String> runAlgorithm() {
+    public List<DetectedObject> runAlgorithm() {
         final Size NET_SIZE = new Size(IMG_SIZE, IMG_SIZE);
         Mat resizedImage = new Mat();
 
@@ -56,9 +54,9 @@ public class OpenCVAlgo implements MediaAlgo {
                 if (!processFrame(frame, resizedImage, NET_SIZE)) break;
             }
         }
-//        HighGui.destroyAllWindows();
         if (detectedObjects.isEmpty()) {
-            detectedObjects.add("No objects detected");
+            detectedObjects.add(new DetectedObject("No objects detected",
+                    0 ,0 ,0,0));
         }
         return detectedObjects;
     }
@@ -69,8 +67,7 @@ public class OpenCVAlgo implements MediaAlgo {
      */
     private boolean processFrame(Mat image, Mat resizedImage, Size netSize) {
         if (image == null || image.empty()) {
-            // Show a blank-ish tick so window stays responsive
-//            if (HighGui.waitKey(1) == 'q') return false;
+        // Show a blank-ish tick so window stays responsive
             return true;
         }
 
@@ -124,13 +121,6 @@ public class OpenCVAlgo implements MediaAlgo {
         }
 
         // NMS
-        if (boxes.isEmpty()) {
-            drawNoDetectionsOverlay(resizedImage);     // centered red message
-//            HighGui.imshow("Image", resizedImage);
-//            int key = HighGui.waitKey(1);
-            return true;
-        }
-
         MatOfRect2d nmsBoxes = new MatOfRect2d();
         nmsBoxes.fromList(boxes);
         MatOfFloat nmsScores = new MatOfFloat();
@@ -138,12 +128,6 @@ public class OpenCVAlgo implements MediaAlgo {
         MatOfInt keep = new MatOfInt();
         Dnn.NMSBoxes(nmsBoxes, nmsScores, CONF_THRESH, NMS_THRESH, keep);
 
-        if (keep.empty()) {
-            drawNoDetectionsOverlay(resizedImage);     // centered red message
-//            HighGui.imshow("Image", resizedImage);
-//            int key = HighGui.waitKey(1);
-            return true;
-        }
 
         // Draw kept boxes
         int[] keptIdx = keep.toArray();
@@ -155,33 +139,10 @@ public class OpenCVAlgo implements MediaAlgo {
             rectangle(resizedImage, p1, p2, new Scalar(0, 165, 255), 2);
             putText(resizedImage, name, new Point(b.x, Math.max(0, b.y - 5)),
                     Imgproc.FONT_HERSHEY_SIMPLEX, 0.7, new Scalar(0, 165, 255), 2);
-            detectedObjects.add(name);
+            detectedObjects.add(new DetectedObject(name, b.x, b.y, b.width, b.height));
         }
 
         return true;
-    }
-
-    /**
-     * Draws a centered “No objects detected” overlay in bright red, larger font.
-     */
-    private void drawNoDetectionsOverlay(Mat frame) {
-        final String msg = "No objects detected";
-        final double fontScale = 1.2; // bigger
-        final int thickness = 2;
-        final int font = Imgproc.FONT_HERSHEY_SIMPLEX;
-        final Scalar color = new Scalar(0, 0, 255); // bright red (BGR)
-
-        int[] baseLine = new int[1];
-        Size textSize = getTextSize(msg, font, fontScale, thickness, baseLine);
-
-        int x = (int) Math.round((frame.cols() - textSize.width) / 2.0);
-        int y = (int) Math.round((frame.rows() + textSize.height) / 2.0);
-
-        Point tl = new Point(x - 10, y - textSize.height - 10);
-        Point br = new Point(x + textSize.width + 10, y + baseLine[0] + 10);
-        rectangle(frame, tl, br, new Scalar(0, 0, 0), -1); // filled black box
-
-        putText(frame, msg, new Point(x, y), font, fontScale, color, thickness);
     }
 
     private static final String[] COCO_CLASSES = {
