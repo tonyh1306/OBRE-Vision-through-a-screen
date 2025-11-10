@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "edu.vassar.cmpu203.OBRE"
+    namespace = "edu.vassar.cmpu203.obre"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "edu.vassar.cmpu203.OBRE"
+        applicationId = "edu.vassar.cmpu203.obre"
         minSdk = 32
         targetSdk = 36
         versionCode = 1
