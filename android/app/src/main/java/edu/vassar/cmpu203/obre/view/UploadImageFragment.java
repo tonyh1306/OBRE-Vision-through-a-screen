@@ -68,10 +68,6 @@ public class UploadImageFragment extends Fragment {
                         Intent data = result.getData();
                         if (data != null && data.getData() != null) {
                             Uri imageUri = data.getData();
-                            try {
-                                Bitmap bitmap = ImageDecoder.decodeBitmap(this.getContentResolver(), imageUri);
-                                // Use the bitmap here
-                            } catch (IOException e) { e.printStackTrace(); }
                         }
                     }
                 }
