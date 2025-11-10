@@ -5,7 +5,7 @@ import org.opencv.videoio.VideoCapture;
 
 import java.util.ArrayList;
 
-public class VideoSource implements MediaSource {
+public class VideoSource implements edu.vassar.cmpu203.OBRE.model.MediaSource {
     private ArrayList<Mat> frames;
     VideoCapture vd;
     private boolean cameraMode = false;
@@ -25,7 +25,7 @@ public class VideoSource implements MediaSource {
                 return;
             }
 
-            vd = new VideoCapture(ResourceUtils.getResourcePath(videoAddress));
+            vd = new VideoCapture(edu.vassar.cmpu203.OBRE.model.ResourceUtils.getResourcePath(videoAddress));
             if (!vd.isOpened()) {
                 System.err.println("Video is not readable!");
                 return;
