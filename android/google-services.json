@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "276119347488",
+    "project_id": "obre-ca750",
+    "storage_bucket": "obre-ca750.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276119347488:android:6131f937660266f460f745",
+        "android_client_info": {
+          "package_name": "edu.vassar.cmpu203.obre"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBT2GT1-7NUDl72GO9o6DR49wMUfEAjjq4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
