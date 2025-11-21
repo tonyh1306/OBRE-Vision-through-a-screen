@@ -1,9 +1,8 @@
 ## Risk and priority
 
-1.) Video Object Recognition
+1.) Multimodal Feedback System (audio + haptic output)
 
-2.) process-image
-
+2.) Accessibility & UX flow refinement
 ## Cutoff:
 
 3.) recognize-text
@@ -11,9 +10,7 @@
 ## Clarification
 
 Real-time object recognition in live recording is our highest priority use case as it is the main function 
-of the app and decides its usability. After that, we want to focus on 
-image-processing as a second option for the user to be able to upload a 
-previously taken image. Then, we have text-recognition that we want to focus 
-on last as it is not the focus of our app. text-recognition is also not a pervasive 
-element. 
+of the app and decides its usability. This iteration we spent a lot of time trying to get this and the Gemini API to work. 
+Then, we have text-recognition that we want to focus on last as it is not the focus of our app. text-recognition is also not a pervasive 
+element. We may work on this on after we get everything working. We want to improve the UI after our functionality improves
 
