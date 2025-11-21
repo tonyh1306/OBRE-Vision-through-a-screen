@@ -4,8 +4,6 @@ import android.view.Display;
 
 public interface VideoStreamUI {
     interface Listener {
-        void onCameraViewStarted();
-
         void onStartStream(VideoStreamUI ui);
         void onStopStream(VideoStreamUI ui);
     }

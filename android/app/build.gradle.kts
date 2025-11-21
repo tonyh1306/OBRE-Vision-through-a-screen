@@ -17,6 +17,21 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    sourceSets {
+
+        getByName("main") {
+            // This points to: android/opencv/jniLibs
+
+            jniLibs.srcDirs(
+                "src/main/jniLibs",
+                project(":opencv").file("native/libs"),
+                project(":opencv").file("jniLibs")
+            )
+        }
+
+
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -36,7 +51,6 @@ android {
         compose = true
         buildConfig = true
     }
-
 }
 
 dependencies {
@@ -90,20 +104,25 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    // Optional - Add window size utils
+    // Add window size utils
     implementation("androidx.compose.material3.adaptive:adaptive")
 
-    // Optional - Integration with activities
+    // Integration with activities
     implementation("androidx.activity:activity-compose:1.11.0")
-    // Optional - Integration with ViewModels
+    // Integration with ViewModels
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.5")
-    // Optional - Integration with LiveData
+    // Integration with LiveData
     implementation("androidx.compose.runtime:runtime-livedata")
-    // Optional - Integration with RxJava
+    // Integration with RxJava
     implementation("androidx.compose.runtime:runtime-rxjava2")
 
     implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
     implementation("com.google.firebase:firebase-firestore:25.1.3")
 
     implementation("com.google.guava:guava:31.1-android")
+
+    // Source - https://stackoverflow.com/a
+    // Posted by Dmitri Chernysh
+    // Retrieved 2025-11-20, License - CC BY-SA 4.0
+    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.16.0-rc1")
 }
