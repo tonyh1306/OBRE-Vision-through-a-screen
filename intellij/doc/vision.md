@@ -2,9 +2,9 @@
 
 ## 1. Introduction
 
-We envision an Object Recognition Application that provides accessibility for visually-impaired individuals
-real-time notification from the video feed with 
-a user-friendly and out-of-the-box experience.
+We envision an Object Recognition Application that is an app as an accessibility application for low-vision users. 
+It's goal is to provide accessibility for visually-impaired individuals. It does this through real-time notification with 
+the video feed with a user-friendly and out-of-the-box experience.
 
 ## 2. Business case
 
@@ -22,7 +22,7 @@ environment.
 
 
 ## 4. Stakeholder goals summary
-- **Users**: recognize objects in live recording, informs the object to user, presents image description option, all with TTS option. 
+- **Users**: recognize objects in live recording, presents image description option, describe any uploaded image, all with TTS option. 
 
 ## Use case diagram
 
