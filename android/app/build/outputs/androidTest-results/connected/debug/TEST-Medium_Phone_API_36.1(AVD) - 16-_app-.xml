@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuite name="edu.vassar.cmpu203.obre.model.LLMAlgoTest" tests="1" failures="1" errors="0" skipped="0" time="6.553" timestamp="2025-11-20T19:43:59" hostname="localhost">
+  <properties>
+    <property name="device" value="Medium_Phone_API_36.1(AVD) - 16" />
+    <property name="flavor" value="" />
+    <property name="project" value=":app" />
+  </properties>
+  <testcase name="testGeminiRealCall" classname="edu.vassar.cmpu203.obre.model.LLMAlgoTest" time="0.359">
+    <failure>java.lang.AssertionError: API call failed: HTTP 400
+at org.junit.Assert.fail(Assert.java:89)
+at edu.vassar.cmpu203.obre.model.LLMAlgoTest.testGeminiRealCall(LLMAlgoTest.java:42)
+</failure>
+  </testcase>
+</testsuite>

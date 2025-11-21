@@ -1,0 +1,6 @@
+edu.vassar.cmpu203.obre.test.app-core-1.7.0-0 /Users/mayalaidler/.gradle/caches/8.13/transforms/e838a273b652eec9c097e0f989948d1b/transformed/core-1.7.0/res
+edu.vassar.cmpu203.obre.test.app-androidTest-1 /Users/mayalaidler/CMPU203/team-c/android/app/build/generated/res/resValues/androidTest/debug
+edu.vassar.cmpu203.obre.test.app-updated_navigation_xml-2 /Users/mayalaidler/CMPU203/team-c/android/app/build/generated/updated_navigation_xml/debugAndroidTest
+edu.vassar.cmpu203.obre.test.app-mergeDebugAndroidTestResources-3 /Users/mayalaidler/CMPU203/team-c/android/app/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/merged.dir
+edu.vassar.cmpu203.obre.test.app-mergeDebugAndroidTestResources-4 /Users/mayalaidler/CMPU203/team-c/android/app/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/stripped.dir
+edu.vassar.cmpu203.obre.test.app-debugAndroidTest-5 /Users/mayalaidler/CMPU203/team-c/android/app/build/intermediates/merged_res/debugAndroidTest/mergeDebugAndroidTestResources

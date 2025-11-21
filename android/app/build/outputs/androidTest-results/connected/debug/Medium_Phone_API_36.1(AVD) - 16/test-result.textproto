@@ -1,0 +1,82 @@
+# proto-message: google.testing.platform.proto.api.core.TestSuiteResult
+# 2025-11-20T19:43:59.367509Z:
+test_suite_meta_data {
+  scheduled_test_case_count: 1
+  device {
+    id: "emulator-5554"
+    friendly_name: "primary"
+  }
+}
+test_status: FAILED
+test_result {
+  test_case {
+    test_class: "LLMAlgoTest"
+    test_package: "edu.vassar.cmpu203.obre.model"
+    test_method: "testGeminiRealCall"
+    start_time {
+      seconds: 1763667832
+      nanos: 196000000
+    }
+    end_time {
+      seconds: 1763667832
+      nanos: 857000000
+    }
+    device {
+      id: "emulator-5554"
+      friendly_name: "primary"
+    }
+  }
+  test_status: FAILED
+  error {
+    error_message: "java.lang.AssertionError: API call failed: HTTP 400\nat org.junit.Assert.fail(Assert.java:89)\nat edu.vassar.cmpu203.obre.model.LLMAlgoTest.testGeminiRealCall(LLMAlgoTest.java:42)\n"
+    error_type: "java.lang.AssertionError"
+    stack_trace: "java.lang.AssertionError: API call failed: HTTP 400\nat org.junit.Assert.fail(Assert.java:89)\nat edu.vassar.cmpu203.obre.model.LLMAlgoTest.testGeminiRealCall(LLMAlgoTest.java:42)\n"
+  }
+  output_artifact {
+    label {
+      label: "logcat"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/mayalaidler/CMPU203/team-c/android/app/build/outputs/androidTest-results/connected/debug/Medium_Phone_API_36.1(AVD) - 16/logcat-edu.vassar.cmpu203.obre.model.LLMAlgoTest-testGeminiRealCall.txt"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/mayalaidler/CMPU203/team-c/android/app/build/outputs/androidTest-results/connected/debug/Medium_Phone_API_36.1(AVD) - 16/device-info.pb"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.meminfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/mayalaidler/CMPU203/team-c/android/app/build/outputs/androidTest-results/connected/debug/Medium_Phone_API_36.1(AVD) - 16/meminfo"
+    }
+  }
+  output_artifact {
+    label {
+      label: "device-info.cpuinfo"
+      namespace: "android"
+    }
+    source_path {
+      path: "/Users/mayalaidler/CMPU203/team-c/android/app/build/outputs/androidTest-results/connected/debug/Medium_Phone_API_36.1(AVD) - 16/cpuinfo"
+    }
+  }
+}
+output_artifact {
+  label {
+    label: "test-results.log"
+    namespace: "com.google.testing.platform.runtime.android.driver.AndroidInstrumentationDriver"
+  }
+  source_path {
+    path: "/Users/mayalaidler/CMPU203/team-c/android/app/build/outputs/androidTest-results/connected/debug/Medium_Phone_API_36.1(AVD) - 16/testlog/test-results.log"
+  }
+  type: TEST_DATA
+  mime_type: "text/plain"
+}

@@ -1,0 +1,4 @@
+/Users/mayalaidler/Library/Android/sdk/cmake/3.22.1/bin/ninja \
+  -C \
+  /Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/.cxx/Debug/o19k1l2a/x86_64 \
+  opencv_jni_shared
