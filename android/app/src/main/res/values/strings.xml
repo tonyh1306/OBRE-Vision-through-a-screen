@@ -2,5 +2,8 @@
     <string name="app_name">android</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="upload_photo">Upload photo</string>
+
+    <string name="uploaded_image">The image uploaded by the user</string>
+    <string name="obre">OBRE!</string>
+    <string name="upload_image">Upload Image</string>
 </resources>

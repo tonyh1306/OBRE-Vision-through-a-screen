@@ -5,7 +5,7 @@ import org.opencv.videoio.VideoCapture;
 
 import java.util.ArrayList;
 
-public class VideoSource implements edu.vassar.cmpu203.OBRE.model.MediaSource {
+public class VideoSource implements edu.vassar.cmpu203.obre.model.MediaSource {
     private ArrayList<Mat> frames;
     VideoCapture vd;
     private boolean cameraMode = false;
@@ -25,7 +25,7 @@ public class VideoSource implements edu.vassar.cmpu203.OBRE.model.MediaSource {
                 return;
             }
 
-            vd = new VideoCapture(edu.vassar.cmpu203.OBRE.model.ResourceUtils.getResourcePath(videoAddress));
+            vd = new VideoCapture(edu.vassar.cmpu203.obre.model.ResourceUtils.getResourcePath(videoAddress));
             if (!vd.isOpened()) {
                 System.err.println("Video is not readable!");
                 return;
@@ -46,7 +46,6 @@ public class VideoSource implements edu.vassar.cmpu203.OBRE.model.MediaSource {
 
     }
 
-    @Override
     public Mat getFrame() {
         if (cameraMode) {
             Mat frame = new Mat();
