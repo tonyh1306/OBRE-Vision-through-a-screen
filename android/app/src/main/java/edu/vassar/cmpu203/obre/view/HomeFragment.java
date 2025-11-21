@@ -1,5 +1,4 @@
 package edu.vassar.cmpu203.obre.view;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -8,26 +7,38 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.provider.MediaStore;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+
+import java.text.BreakIterator;
+
 import edu.vassar.cmpu203.obre.R;
+import edu.vassar.cmpu203.obre.view.UploadImageFragment;
 
 public class HomeFragment extends Fragment {
 
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    private String mParam1;
+    private String mParam2;
+    private Bitmap selectedBitmap;
     private TextView resultText;
     private ImageView previewImage;
 
@@ -35,28 +46,41 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static HomeFragment newInstance(String param1, String param2) {
+        HomeFragment fragment = new HomeFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        // 1. Initialize UI elements if they exist in fragment_home.xml
-        // resultText = view.findViewById(R.id.resultText); // Uncomment if IDs exist
-        // previewImage = view.findViewById(R.id.previewImage); // Uncomment if IDs exist
 
         Button uploadButton = view.findViewById(R.id.button_go_to_upload);
         uploadButton.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragmentContainerView, new UploadImageFragment()) // Ensure ID matches MainUI
+                    .replace(R.id.main, new UploadImageFragment())
                     .addToBackStack(null)
                     .commit();
         });
 
         return view;
     }
-
     @SuppressLint("SetTextI18n")
     private final ActivityResultLauncher<Intent> imagePickerLauncher =
             registerForActivityResult(
@@ -65,18 +89,18 @@ public class HomeFragment extends Fragment {
                         if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                             Uri uri = result.getData().getData();
                             try {
-                                if (uri != null && previewImage != null) {
-                                    ContentResolver resolver = requireActivity().getContentResolver();
-                                    InputStream stream = resolver.openInputStream(uri);
-                                    Bitmap selectedBitmap = BitmapFactory.decodeStream(stream);
-                                    previewImage.setImageBitmap(selectedBitmap);
+                                ContentResolver resolver = requireActivity().getContentResolver();
+                                assert uri != null;
+                                InputStream stream = resolver.openInputStream(uri);
+                                Bitmap selectedBitmap = BitmapFactory.decodeStream(stream);
+                                previewImage.setImageBitmap(selectedBitmap);
 
-                                    if (resultText != null) resultText.setText("");
-                                }
+                                resultText.setText("");
                             } catch (IOException e) {
-                                if (resultText != null) resultText.setText("Failed to load image.");
+                                resultText.setText("Failed to load image.");
                             }
                         }
                     }
             );
+
 }

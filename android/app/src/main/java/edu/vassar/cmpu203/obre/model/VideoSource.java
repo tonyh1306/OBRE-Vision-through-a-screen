@@ -46,7 +46,6 @@ public class VideoSource implements MediaSource {
 
     }
 
-    @Override
     public Mat getFrame() {
         if (cameraMode) {
             Mat frame = new Mat();

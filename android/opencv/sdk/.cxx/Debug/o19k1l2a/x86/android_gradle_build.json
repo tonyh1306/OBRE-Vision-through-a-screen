@@ -1,0 +1,37 @@
+{
+  "buildFiles": [
+    "/Users/tqnguyen/cs203/team-c/android/opencv/sdk/libcxx_helper/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/tqnguyen/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/tqnguyen/cs203/team-c/android/opencv/sdk/.cxx/Debug/o19k1l2a/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/tqnguyen/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/tqnguyen/cs203/team-c/android/opencv/sdk/.cxx/Debug/o19k1l2a/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "opencv_jni_shared::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "x86",
+      "artifactName": "opencv_jni_shared",
+      "output": "/Users/tqnguyen/cs203/team-c/android/opencv/sdk/.cxx/Debug/o19k1l2a/x86/libopencv_jni_shared.a"
+    }
+  },
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "/Users/tqnguyen/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang.lld",
+      "cppCompilerExecutable": "/Users/tqnguyen/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++.lld"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

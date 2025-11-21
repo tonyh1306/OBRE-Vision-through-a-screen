@@ -1,0 +1,3 @@
+/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/.cxx/RelWithDebInfo/1i4n2o1e/x86/CMakeFiles/opencv_jni_shared.dir
+/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/.cxx/RelWithDebInfo/1i4n2o1e/x86/CMakeFiles/edit_cache.dir
+/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/.cxx/RelWithDebInfo/1i4n2o1e/x86/CMakeFiles/rebuild_cache.dir
