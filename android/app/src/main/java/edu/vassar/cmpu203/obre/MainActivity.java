@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import edu.vassar.cmpu203.obre.view.HomeFragment;
+import edu.vassar.cmpu203.obre.view.ResultFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,3 +34,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+
+

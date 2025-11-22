@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import edu.vassar.cmpu203.obre.R;
 
-public interface UploadImageUI {
+public class UploadImageUI {
     public Button buttonPickImage;
     public ImageView previewImage;
     public TextView resultText;
@@ -21,5 +21,8 @@ public interface UploadImageUI {
     public UploadImageUI(View view) {
         buttonPickImage = view.findViewById(R.id.pick_image_button);
         resultText = view.findViewById(R.id.result_text);
+    }
+
+    public interface Listener {
     }
 }

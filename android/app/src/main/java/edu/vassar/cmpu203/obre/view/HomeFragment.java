@@ -74,7 +74,7 @@ public class HomeFragment extends Fragment {
         uploadButton.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.main, new UploadImageFragment())
+                    .replace(R.id.fragment_container, new UploadImageFragment())
                     .addToBackStack(null)
                     .commit();
         });

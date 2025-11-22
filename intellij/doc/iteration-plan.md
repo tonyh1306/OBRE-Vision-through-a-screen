@@ -1,8 +1,10 @@
 ## Risk and priority
+1.) Functionality of video stream
 
-1.) Multimodal Feedback System (audio + haptic output)
+2.) Multimodal Feedback System (audio + haptic output)
 
-2.) Accessibility & UX flow refinement
+3.) Accessibility & UX flow refinement
+
 ## Cutoff:
 
 3.) recognize-text

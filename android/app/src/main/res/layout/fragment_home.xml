@@ -16,7 +16,6 @@
     <Button
         android:id="@+id/button_go_to_upload"
         android:text="Upload Image"
-        android:background="blue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

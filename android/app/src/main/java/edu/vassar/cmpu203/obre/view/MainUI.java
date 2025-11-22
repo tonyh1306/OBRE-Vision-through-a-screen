@@ -42,7 +42,7 @@ public class MainUI {
 
     public void displayFragment(@NonNull Fragment fragment) {
         FragmentTransaction fragmentTransaction = this.fragmentManager.beginTransaction();
-        fragmentTransaction.replace(this.mainBinding.fragmentContainerView.getId(), fragment);
+        fragmentTransaction.replace(this.mainBinding.fragmentContainer.getId(), fragment);
         fragmentTransaction.commit();
     }
 
@@ -63,6 +63,6 @@ public class MainUI {
      * @param <F> the fragment currently being displayed
      */
     public <F extends Fragment> F getFragment() {
-        return this.mainBinding.fragmentContainerView.getFragment();
+        return this.mainBinding.fragmentContainer.getFragment();
     }
 }
