@@ -1,0 +1,9 @@
+# Android / OpenCV build outputs
+**/build/
+**/intermediates/
+**/cxx/
+.gradle/
+
+# Local config
+/local.properties
+*.iml
