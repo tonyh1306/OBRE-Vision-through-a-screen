@@ -1,2 +1,0 @@
-ninja: Entering directory `/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/.cxx/Debug/o19k1l2a/x86'
-ninja: no work to do.
