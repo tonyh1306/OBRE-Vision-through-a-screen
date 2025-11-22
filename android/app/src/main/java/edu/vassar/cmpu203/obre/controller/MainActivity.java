@@ -242,22 +242,6 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
 
     }
 
-
-    @Override
-    public void onUploadImage() {
-
-    }
-
-    @Override
-    public void onDoneUploadingImage() {
-
-    }
-
-    @Override
-    public void onExit() {
-
-    }
-
     @Override
     public void onStartStream(VideoStreamUI ui) {
 

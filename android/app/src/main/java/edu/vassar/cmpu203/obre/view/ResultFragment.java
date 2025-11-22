@@ -1,0 +1,58 @@
+package edu.vassar.cmpu203.obre.view;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import edu.vassar.cmpu203.obre.R;
+
+public class ResultFragment extends Fragment {
+
+    private static final String ARG_RESULT_TEXT = "result_text";
+    private String resultText;
+
+    public ResultFragment() {
+        // Required empty constructor
+    }
+
+    // Factory method to create fragment with result text
+    public ResultFragment(String resultText) {
+        Bundle args = new Bundle();
+        args.putString(ARG_RESULT_TEXT, resultText);
+        setArguments(args);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            resultText = getArguments().getString(ARG_RESULT_TEXT);
+        }
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        // Inflate a simple layout for result display
+        return inflater.inflate(R.layout.fragment_result, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        TextView resultTextView = view.findViewById(R.id.result_text_view);
+        resultTextView.setText(resultText != null ? resultText : "No result");
+
+        // Optional: you can add a back button here if you want
+        view.findViewById(R.id.back_button).setOnClickListener(v ->
+                requireActivity().getSupportFragmentManager().popBackStack()
+        );
+    }
+}

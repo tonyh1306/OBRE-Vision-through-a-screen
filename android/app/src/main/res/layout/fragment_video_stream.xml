@@ -25,7 +25,7 @@ r
             android:layout_height="67dp"
             android:layout_marginBottom="30dp"
             android:backgroundTint="#6F00FF"
-            android:text="@string/upload_photo"
+            android:text="upload_photo"
             app:icon="@android:drawable/ic_menu_camera"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

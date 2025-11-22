@@ -1,36 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
-<<<<<<< HEAD
-    android:layout_height="match_parent"
-    tools:context=".controller.MainActivity">
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent" />
-
-    <Button
-        android:id="@+id/upload_image_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="592dp"
-        android:text="Upload Image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent" />
-=======
     android:layout_height="match_parent">
 
+    <!-- Fragment container -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container"
         android:name="edu.vassar.cmpu203.obre.view.HomeFragment"
@@ -40,7 +15,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
->>>>>>> LLMAlgo
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
