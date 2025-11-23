@@ -2,6 +2,7 @@ package edu.vassar.cmpu203.obre.controller;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
@@ -24,6 +25,17 @@ import edu.vassar.cmpu203.obre.model.DetectedObject;
 import edu.vassar.cmpu203.obre.model.OpenCVAlgo;
 import edu.vassar.cmpu203.obre.view.VideoStreamFragment;
 
+/**
+ * Manages the CameraX lifecycle, frame analysis, and object detection pipeline.
+ * <p>
+ * This class is responsible for:
+ * <ul>
+ *     <li>Binding the camera to the lifecycle of the activity.</li>
+ *     <li>Converting camera frames (ImageProxy) to OpenCV Mat objects.</li>
+ *     <li>Running object detection on a background thread.</li>
+ *     <li>Updating the UI with detection results.</li>
+ * </ul>
+ */
 public class CameraController {
     private static final String TAG = "CameraController";
     private final MainActivity mainActivity;
@@ -37,7 +49,13 @@ public class CameraController {
     private Mat latestFrame = new Mat();
     private byte[] cachedI420Buffer;
 
-    public CameraController(MainActivity activity, VideoStreamFragment frag) throws ExecutionException, InterruptedException {
+    /**
+     * Initializes the camera controller and starts the camera immediately.
+     *
+     * @param activity The main activity context, used for lifecycle binding.
+     * @param frag The fragment where the camera preview and overlays are displayed.
+     */
+    public CameraController(MainActivity activity, VideoStreamFragment frag) {
         this.mainActivity = activity;
         cameraExecutor = Executors.newSingleThreadExecutor();
         detectionExecutor = Executors.newSingleThreadExecutor();
@@ -46,6 +64,14 @@ public class CameraController {
 
         startCamera();
     }
+
+    /**
+     * Asynchronously initializes the CameraX provider.
+     * <p>
+     * This method requests the {@link ProcessCameraProvider} instance. Once the provider
+     * is available, it calls {@link #bindCameraUseCases()} to set up the preview and
+     * image analysis. If initialization fails, an error is logged and displayed on the UI.
+     */
 
     private void startCamera() {
         com.google.common.util.concurrent.ListenableFuture<ProcessCameraProvider> cameraProviderListenerFuture = ProcessCameraProvider.getInstance(mainActivity);
@@ -61,6 +87,10 @@ public class CameraController {
         }, ContextCompat.getMainExecutor(mainActivity));
     }
 
+    /**
+     * Binds the camera preview and image analysis use cases to the lifecycle owner.
+     * Also sets up the analyzer to process frames.
+     */
     public void bindCameraUseCases() {
         if (fragment.getPreviewView() == null) {
             Log.e(TAG, "PreviewView is null. Cannot bind camera.");
@@ -85,6 +115,12 @@ public class CameraController {
         fragment.presentAllowed("Camera started successfully");
     }
 
+    /**
+     * Analyzes a single frame from the camera.
+     * Converts the YUV image to an RGB Mat, handles rotation, and updates the latest frame buffer.
+     *
+     * @param imageProxy The image frame provided by CameraX.
+     */
     public void analyzeImage(ImageProxy imageProxy) {
         if (!isRunning) {
             imageProxy.close();
@@ -128,6 +164,15 @@ public class CameraController {
         }
     }
 
+    /**
+     * Starts the continuous object detection loop on a background thread.
+     * <p>
+     * This method runs on the {@code detectionExecutor}. It continuously retrieves the
+     * {@code latestFrame}, runs the {@link OpenCVAlgo} detector on it, and posts the
+     * resulting list of {@link DetectedObject}s back to the main thread to update the UI overlay.
+     * <p>
+     * The loop is throttled with a 30ms sleep to prevent CPU exhaustion, targeting approx. 30 FPS.
+     */
     private void startDetection() {
         detectionExecutor.execute(() -> {
             while (isRunning) {
@@ -155,6 +200,17 @@ public class CameraController {
         });
     }
 
+    /**
+     * Converts a CameraX {@link ImageProxy} (YUV_420_888) into an OpenCV {@link Mat} (RGB).
+     * <p>
+     * Since CameraX produces images in YUV format with potentially different row/pixel strides,
+     * this method manually extracts the Y, U, and V planes, consolidates them into a contiguous
+     * I420 byte array, and then uses {@link Imgproc#cvtColor} to convert to RGB.
+     *
+     * @param imageProxy The image frame provided by the CameraX ImageAnalysis use case.
+     * @return An OpenCV Mat containing the RGB representation of the image.
+     */
+    @NonNull
     private Mat imageProxyToMat(ImageProxy imageProxy) {
         // Force disable threading to prevent SIGILL on emulator
         org.opencv.core.Core.setNumThreads(0);
@@ -222,6 +278,10 @@ public class CameraController {
         return rgbMat;
     }
 
+    /**
+     * Stops the camera, shuts down background executors, and releases OpenCV resources.
+     * Should be called when the camera is no longer needed.
+     */
     public void stop() {
         isRunning = false;
         if (cameraProvider != null) {
@@ -235,6 +295,9 @@ public class CameraController {
         }
     }
 
+    /**
+     * Toggles between the front and back cameras.
+     */
     public void switchCamera() {
         cameraSelector = (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
                 ? CameraSelector.DEFAULT_FRONT_CAMERA

@@ -18,6 +18,12 @@ import java.util.List;
 import edu.vassar.cmpu203.obre.databinding.FragmentVideoStreamBinding;
 import edu.vassar.cmpu203.obre.model.DetectedObject;
 
+/**
+ * Fragment responsible for displaying the live camera feed and detection overlays.
+ * <p>
+ * Implements the View component of the video stream feature. It handles user
+ * interactions (buttons) and provides access to the camera PreviewView.
+ */
 public class VideoStreamFragment extends Fragment implements VideoStreamUI {
 
     private FragmentVideoStreamBinding binding;
@@ -49,6 +55,13 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
         this.listener = listener;
     }
 
+
+    /**
+     * returns the PreviewView used by CameraX.
+     * Safe to call only after onViewCreated.
+     *
+     * @return The PreviewView, or null if the binding is not initialized.
+     */
     public PreviewView getPreviewView() {
         if (binding == null) {
             return null;
@@ -56,12 +69,23 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
         return binding.previewView;
     }
 
+
+    /**
+     * Updates the overlay view with a list of detected objects.
+     *
+     * @param objects The list of objects detected by the model.
+     */
     public void updateDetections(List<DetectedObject> objects) {
         if (binding != null) {
             binding.overlayView.setDetectedObjects(objects);
         }
     }
 
+    /**
+     * Displays a short toast message on the main thread.
+     *
+     * @param msg The message to display.
+     */
     public void presentAllowed(String msg) {
         new Handler(Looper.getMainLooper()).post(() -> {
             if (getContext() != null) {
@@ -70,6 +94,11 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
         });
     }
 
+    /**
+     * Displays a long toast error message on the main thread.
+     *
+     * @param s The error message.
+     */
     public void displayError(String s) {
         new Handler(Looper.getMainLooper()).post(() -> {
             if (getContext() != null) {

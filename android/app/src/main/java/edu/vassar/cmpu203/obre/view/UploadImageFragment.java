@@ -16,8 +16,14 @@ import androidx.fragment.app.Fragment;
 
 import edu.vassar.cmpu203.obre.R;
 
+/**
+ * Fragment that allows users to pick an image from the gallery and send it for AI analysis.
+ */
 public class UploadImageFragment extends Fragment {
-
+    /**
+     * Interface for handling interactions within the UploadImageFragment.
+     * The Controller (Activity) implements this to handle navigation and logic.
+     */
     public interface Listener {
         void onPickImageRequested();
         void onAnalyzeImageRequested(Bitmap image);
@@ -74,12 +80,17 @@ public class UploadImageFragment extends Fragment {
         });
     }
 
+    /**
+     * Sets the listener to handle UI events.
+     * @param listener The listener implementation.
+     */
     public void setListener(Listener listener) {
         this.listener = listener;
     }
 
     /**
-     * Called by the Controller (MainActivity) to update the UI with the selected image.
+     * Updates the ImageView with the selected Bitmap.
+     * @param bitmap The image selected by the user.
      */
     public void updateImagePreview(Bitmap bitmap) {
         this.selectedBitmap = bitmap;
@@ -88,8 +99,9 @@ public class UploadImageFragment extends Fragment {
         }
     }
 
+
     /**
-     * Called by Controller if analysis fails to hide spinner
+     * Hides the loading spinner if the analysis fails.
      */
     public void onAnalysisFailed() {
         if (loadingSpinner != null) loadingSpinner.setVisibility(View.GONE);

@@ -12,20 +12,26 @@ import static org.opencv.imgproc.Imgproc.*;
 
 import android.content.Context;
 
+/**
+ * Implements object detection using OpenCV and the YOLO neural network model.
+ */
 public class OpenCVAlgo implements MediaAlgo {
     public MediaSource mediaSource;
     public static int IMG_SIZE = 640;
     Net net;
     List<DetectedObject> detectedObjects;
 
+    /**
+     * Initializes the YOLO model by loading the ONNX file from resources.
+     *
+     * @param context Application context used to access raw resources.
+     */
     public OpenCVAlgo(Context context) {
         try {
             String modelPath = ResourceUtils.copyResourceToFile(context,
                     context.getResources().getIdentifier("yolo12n", "raw", context.getPackageName()),
                     "yolo12n.onnx");
             net = Dnn.readNetFromONNX(modelPath);
-
-            // Use default backend to avoid SIGILL crashes on some emulators
             org.opencv.core.Core.setNumThreads(0);
             net.setPreferableBackend(Dnn.DNN_BACKEND_DEFAULT);
             net.setPreferableTarget(Dnn.DNN_TARGET_CPU);
@@ -99,18 +105,23 @@ public class OpenCVAlgo implements MediaAlgo {
         MatOfInt keep = new MatOfInt();
         Dnn.NMSBoxes(nmsBoxes, nmsScores, CONF_THRESH, NMS_THRESH, keep);
 
-        // FIX: Check if 'keep' has rows before calling toArray() to prevent crash
         if (keep.rows() > 0) {
             int[] keptIdx = keep.toArray();
             for (int idx : keptIdx) {
                 Rect2d b = boxes.get(idx);
                 String name = COCO_CLASSES[classIds.get(idx)];
-                // Add to list so Fragment can draw it later
                 detectedObjects.add(new DetectedObject(name, b.x, b.y, b.width, b.height));
             }
         }
     }
 
+
+    /**
+     * Runs object detection on a single frame.
+     *
+     * @param frame The input image matrix (Mat) to analyze.
+     * @return A list of DetectedObject instances containing class names and bounding boxes.
+     */
     public synchronized List<DetectedObject> runOnFrame(Mat frame) {
         detectedObjects.clear();
         if (net == null) {

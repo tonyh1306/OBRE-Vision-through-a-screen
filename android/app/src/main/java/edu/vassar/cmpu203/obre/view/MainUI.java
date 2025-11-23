@@ -34,12 +34,11 @@ public class MainUI {
     }
 
     /**
-     * Replaces the content of the screen container with the fragment passed in
-     * as an argument.
+     * Replaces the content of the screen container with the specified fragment.
+     * Does not add the transaction to the back stack.
      *
-     * @param fragment The fragment to be displayed
+     * @param fragment The fragment to be displayed.
      */
-
     public void displayFragment(@NonNull Fragment fragment) {
         FragmentTransaction fragmentTransaction = this.fragmentManager.beginTransaction();
         fragmentTransaction.replace(this.mainBinding.fragmentContainerView.getId(), fragment);
@@ -47,13 +46,12 @@ public class MainUI {
     }
 
     /**
-     * Replaces the content of the screen container with the fragment passed in
-     * as an argument. Pop back the stack if addToBackStack is true.
+     * Replaces the content of the screen container with the specified fragment.
+     * Optionally adds the transaction to the back stack to allow "Back" navigation.
      *
-     * @param fragment The fragment to be displayed
-     * @param addToBackStack whether to add the fragment to the back stack
+     * @param fragment The fragment to be displayed.
+     * @param addToBackStack True to add to back stack, false otherwise.
      */
-
     public void displayFragment(@NonNull Fragment fragment, boolean addToBackStack) {
         FragmentTransaction fragmentTransaction = this.fragmentManager.beginTransaction();
         fragmentTransaction.replace(this.mainBinding.fragmentContainerView.getId(), fragment);

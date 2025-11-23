@@ -33,6 +33,16 @@ import edu.vassar.cmpu203.obre.view.UploadImageFragment;
 import edu.vassar.cmpu203.obre.view.VideoStreamFragment;
 import edu.vassar.cmpu203.obre.view.VideoStreamUI;
 
+/**
+ * The main entry point of the application.
+ * <p>
+ * This Activity acts as the primary Controller in the MVC architecture. It handles:
+ * <ul>
+ *     <li>Navigation between fragments (Video Stream, Upload Image, Results).</li>
+ *     <li>Runtime permission requests for the Camera.</li>
+ *     <li>Coordination between the UI views and the Model logic (LLMAlgo, CameraController).</li>
+ * </ul>
+ */
 public class MainActivity extends AppCompatActivity implements VideoStreamUI.Listener, UploadImageFragment.Listener {
 
     private static final List<String> CAMERAX_PERMISSION = Arrays.asList(
@@ -120,6 +130,12 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
         }
     }
 
+    /**
+     * Callback triggered when the VideoStreamFragment is ready to start the camera.
+     * Initializes the CameraController.
+     *
+     * @param ui The UI interface representing the video stream view.
+     */
     @Override
     public void onStartStream(VideoStreamUI ui) {
         VideoStreamFragment fragment = (VideoStreamFragment) ui;
@@ -139,6 +155,9 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
         }
     }
 
+    /**
+     * Callback triggered to switch the active camera lens (front/back).
+     */
     @Override
     public void onSwitchCamera() {
         if (cameraController != null) {
@@ -148,6 +167,11 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
         }
     }
 
+
+    /**
+     * Callback triggered when the user requests to analyze a static image.
+     * Stops the live camera and navigates to the UploadImageFragment.
+     */
     public void onUploadImageRequested() {
         if (cameraController != null) {
             cameraController.stop();
@@ -159,6 +183,9 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
         mainUI.displayFragment(uploadFragment);
     }
 
+    /**
+     * Launches the system image picker to allow the user to select a photo.
+     */
     @Override
     public void onPickImageRequested() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -167,6 +194,12 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
         imagePickerLauncher.launch(intent);
     }
 
+    /**
+     * Sends the selected image to the Gemini LLM for analysis.
+     * On success, navigates to the ResultFragment.
+     *
+     * @param image The Bitmap image to analyze.
+     */
     @Override
     public void onAnalyzeImageRequested(Bitmap image) {
         LLMAlgo llm = new LLMAlgo();
@@ -190,6 +223,11 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
         });
     }
 
+
+    /**
+     * Handles navigation back to the live video stream from the upload screen.
+     * Ensures the view is fully created before re-initializing the camera.
+     */
     @Override
     public void onSwitchBackToStream() {
         VideoStreamFragment fragment = new VideoStreamFragment();
