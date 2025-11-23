@@ -50,6 +50,9 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
     }
 
     public PreviewView getPreviewView() {
+        if (binding == null) {
+            return null;
+        }
         return binding.previewView;
     }
 
