@@ -41,8 +41,7 @@ import edu.vassar.cmpu203.obre.view.UploadImageUI;
 import edu.vassar.cmpu203.obre.view.VideoStreamFragment;
 import edu.vassar.cmpu203.obre.view.VideoStreamUI;
 
-public class MainActivity extends AppCompatActivity implements VideoStreamUI.Listener,
-        UploadImageUI.Listener {
+public class MainActivity extends AppCompatActivity implements VideoStreamUI.Listener {
     private static final List<String> CAMERAX_PERMISSION = Arrays.asList(
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO
