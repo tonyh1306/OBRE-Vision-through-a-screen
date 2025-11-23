@@ -1,6 +1,7 @@
 # Recognize Objects in Video
 
 ## 1. Primary actor and goals
+
 __User__: Wants to recognize what objects are in the video stream from the camera and receive real-time audio descriptions.
 
 ## 2. Preconditions
@@ -21,7 +22,6 @@ What must be true upon successful completion of the use case.
 * There is a text-to-speech function that reads out the description.
 
 ## 4. Workflow
-
 
 for _analyze-video_:
 
@@ -60,5 +60,3 @@ endif
 stop
 @enduml
 ```
-
-

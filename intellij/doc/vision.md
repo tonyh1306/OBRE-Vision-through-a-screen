@@ -7,6 +7,7 @@ We envision an **Object Recognition Application** as an accessibility tool for l
 ## 2. Business case
 
 Our software addresses the visually-impaired community's needs:
+
 1. It can provide immediate access without login requirements, creating a smooth
 and immediate user experience.
 2. It integrates text-to-speech capabilities that allow users to become
@@ -14,12 +15,13 @@ aware of their surroundings just through pointing their camera at their
 environment.
 
 ## 3. Key functionality
+
 - Video feed capture with audible notification using Text-to-speech.
 - Text recognition with Text-to-speech capability.
 - Image upload for recognition through OpenAI's API.
 
-
 ## 4. Stakeholder goals summary
+
 - **Users**: Recognize objects in live video streams and identify what is around them. Process uploaded images to receive accurate descriptions. Read text in their environment in real time. All features should provide audio feedback via text-to-speech.
 
 ## Use case diagram
