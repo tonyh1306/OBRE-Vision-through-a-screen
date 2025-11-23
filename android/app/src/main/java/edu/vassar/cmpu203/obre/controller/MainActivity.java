@@ -193,12 +193,17 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
     @Override
     public void onSwitchBackToStream() {
         VideoStreamFragment fragment = new VideoStreamFragment();
-        try {
-            cameraController = new CameraController(this, fragment);
-        } catch (Exception e) {
-            Log.e(TAG, "Failed to start camera", e);
-            fragment.displayError("Failed to start camera");
-        }
+        fragment.setListener(this);
+        mainUI.displayFragment(fragment);
+        getSupportFragmentManager().registerFragmentLifecycleCallbacks(new androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks() {
+            @Override
+            public void onFragmentViewCreated(@NonNull androidx.fragment.app.FragmentManager fm, @NonNull androidx.fragment.app.Fragment f, @NonNull android.view.View v, @Nullable Bundle savedInstanceState) {
+                if (f == fragment) {
+                    onStartStream(fragment);
+                    fm.unregisterFragmentLifecycleCallbacks(this);
+                }
+            }
+        }, false);
     }
 
     @Override
