@@ -1,1 +1,1 @@
-/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/libcxx_helper/CMakeLists.txt
+/Users/tqnguyen/cs203/team-c/android/opencv/sdk/libcxx_helper/CMakeLists.txt

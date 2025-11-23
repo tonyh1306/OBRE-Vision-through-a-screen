@@ -1,4 +1,4 @@
-# Install script for directory: /Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/libcxx_helper
+# Install script for directory: /Users/tqnguyen/cs203/team-c/android/opencv/sdk/libcxx_helper
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,7 +39,7 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/Users/mayalaidler/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-objdump")
+  set(CMAKE_OBJDUMP "/Users/tqnguyen/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-objdump")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/.cxx/Debug/3g225315/x86/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/tqnguyen/cs203/team-c/android/opencv/sdk/.cxx/Debug/3g225315/x86/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

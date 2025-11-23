@@ -1,231 +1,203 @@
 package edu.vassar.cmpu203.obre.controller;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.ContentValues;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.CameraSelector;
-import androidx.camera.core.Preview;
-import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.video.MediaStoreOutputOptions;
-import androidx.camera.video.Quality;
-import androidx.camera.video.QualitySelector;
-import androidx.camera.video.Recorder;
-import androidx.camera.video.Recording;
-import androidx.camera.video.VideoCapture;
-import androidx.camera.video.VideoRecordEvent;
-import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import org.opencv.android.OpenCVLoader;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import edu.vassar.cmpu203.obre.R;
+import edu.vassar.cmpu203.obre.model.LLMAlgo;
 import edu.vassar.cmpu203.obre.view.MainUI;
+import edu.vassar.cmpu203.obre.view.ResultFragment;
 import edu.vassar.cmpu203.obre.view.UploadImageFragment;
-import edu.vassar.cmpu203.obre.view.UploadImageUI;
 import edu.vassar.cmpu203.obre.view.VideoStreamFragment;
 import edu.vassar.cmpu203.obre.view.VideoStreamUI;
 
-public class MainActivity extends AppCompatActivity implements VideoStreamUI.Listener, UploadImageUI.Listener {
+public class MainActivity extends AppCompatActivity implements VideoStreamUI.Listener, UploadImageFragment.Listener {
+
     private static final List<String> CAMERAX_PERMISSION = Arrays.asList(
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO
     );
-    private static final String TAG = "CameraXVideo";
-    private static final String FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS";
+    private static final String TAG = "MainActivity";
     private static final int REQUEST_CODE_PERMISSIONS = 10;
-    private PreviewView previewView;
-    private Button recordButton;
+
     private ExecutorService cameraExecutor;
-    private VideoCapture<Recorder> videoCapture;
-    private Recording currentRecording;
-    private Uri lastRecordedVideoUri; // For potential playback screen logic
-    // Enum state is handled implicitly by checking if currentRecording is null
-    private CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
+    private CameraController cameraController;
+    private MainUI mainUI;
+    private UploadImageFragment uploadFragment;
 
-    enum Options {
-        UPLOAD_IMAGE,
-        VIDEO_STREAM,
-        EXIT()
-    }
-
-    private Options state = Options.VIDEO_STREAM;
-    private MainUI mainui; // Reference to the fragment manager class
+    // Image Picker Launcher
+    private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Uri uri = result.getData().getData();
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                        if (uploadFragment != null) {
+                            uploadFragment.updateImagePreview(bitmap);
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, "Failed to load image", e);
+                        Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mainui = new MainUI(this);
+        mainUI = new MainUI(this);
+        setContentView(mainUI.getRootView());
 
-        setContentView(mainui.getRootView());
-
-        previewView = findViewById(R.id.previewView);
-
-        cameraExecutor = Executors.newSingleThreadExecutor();
-
-
-        if (hasRequiredPermission()) {
-            try {
-                startCamera();
-            } catch (ExecutionException | InterruptedException e) {
-                Log.e(TAG, "Camera start failed", e);
-                Toast.makeText(this, "Failed to start camera.", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            ActivityCompat.requestPermissions(
-                    this, CAMERAX_PERMISSION.toArray(new String[0]), REQUEST_CODE_PERMISSIONS
-            );
-        }
+        VideoStreamFragment fragment = new VideoStreamFragment();
+        fragment.setListener(this);
+        mainUI.displayFragment(fragment);
 
         if (OpenCVLoader.initLocal()) {
+            org.opencv.core.Core.setNumThreads(0);
             Log.i(TAG, "OpenCV loaded successfully");
+            if (hasRequiredPermission()) {
+                getSupportFragmentManager().registerFragmentLifecycleCallbacks(new androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks() {
+                    @Override
+                    public void onFragmentViewCreated(@NonNull androidx.fragment.app.FragmentManager fm, @NonNull androidx.fragment.app.Fragment f, @NonNull android.view.View v, @Nullable Bundle savedInstanceState) {
+                        if (f == fragment) {
+                            onStartStream(fragment);
+                            fm.unregisterFragmentLifecycleCallbacks(this);
+                        }
+                    }
+                }, false);
+            } else {
+                ActivityCompat.requestPermissions(
+                        this, CAMERAX_PERMISSION.toArray(new String[0]), REQUEST_CODE_PERMISSIONS
+                );
+            }
         } else {
             Log.e(TAG, "OpenCV initialization failed!");
-            (Toast.makeText(this, "OpenCV initialization failed!", Toast.LENGTH_LONG)).show();
+            fragment.displayError("OpenCV initialization failed!");
             return;
         }
+        cameraExecutor = Executors.newSingleThreadExecutor();
     }
 
     private boolean hasRequiredPermission() {
         return CAMERAX_PERMISSION.stream().allMatch(permission ->
-                ContextCompat.checkSelfPermission(
-                        getApplicationContext(),
-                        permission
-                ) == PackageManager.PERMISSION_GRANTED
+                ContextCompat.checkSelfPermission(getApplicationContext(), permission) == PackageManager.PERMISSION_GRANTED
         );
     }
-
-    private void showVideoStream() {
-        mainui.displayFragment(new VideoStreamFragment());
-    }
-
-    private void showImageUpload() {
-        mainui.displayFragment(new UploadImageFragment());
-    }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (hasRequiredPermission()) {
-                try {
-                    startCamera();
-                } catch (ExecutionException | InterruptedException e) {
-                    Log.e(TAG, "Camera failed with permission", e);
-                    Toast.makeText(this, "Failed to start camera.", Toast.LENGTH_SHORT).show();
-                }
-            } else {
+            if (!hasRequiredPermission()) {
                 Toast.makeText(this, "Permission not granted by user.", Toast.LENGTH_LONG).show();
                 finish();
             }
         }
     }
 
-    public boolean cameraPermissionState() {
-        if (hasRequiredPermission()) {
-            return true;
+    @Override
+    public void onStartStream(VideoStreamUI ui) {
+        VideoStreamFragment fragment = (VideoStreamFragment) ui;
+        try {
+            cameraController = new CameraController(this, fragment);
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to start camera", e);
+            fragment.displayError("Failed to start camera");
+        }
+    }
+
+    @Override
+    public void onStopStream(VideoStreamUI ui) {
+        if (cameraController != null) {
+            cameraController.stop();
+            cameraController = null;
+        }
+    }
+
+    @Override
+    public void onSwitchCamera() {
+        if (cameraController != null) {
+            cameraController.switchCamera();
         } else {
-            return false;
+            Log.e(TAG, "CameraController is null, cannot switch");
         }
     }
 
-    private void startCamera() throws ExecutionException, InterruptedException {
-        com.google.common.util.concurrent.ListenableFuture<ProcessCameraProvider> cameraProviderListenerFuture = ProcessCameraProvider.getInstance(this);
-        cameraProviderListenerFuture.addListener(() -> {
-            try {
-                ProcessCameraProvider cameraProvider = cameraProviderListenerFuture.get();
+    public void onUploadImageRequested() {
+        if (cameraController != null) {
+            cameraController.stop();
+            cameraController = null;
+        }
 
-                if (previewView == null) {
-                    Log.e(TAG, "PreviewView has not been initialized.");
-                    return;
-                }
+        uploadFragment = new UploadImageFragment();
+        uploadFragment.setListener(this);
+        mainUI.displayFragment(uploadFragment);
+    }
 
-                Preview preview = new Preview.Builder().build();
-                preview.setSurfaceProvider(previewView.getSurfaceProvider());
+    @Override
+    public void onPickImageRequested() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        imagePickerLauncher.launch(intent);
+    }
 
-                Recorder recorder = new Recorder.Builder()
-                        .setQualitySelector(QualitySelector.from(Quality.HD))
-                        .build();
+    @Override
+    public void onAnalyzeImageRequested(Bitmap image) {
+        LLMAlgo llm = new LLMAlgo();
 
-                videoCapture = VideoCapture.withOutput(recorder);
-
-
-                cameraProvider.unbindAll();
-                cameraProvider.bindToLifecycle(this, cameraSelector, preview, videoCapture);
-
-            } catch (ExecutionException | InterruptedException e) {
-                Log.e(TAG, "Camera initialization failed.", e);
+        llm.sendImageToGemini(image, new LLMAlgo.Listener() {
+            @Override
+            public void onSuccess(String responseText) {
+                runOnUiThread(() -> {
+                    mainUI.displayFragment(new ResultFragment(responseText), true);
+                });
             }
-        }, ContextCompat.getMainExecutor(this));
-    }
 
-
-    @SuppressLint("MissingPermission")
-    private void onToggleRecording() {
-        if (videoCapture == null) {
-            return;
-        }
-
-        if (currentRecording == null) {
-            String name = "CameraX-recording-" + new SimpleDateFormat(FILENAME_FORMAT, Locale.US)
-                    .format(System.currentTimeMillis()) + ".mp4";
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(MediaStore.Video.Media.DISPLAY_NAME, name);
-
-
-            MediaStoreOutputOptions outputOptions = new MediaStoreOutputOptions.Builder(
-                    getContentResolver(),
-                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
-                    .setContentValues(contentValues)
-                    .build();
-
-            currentRecording = videoCapture.getOutput()
-                    .prepareRecording(this, outputOptions)
-                    .withAudioEnabled()
-                    .start(ContextCompat.getMainExecutor(this), this::handleVideoRecorderEvent);
-        } else {
-            // Stop recording
-            currentRecording.stop();
-            currentRecording = null;
-            // Update UI (e.g., set button text to "Start")
-            // recordButton.setText("Start Recording");
-        }
-    }
-
-    private void handleVideoRecorderEvent(VideoRecordEvent event) {
-        if (event instanceof VideoRecordEvent.Start) {
-            Log.d(TAG, "Recording started");
-        } else if (event instanceof VideoRecordEvent.Finalize) {
-            VideoRecordEvent.Finalize finalizeEvent = (VideoRecordEvent.Finalize) event;
-            if (finalizeEvent.hasError()) {
-                Log.e(TAG, "Recording error: " + finalizeEvent.getError() + ", " + finalizeEvent.getCause());
-                Toast.makeText(this, "Recording error: " + finalizeEvent.getError(), Toast.LENGTH_SHORT).show();
-            } else {
-                lastRecordedVideoUri = finalizeEvent.getOutputResults().getOutputUri();
-                Log.d(TAG, "Recording finalized: " + lastRecordedVideoUri);
-                Toast.makeText(this, "Video saved: " + lastRecordedVideoUri, Toast.LENGTH_SHORT).show();
-                // Transition to playback screen logic here
+            @Override
+            public void onError(Exception e) {
+                Log.e(TAG, "Gemini Error", e);
+                runOnUiThread(() -> {
+                    if (uploadFragment != null) uploadFragment.onAnalysisFailed();
+                    Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
             }
+        });
+    }
+
+    @Override
+    public void onSwitchBackToStream() {
+        VideoStreamFragment fragment = new VideoStreamFragment();
+        try {
+            cameraController = new CameraController(this, fragment);
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to start camera", e);
+            fragment.displayError("Failed to start camera");
         }
     }
 
@@ -236,20 +208,4 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
             cameraExecutor.shutdown();
         }
     }
-
-    @Override
-    public void onCameraViewStarted() {
-
-    }
-
-    @Override
-    public void onStartStream(VideoStreamUI ui) {
-
-    }
-
-    @Override
-    public void onStopStream(VideoStreamUI ui) {
-
-    }
-
 }

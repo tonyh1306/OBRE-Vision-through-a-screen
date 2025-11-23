@@ -5,9 +5,17 @@
     android:padding="16dp">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/black"
+            android:text="Back" />
 
         <Button
             android:id="@+id/pick_image_button"
@@ -20,8 +28,12 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginTop="16dp"
-            android:scaleType="centerCrop"
-            android:background="#DDDDDD" />
+            android:background="#DDDDDD"
+            android:scaleType="centerCrop" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/run_ai_button"
@@ -34,9 +46,9 @@
             android:id="@+id/loading_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="12dp"
-            android:visibility="gone"
-            android:layout_gravity="center" />
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/result_text"

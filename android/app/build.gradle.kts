@@ -28,6 +28,16 @@ android {
         buildConfigField("String", "GOOGLE_API_KEY", "\"${localProperties.getProperty("GOOGLE_API_KEY")}\"")
     }
 
+    sourceSets {
+        getByName("main") {
+            jniLibs.srcDirs(
+                "src/main/jniLibs",
+                project(":opencv").file("native/libs"),
+                project(":opencv").file("src/main/jniLibs")
+            )
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -41,6 +51,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+<<<<<<< HEAD
 
     buildFeatures {
         viewBinding = true

@@ -1,19 +1,19 @@
 {
   "buildFiles": [
-    "/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/libcxx_helper/CMakeLists.txt"
+    "/Users/tqnguyen/cs203/team-c/android/opencv/sdk/libcxx_helper/CMakeLists.txt"
   ],
   "cleanCommandsComponents": [
     [
-      "/Users/mayalaidler/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "/Users/tqnguyen/Library/Android/sdk/cmake/3.22.1/bin/ninja",
       "-C",
-      "/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/.cxx/Debug/3g225315/x86",
+      "/Users/tqnguyen/cs203/team-c/android/opencv/sdk/.cxx/Debug/3g225315/x86",
       "clean"
     ]
   ],
   "buildTargetsCommandComponents": [
-    "/Users/mayalaidler/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "/Users/tqnguyen/Library/Android/sdk/cmake/3.22.1/bin/ninja",
     "-C",
-    "/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/.cxx/Debug/3g225315/x86",
+    "/Users/tqnguyen/cs203/team-c/android/opencv/sdk/.cxx/Debug/3g225315/x86",
     "{LIST_OF_TARGETS_TO_BUILD}"
   ],
   "libraries": {
@@ -21,13 +21,13 @@
       "toolchain": "toolchain",
       "abi": "x86",
       "artifactName": "opencv_jni_shared",
-      "output": "/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/.cxx/Debug/3g225315/x86/libopencv_jni_shared.a"
+      "output": "/Users/tqnguyen/cs203/team-c/android/opencv/sdk/.cxx/Debug/3g225315/x86/libopencv_jni_shared.a"
     }
   },
   "toolchains": {
     "toolchain": {
-      "cCompilerExecutable": "/Users/mayalaidler/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang.lld",
-      "cppCompilerExecutable": "/Users/mayalaidler/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++.lld"
+      "cCompilerExecutable": "/Users/tqnguyen/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang.lld",
+      "cppCompilerExecutable": "/Users/tqnguyen/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++.lld"
     }
   },
   "cFileExtensions": [],
