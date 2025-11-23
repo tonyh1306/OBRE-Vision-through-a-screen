@@ -1,71 +1,112 @@
 ```plantuml
 @startuml
-hide circle
 skin rose
 hide empty methods
 skinparam Linetype ortho
 
 interface UI <<Interface>> {
-  setListener(Controller ctrl)
-  startUI()
-  displayDetections(List<String>)
+  void setListener(Listener listener)
+  void startDetecting()
+  void startVideoStreaming()
+  void displayDetections(List<String> detections)
+  void displayMessage(String message)
 }
 
-class CmdLineUI {
+interface UI.Listener <<Interface>> {
+  void onUploadImage(String fileName)
+}
+
+class CmdLineUI implements UI {
+  ps : PrintStream
+  in : Scanner
+  listener : UI.Listener
+  --
   CmdLineUI()
-  setListener(Controller ctrl)
-  startVideoStreaming()
-  displayDetections(List<String>)
+  void startDetecting()
+  void startVideoStreaming()
+  void setListener(UI.Listener listener)
+  void displayDetections(List<String> detections)
+  void displayMessage(String message)
+  boolean isValidImageFile(String filename)
+}
+
+class Controller implements UI.Listener {
+  ui : UI
+  option : Options
+  --
+  Controller(CmdLineUI ui)
+  void onUploadImage(String filename)
+  void processTextRecognition(String filename)
+  void main(String[] args) {static}
 }
 
 UI <|.. CmdLineUI
-
-class Controller {
-  Controller(UI ui)
-  main(String[] args) {static}
-  processImageFile(String filename)
-}
-
-Controller ..> UI : <<uses>>
-CmdLineUI ..> Controller : <<sends commands>>
+UI.Listener <|.. Controller
+Controller --> UI : ui
 
 interface MediaSource <<Interface>> {
-Mat getFrame();
-ArrayList<Mat> getFrameArray();
+  Mat getFrame()
+  ArrayList<Mat> getFrameArray()
 }
 
-class ImageSource {
-    Mat image
-    ArrayList<Mat> frames
-    --
-  ImageSource(String filePath)
-  getMediaAddress() : String
-  readFrame() : Object
+class ImageSource implements MediaSource {
+  image : Mat
+  frames : ArrayList<Mat>
+  --
+  ImageSource(String imageAddress)
+  Mat getFrame()
+  ArrayList<Mat> getFrameArray()
 }
 
-MediaSource <|.. ImageSource
+class VideoSource implements MediaSource {
+  cameraMode : boolean
+  vd : VideoCapture
+  frames : ArrayList<Mat>
+  --
+  Mat getFrame()
+  ArrayList<Mat> getFrameArray()
+}
 
 interface MediaAlgo <<Interface>> {
---
-runAlgorithm(Mat frame) : List<String>
+  List<String> runAlgorithm()
 }
 
-class OpenCVAlgo {
-+ {static} COCO_CLASSES : List<String>
-Net net
-+ {static} IMG_SIZE : int
-List<String> detectObjects(MediaSource source)
-MediaSource mediaSource
-+ {static} MODEL_NAME : String
---
-  OpenCVAlgo()
-  detectObjects(MediaSource source) : List<String>
+class OpenCVAlgo implements MediaAlgo {
+  + {static} MODEL_NAME : String
+  + {static} IMG_SIZE : int
+  + {static} COCO_CLASSES : String[]
+  mediaSource : MediaSource
+  net : Net
+  detectedObjects : List<String>
+  --
+  OpenCVAlgo(MediaSource mediaSource)
+  List<String> runAlgorithm()
+  boolean processFrame(Mat image, Mat resizedImage, Size netSize)
+  void drawNoDetectionsOverlay(Mat frame)
 }
 
+class TextRecognizer {
+  --
+  String recognizeText(String filename)
+}
 
-Controller --> MediaSource : <<uses>>
-Controller --> MediaAlgo : <<uses>>
-MediaAlgo <|.. OpenCVAlgo
-Controller ..> ImageSource : <<creates>>
-Controller ..> OpenCVAlgo : <<creates>>
+class LLMAlgo {
+  API_KEY : String
+  --
+  LLMAlgo()
+}
+
+class ResourceUtils {
+  --
+  String getResourcePath(String resourceName) {static}
+}
+
+ImageSource --|> MediaSource
+VideoSource --|> MediaSource
+OpenCVAlgo --|> MediaAlgo
+OpenCVAlgo --> MediaSource : mediaSource
+Controller --> ImageSource : creates
+Controller --> OpenCVAlgo : creates
+Controller --> TextRecognizer : uses
+
 @enduml

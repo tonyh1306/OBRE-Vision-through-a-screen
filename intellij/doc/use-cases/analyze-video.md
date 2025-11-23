@@ -1,15 +1,15 @@
-# Real-time Object Recognition
+# Recognize Objects in Video
 
 ## 1. Primary actor and goals
-__User__: Wants a fast responding speech text that is able to recognize what object is on video stream from the camera.
+__User__: Wants to recognize what objects are in the video stream from the camera and receive real-time audio descriptions.
 
 ## 2. Preconditions
 
 What must be true prior to the start of the use case.
 
-* We are not going to have a log-in system for the purpose of an easy-use and quick-access of the app
+* We are not going to have a log-in system for the purpose of easy-use and quick-access of the app.
 * The camera is working and is granted permission.
-* There's enough lighting and the object is visible and not obscure.
+* There is enough lighting and the objects are visible and not obscured.
 
 ## 3. Post-conditions
 

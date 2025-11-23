@@ -2,9 +2,7 @@
 
 ## 1. Introduction
 
-We envision an Object Recognition Application that is an app as an accessibility application for low-vision users. 
-It's goal is to provide accessibility for visually-impaired individuals. It does this through real-time notification with 
-the video feed with a user-friendly and out-of-the-box experience.
+We envision an **Object Recognition Application** as an accessibility tool for low-vision and visually-impaired users. The app enables users to recognize objects from video streams and images, and to read text in their environment, all through real-time audio feedback. It provides an out-of-the-box experience that requires no login and prioritizes ease of use.
 
 ## 2. Business case
 
@@ -22,7 +20,7 @@ environment.
 
 
 ## 4. Stakeholder goals summary
-- **Users**: recognize objects in live recording, presents image description option, describe any uploaded image, all with TTS option. 
+- **Users**: Recognize objects in live video streams and identify what is around them. Process uploaded images to receive accurate descriptions. Read text in their environment in real time. All features should provide audio feedback via text-to-speech.
 
 ## Use case diagram
 
@@ -35,14 +33,18 @@ actor "End user" as user
 
 ' list all use cases in package
 package OBRE {
-    usecase "Real-time object recognition with TTS" as obre
-    usecase "Photo processing for image description" as describe 
-    usecase "Real-time text recognition with TTS" as videotext
+    usecase "Recognize objects in video" as obre
+    usecase "Describe uploaded image" as describe 
+    usecase "Recognize text in video" as videotext
+    usecase "Toggle text-to-speech" as toggleTTS
 }
 
 ' list relationships between actors and use cases
 user --> obre
 videotext --|> obre : <<extends>>
 describe --|> obre : <<extends>>
+obre ..> toggleTTS : <<uses>>
+videotext ..> toggleTTS : <<uses>>
+describe ..> toggleTTS : <<uses>>
 @enduml
 ```
