@@ -1,18 +1,18 @@
-                        -H/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/libcxx_helper
+                        -H/Users/tqnguyen/cs203/team-c/android/opencv/sdk/libcxx_helper
 -DCMAKE_SYSTEM_NAME=Android
 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 -DCMAKE_SYSTEM_VERSION=21
 -DANDROID_PLATFORM=android-21
 -DANDROID_ABI=x86
 -DCMAKE_ANDROID_ARCH_ABI=x86
--DANDROID_NDK=/Users/mayalaidler/Library/Android/sdk/ndk/27.0.12077973
--DCMAKE_ANDROID_NDK=/Users/mayalaidler/Library/Android/sdk/ndk/27.0.12077973
--DCMAKE_TOOLCHAIN_FILE=/Users/mayalaidler/Library/Android/sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake
--DCMAKE_MAKE_PROGRAM=/Users/mayalaidler/Library/Android/sdk/cmake/3.22.1/bin/ninja
--DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/build/intermediates/cxx/Debug/3g225315/obj/x86
--DCMAKE_RUNTIME_OUTPUT_DIRECTORY=/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/build/intermediates/cxx/Debug/3g225315/obj/x86
+-DANDROID_NDK=/Users/tqnguyen/Library/Android/sdk/ndk/27.0.12077973
+-DCMAKE_ANDROID_NDK=/Users/tqnguyen/Library/Android/sdk/ndk/27.0.12077973
+-DCMAKE_TOOLCHAIN_FILE=/Users/tqnguyen/Library/Android/sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=/Users/tqnguyen/Library/Android/sdk/cmake/3.22.1/bin/ninja
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/Users/tqnguyen/cs203/team-c/android/opencv/sdk/build/intermediates/cxx/Debug/3g225315/obj/x86
+-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=/Users/tqnguyen/cs203/team-c/android/opencv/sdk/build/intermediates/cxx/Debug/3g225315/obj/x86
 -DCMAKE_BUILD_TYPE=Debug
--B/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/.cxx/Debug/3g225315/x86
+-B/Users/tqnguyen/cs203/team-c/android/opencv/sdk/.cxx/Debug/3g225315/x86
 -GNinja
 -DANDROID_STL=c++_shared
                         Build command args: []

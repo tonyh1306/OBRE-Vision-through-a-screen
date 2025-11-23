@@ -47,6 +47,24 @@ public class MainUI {
     }
 
     /**
+     * Replaces the content of the screen container with the fragment passed in
+     * as an argument. Pop back the stack if addToBackStack is true.
+     *
+     * @param fragment The fragment to be displayed
+     * @param addToBackStack whether to add the fragment to the back stack
+     */
+
+    public void displayFragment(@NonNull Fragment fragment, boolean addToBackStack) {
+        FragmentTransaction fragmentTransaction = this.fragmentManager.beginTransaction();
+        fragmentTransaction.replace(this.mainBinding.fragmentContainerView.getId(), fragment);
+        if (addToBackStack) {
+            fragmentTransaction.addToBackStack(null);
+        }
+        fragmentTransaction.commit();
+    }
+
+
+    /**
      * Returns the root view of the activity.
      *
      * @return the screen's root view

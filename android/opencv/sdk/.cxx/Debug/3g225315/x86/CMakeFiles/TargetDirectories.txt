@@ -1,3 +1,3 @@
-/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/.cxx/Debug/3g225315/x86/CMakeFiles/opencv_jni_shared.dir
-/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/.cxx/Debug/3g225315/x86/CMakeFiles/edit_cache.dir
-/Users/mayalaidler/CMPU203/team-c/android/opencv/sdk/.cxx/Debug/3g225315/x86/CMakeFiles/rebuild_cache.dir
+/Users/tqnguyen/cs203/team-c/android/opencv/sdk/.cxx/Debug/3g225315/x86/CMakeFiles/opencv_jni_shared.dir
+/Users/tqnguyen/cs203/team-c/android/opencv/sdk/.cxx/Debug/3g225315/x86/CMakeFiles/edit_cache.dir
+/Users/tqnguyen/cs203/team-c/android/opencv/sdk/.cxx/Debug/3g225315/x86/CMakeFiles/rebuild_cache.dir

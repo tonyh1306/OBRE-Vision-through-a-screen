@@ -1,6 +1,7 @@
 package edu.vassar.cmpu203.obre.model;
 import android.content.Context;
 
+import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -37,7 +38,7 @@ public class LLMAlgoTest {
      * @throws IOException if the test image asset cannot be opened or read.
      */
     @Test
-    public void testGeminiRealCall() throws InterruptedException, IOException {
+    public void testGeminiRealCall() throws InterruptedException, IOException, JSONException {
         LLMAlgo llm = new LLMAlgo();
 
         // Use getContext() to access the test app's assets folder

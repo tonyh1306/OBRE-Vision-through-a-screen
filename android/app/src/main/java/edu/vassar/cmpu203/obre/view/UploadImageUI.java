@@ -6,23 +6,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import edu.vassar.cmpu203.obre.R;
 
-public class UploadImageUI {
-    public Button buttonPickImage;
-    public ImageView previewImage;
-    public TextView resultText;
+public interface UploadImageUI {
+//    void setListener(com.google.androidgamesdk.gametextinput.Listener listener);
+//    public Button buttonPickImage;
+//    public ImageView previewImage;
+//    public TextView resultText;
 
-    public UploadImageUI(Activity activity) {
-        View view = activity.getLayoutInflater().inflate(R.layout.fragment_upload_image, null);
-
-        buttonPickImage = view.findViewById(R.id.pick_image_button);
-        resultText = view.findViewById(R.id.result_text);
-    }
-
-    public UploadImageUI(View view) {
-        buttonPickImage = view.findViewById(R.id.pick_image_button);
-        resultText = view.findViewById(R.id.result_text);
-    }
-
-    public interface Listener {
-    }
+//    public UploadImageUI(Activity activity) {
+//        View view = activity.getLayoutInflater().inflate(R.layout.fragment_upload_image, null);
+//
+//        buttonPickImage = view.findViewById(R.id.pick_image_button);
+//        resultText = view.findViewById(R.id.result_text);
+//    }
+//
+//    public UploadImageUI(View view) {
+//        buttonPickImage = view.findViewById(R.id.pick_image_button);
+//        resultText = view.findViewById(R.id.result_text);
+//    }
 }
