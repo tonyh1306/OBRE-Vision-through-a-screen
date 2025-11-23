@@ -117,11 +117,10 @@ The app requests the following permissions (handled in `AndroidManifest.xml`):
 ##### Home Screen
 
 - Launch the app to see the main menu
-- Choose between Live Video Detection, Image Upload, or Text Recognition
+- Choose between Live Video Detection and Image Upload
 
 ##### Live Video Detection
 
-- Tap "Start Camera" to begin real-time object detection
 - Point camera at objects to detect them
 - Detected objects appear with bounding boxes
 - Audio feedback announces detected objects
