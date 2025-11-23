@@ -1,7 +1,8 @@
 you# Describe Uploaded Image
 
 ## 1. Primary actor and goals
-* __User__: Wants to upload a photo and receive an accurate description of the objects within it. 
+
+* __User__: Wants to upload a photo and receive an accurate description of the objects within it.
 
 ## 2. Other stakeholders and their goals
 
@@ -24,8 +25,8 @@ What must be true upon successful completion of the use case.
 * Image is processed and ChatGPT describes the image closely in text.
 * App displays text-to-speech function that reads out the description.
 
-
 ## 5. Workflow
+
 ```plantuml
 @startuml
 

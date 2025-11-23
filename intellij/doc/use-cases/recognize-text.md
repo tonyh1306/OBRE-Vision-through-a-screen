@@ -1,6 +1,7 @@
 # Recognize Text in Video
 
 ## 1. Primary actor and goals
+
 __User__: Wants to recognize text in the video stream from the camera and receive real-time audio descriptions of the text.
 
 ## 2. Other stakeholders and their goals
@@ -21,7 +22,7 @@ What must be true upon successful completion of the use case.
 
 * Text is recognized.
 * There is a text-to-speech function that reads out the text.
-* an option to choose the language which the language is read out in. 
+* an option to choose the language which the language is read out in.
 
 ## 4. Workflow
 
@@ -59,5 +60,3 @@ endif
 stop
 @enduml
 ```
-
-
