@@ -98,7 +98,7 @@ The command-line prototype (in `/intellij` directory) demonstrated:
 
 5. **Run on Device or Emulator**
    - Connect an Android device (API 32+) or launch an emulator:
-        - Specifically for an emulator, it is recommended that the user goes into the Android Device Management Pane. Choose `Edit > Advanced` Settings and choose Webcam0 for Rear Camera and Emulated for Front Camera.
+        - **Specifically for an emulator**, it is recommended that the user goes into the Android Device Management Pane. Choose `Edit > Advanced` Settings and choose Webcam0 for Rear Camera and Emulated for Front Camera.
    - Click `Run` in Android Studio
 
 ### Required Permissions

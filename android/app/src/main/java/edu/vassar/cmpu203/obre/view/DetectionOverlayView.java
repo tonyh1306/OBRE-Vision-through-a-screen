@@ -14,6 +14,10 @@ import java.util.List;
 
 import edu.vassar.cmpu203.obre.model.DetectedObject;
 
+/**
+ * A custom View that draws bounding boxes and labels over the camera preview.
+ * This view is transparent and sits on top of the PreviewView.
+ */
 public class DetectionOverlayView extends View {
     private List<DetectedObject> detectedObjects = new ArrayList<>();
     private final Paint boxPaint = new Paint();
@@ -36,11 +40,20 @@ public class DetectionOverlayView extends View {
         textPaint.setStyle(Paint.Style.FILL);
     }
 
+    /**
+     * Updates the list of objects to draw and triggers a redraw of the view.
+     *
+     * @param objects The list of detected objects.
+     */
     public void setDetectedObjects(List<DetectedObject> objects) {
         this.detectedObjects = objects;
         postInvalidate();
     }
 
+    /**
+     * Draws the bounding boxes and text labels on the canvas.
+     * Scales the coordinates from the model size (640x640) to the actual view size.
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
