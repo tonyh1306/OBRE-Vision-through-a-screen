@@ -19,7 +19,6 @@ public class DetectionOverlayView extends View {
     private final Paint boxPaint = new Paint();
     private final Paint textPaint = new Paint();
 
-    // Constructor needed for XML inflation
     public DetectionOverlayView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();

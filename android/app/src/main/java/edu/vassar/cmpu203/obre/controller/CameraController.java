@@ -25,14 +25,13 @@ import edu.vassar.cmpu203.obre.model.OpenCVAlgo;
 import edu.vassar.cmpu203.obre.view.VideoStreamFragment;
 
 public class CameraController {
-    // ... (Keep existing fields and Constructor) ...
     private static final String TAG = "CameraController";
     private final MainActivity mainActivity;
     private final ExecutorService cameraExecutor;
     private final ExecutorService detectionExecutor;
     private OpenCVAlgo detector;
     private final VideoStreamFragment fragment;
-    private CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
+    private CameraSelector cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA;
     private ProcessCameraProvider cameraProvider;
     private volatile boolean isRunning = false;
     private Mat latestFrame = new Mat();
@@ -48,8 +47,7 @@ public class CameraController {
         startCamera();
     }
 
-    // ... (Keep startCamera and bindCameraUseCases as they are) ...
-    private void startCamera() throws ExecutionException, InterruptedException {
+    private void startCamera() {
         com.google.common.util.concurrent.ListenableFuture<ProcessCameraProvider> cameraProviderListenerFuture = ProcessCameraProvider.getInstance(mainActivity);
         cameraProviderListenerFuture.addListener(() -> {
             try {
@@ -87,7 +85,6 @@ public class CameraController {
         fragment.presentAllowed("Camera started successfully");
     }
 
-    // REPLACE THIS METHOD ENTIRELY
     public void analyzeImage(ImageProxy imageProxy) {
         if (!isRunning) {
             imageProxy.close();
@@ -96,11 +93,9 @@ public class CameraController {
         try {
             // 1. Get the rotation required (usually 90 for back camera portrait)
             int rotationDegrees = imageProxy.getImageInfo().getRotationDegrees();
-
             Mat frame = imageProxyToMat(imageProxy);
 
             if (!frame.empty()) {
-
                 // 2. Rotate the Mat so the AI sees an upright image
                 if (rotationDegrees != 0) {
                     Mat rotated = new Mat();
@@ -111,7 +106,6 @@ public class CameraController {
                     } else if (rotationDegrees == 270) {
                         Core.rotate(frame, rotated, Core.ROTATE_90_COUNTERCLOCKWISE);
                     } else {
-                        // Fallback
                         frame.copyTo(rotated);
                     }
 
@@ -147,7 +141,6 @@ public class CameraController {
                 if (frame != null) {
                     List<DetectedObject> detections = detector.runOnFrame(frame);
                     frame.release();
-
                     // Pass results back to UI thread to update overlay
                     mainActivity.runOnUiThread(() -> fragment.updateDetections(detections));
                 }
