@@ -1,20 +1,19 @@
-# Real-time Text Recognition
+# Recognize Text in Video
 
 ## 1. Primary actor and goals
-__User__: Wants a fast responding speech text that is able to recognize text on video stream from the camera
+__User__: Wants to recognize text in the video stream from the camera and receive real-time audio descriptions of the text.
 
 ## 2. Other stakeholders and their goals
 
-* __User__: Wants a friendly user interface. Wants a fast responding and accurate description of an object on the screen.
+* __User__: Wants a friendly user interface. Wants fast responding and accurate text recognition.
 
-## 2. Preconditions
+## 3. Preconditions
 
 What must be true prior to the start of the use case.
 
-* We are not going to have a log-in system for the purpose of an easy-use and quick-access of the app
+* We are not going to have a log-in system for the purpose of easy-use and quick-access of the app.
 * The camera is working and is granted permission.
-* There's enough lighting and the text is visible and clear.
-* The app is open and running.
+* There is enough lighting and the text is visible and clear.
 
 ## 3. Post-conditions
 

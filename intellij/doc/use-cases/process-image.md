@@ -1,7 +1,7 @@
-you# Process Image Upload and generate Description
+you# Describe Uploaded Image
 
 ## 1. Primary actor and goals
-* __User__: Wants to process a photo to acquire its description and detect the focused object within it. 
+* __User__: Wants to upload a photo and receive an accurate description of the objects within it. 
 
 ## 2. Other stakeholders and their goals
 
@@ -11,8 +11,8 @@ you# Process Image Upload and generate Description
 
 What must be true prior to the start of the use case.
 
-* We are not going to have a log-in system for the purpose of an easy-use and quick-access of the app
-* User has a clear image prepared.
+* We are not going to have a log-in system for the purpose of easy-use and quick-access of the app.
+* User has a clear image prepared or access to the device's photo gallery.
 * The app is open and running.
 * App is granted permission to access the gallery and the device is connected to the Internet.
 
@@ -40,31 +40,40 @@ title Image Upload (fully-dressed)
 |User|
 start
 :Open image upload tab;
+:Select or take an image;
 
-while (Image?) is (no) 
 |System|
+while (Image selected?) is (no) 
   :Output error;
   :Ask for image;  
 endwhile(yes)
 
+|User|
 :Pass the image through to processing algorithm;
+
+|System|
 if (Output?) is ( yes ) then
     :Display the description;
     
     |User|
     if (Announce description?) is (yes) then
     |System|
-    :Speaks out loud description;
+    :Invoke Toggle text-to-speech;
+    :Speak out loud description;
     else (no)
     endif
 else ( no )
-:Displays error;
-:Ask for image reupload;
+|System|
+:Display error;
+|User|
+:Request image reupload;
 endif
 stop
 @enduml
 ```
-## 5. Sequence Diagram
+
+## 6. Sequence Diagram
+
 ```plantuml
 @startuml
 skin rose
@@ -74,22 +83,22 @@ actor User
 
 participant "UI" as ui
 participant "Controller" as controller
-participant ": ImageSource" as process
-participant ": MediaAlgo" as opencv
-participant ": LLMAlgo" as gpt
+participant ": ImageSource" as imagesource
+participant ": MediaAlgo" as mediaAlgo
+participant ": LLMAlgo" as llm
 
 User -> ui : select / upload image
-ui -> controller : pass image file
-controller -> process : load image
+ui -> controller : passImage(file)
+controller -> imagesource : loadImage(file)
 
-process -> controller : return pre-processed image
-opencv -> opencv : run recognition algorithm
-opencv --> controller : return detected objects
-process -> opencv : loads pre-processed image
-controller -> gpt : send object data for description
-gpt --> controller : return image description
+imagesource --> controller : return preprocessed image
+controller -> mediaAlgo : runAlgorithm(image)
+mediaAlgo --> controller : return detected objects
+controller -> llm : generateDescription(objects)
+llm --> controller : return description
 
-controller -> ui : display results (objects + description)
+controller -> ui : displayResults(objects, description)
+ui --> User : show results
 
 @enduml
 

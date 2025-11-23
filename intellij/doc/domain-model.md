@@ -1,71 +1,66 @@
 ```plantuml
 @startuml
-hide circle
 skin rose
 hide empty methods
 
 interface MediaSource {
 --
-Mat getFrame();
-ArrayList<Mat> getFrameArray();
+Mat getFrame()
+ArrayList<Mat> getFrameArray()
 }
 
-class ImageSource {
-Mat image
-ArrayList<Mat> frames
---
-Mat getFrame();
-ArrayList<Mat> getFrameArray();
+class ImageSource implements MediaSource {
+  image : Mat
+  frames : ArrayList<Mat>
+  --
+  Mat getFrame()
+  ArrayList<Mat> getFrameArray()
 }
 
-
-class VideoSource {
-boolean cameraMode
-VideoCapture vd
-ArrayList<Mat> frames
---
-Mat getFrame();
-ArrayList<Mat> getFrameArray();
+class VideoSource implements MediaSource {
+  cameraMode : boolean
+  vd : VideoCapture
+  frames : ArrayList<Mat>
+  --
+  Mat getFrame()
+  ArrayList<Mat> getFrameArray()
 }
 
-class LLMAlgo{
-ImageSource imageSource
+interface MediaAlgo {
 --
 List<String> runAlgorithm()
 }
 
-interface MediaAlgo{
-List<String> runAlgorithm()
+class OpenCVAlgo implements MediaAlgo {
+  + {static} MODEL_NAME : String
+  + {static} IMG_SIZE : int
+  + {static} COCO_CLASSES : String[]
+  mediaSource : MediaSource
+  net : Net
+  detectedObjects : List<String>
+  --
+  List<String> runAlgorithm()
+  boolean processFrame(Mat image, Mat resizedImage, Size netSize)
 }
 
-class OpenCVAlgo{
-+ {static} COCO_CLASSES : List<String>
-Net net
-+ {static} IMG_SIZE : int
-List<String> detectObjects(MediaSource source)
-MediaSource mediaSource
-+ {static} MODEL_NAME : String
---
-List<String> runAlgorithm(Mat frame)
-boolean processFrame(Mat frame)
+class TextRecognizer {
+  --
+  String recognizeText(String filename)
 }
 
-class OtherAlgo{
-
+class LLMAlgo {
+  API_KEY : String
 }
 
-' class TesseractAlgo{}
+class ResourceUtils {
+  --
+  String getResourcePath(String resourceName) {static}
+}
 
-' interface TextRecAlgo {}
+ImageSource --|> MediaSource
+VideoSource --|> MediaSource
+OpenCVAlgo --|> MediaAlgo
+OpenCVAlgo --> MediaSource : mediaSource
+OpenCVAlgo --> ResourceUtils : uses
 
-MediaAlgo<|..OpenCVAlgo
-MediaAlgo<|.right.OtherAlgo
-ImageSource -left- OpenCVAlgo: input >
-ImageSource -- LLMAlgo: input >
-VideoSource - OpenCVAlgo: input > 
-ImageSource ..|> MediaSource
-VideoSource ..|> MediaSource
-OpenCVAlgo ..> MediaSource : <<uses>>
-
-' TesseractAlgo ..|> TextRecAlgo
 @enduml
