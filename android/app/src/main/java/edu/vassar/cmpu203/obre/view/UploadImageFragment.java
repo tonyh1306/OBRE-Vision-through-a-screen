@@ -1,50 +1,36 @@
 package edu.vassar.cmpu203.obre.view;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import org.json.JSONException;
-
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-
 import edu.vassar.cmpu203.obre.R;
-import edu.vassar.cmpu203.obre.model.LLMAlgo;
 
-/**
- * Fragment allowing users to select an image and send it to Gemini.
- */
-public class UploadImageFragment extends Fragment implements UploadImageUI {
+public class UploadImageFragment extends Fragment {
 
-    private static final int PICK_IMAGE_REQUEST = 10;
+    public interface Listener {
+        void onPickImageRequested();
+        void onAnalyzeImageRequested(Bitmap image);
+        void onSwitchBackToStream();
+    }
 
-    private com.google.androidgamesdk.gametextinput.Listener listener;
     private ImageView previewImage;
-    private TextView resultText;
+    private ProgressBar loadingSpinner;
     private Bitmap selectedBitmap;
+    private Listener listener;
 
     public UploadImageFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void setListener(com.google.androidgamesdk.gametextinput.Listener listener) {
-        this.listener = listener;
     }
 
     @Override
@@ -54,91 +40,58 @@ public class UploadImageFragment extends Fragment implements UploadImageUI {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         previewImage = view.findViewById(R.id.preview_image);
-        resultText  = view.findViewById(R.id.result_text);
-
+        loadingSpinner = view.findViewById(R.id.loading_spinner);
         Button pickImageButton = view.findViewById(R.id.pick_image_button);
-        Button runAIButton     = view.findViewById(R.id.run_ai_button);
+        Button runAIButton = view.findViewById(R.id.run_ai_button);
+        Button backButton = view.findViewById(R.id.backButton);
 
-        pickImageButton.setOnClickListener(v -> openImagePicker());
+        pickImageButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onPickImageRequested();
+            }
+        });
 
         runAIButton.setOnClickListener(v -> {
             if (selectedBitmap == null) {
                 Toast.makeText(getContext(), "Please pick an image first", Toast.LENGTH_SHORT).show();
                 return;
             }
-            try {
-                callGeminiAPI(selectedBitmap);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
+            if (listener != null) {
+                // Show loading state
+                if (loadingSpinner != null) loadingSpinner.setVisibility(View.VISIBLE);
+                listener.onAnalyzeImageRequested(selectedBitmap);
+            }
+        });
+
+        backButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onSwitchBackToStream();
             }
         });
     }
 
-    /** Launches the file picker */
-    private void openImagePicker() {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    public void setListener(Listener listener) {
+        this.listener = listener;
     }
 
-    /** Handles image selected from device */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode,
-                                 @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
-            if (data != null && data.getData() != null) {
-                Uri uri = data.getData();
-                try {
-                    InputStream is = requireActivity().getContentResolver().openInputStream(uri);
-                    selectedBitmap = BitmapFactory.decodeStream(is);
-                    previewImage.setImageBitmap(selectedBitmap);
-
-                } catch (Exception e) {
-                    Toast.makeText(getContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
-                }
-            }
+    /**
+     * Called by the Controller (MainActivity) to update the UI with the selected image.
+     */
+    public void updateImagePreview(Bitmap bitmap) {
+        this.selectedBitmap = bitmap;
+        if (previewImage != null) {
+            previewImage.setImageBitmap(bitmap);
         }
     }
 
-    /** Convert bitmap → Base64 for Gemini REST */
-    private String bitmapToBase64(Bitmap bmp) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] bytes = stream.toByteArray();
-        return Base64.encodeToString(bytes, Base64.NO_WRAP);
-    }
-
-    /** Calls the Gemini REST client */
-    private void callGeminiAPI(Bitmap bitmap) throws JSONException {
-        resultText.setText("Processing…");
-
-        String base64 = bitmapToBase64(bitmap);
-        LLMAlgo client = new LLMAlgo();
-
-        client.sendImageToGemini(base64, new LLMAlgo.Listener() {
-            @Override
-            public void onSuccess(String responseText) {
-                if (getActivity() != null) {
-                    requireActivity().runOnUiThread(() ->
-                            resultText.setText("Gemini Response:\n\n" + responseText)
-                    );
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                if (getActivity() != null) {
-                    requireActivity().runOnUiThread(() ->
-                            resultText.setText("Error: " + e.getMessage())
-                    );
-                }
-            }
-        });
+    /**
+     * Called by Controller if analysis fails to hide spinner
+     */
+    public void onAnalysisFailed() {
+        if (loadingSpinner != null) loadingSpinner.setVisibility(View.GONE);
     }
 }

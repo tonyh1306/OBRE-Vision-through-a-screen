@@ -7,7 +7,7 @@ import android.widget.TextView;
 import edu.vassar.cmpu203.obre.R;
 
 public interface UploadImageUI {
-    void setListener(com.google.androidgamesdk.gametextinput.Listener listener);
+//    void setListener(com.google.androidgamesdk.gametextinput.Listener listener);
 //    public Button buttonPickImage;
 //    public ImageView previewImage;
 //    public TextView resultText;

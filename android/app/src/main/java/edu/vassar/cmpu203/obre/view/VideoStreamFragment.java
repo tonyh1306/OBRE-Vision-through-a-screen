@@ -23,6 +23,7 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
     private FragmentVideoStreamBinding binding;
     private Listener listener;
 
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -33,9 +34,15 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // No manual view creation needed anymore!
-        // The XML handles it.
+        this.binding.cameraSwitchButton.setOnClickListener((v) -> {
+            if (this.listener != null) this.listener.onSwitchCamera();
+        });
+        this.binding.uploadImageButton.setOnClickListener(v -> {
+            if (this.listener != null) this.listener.onUploadImageRequested();
+        });
+
     }
+
 
     @Override
     public void setListener(Listener listener) {
@@ -46,14 +53,8 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
         return binding.previewView;
     }
 
-    @Override
-    public void displayDetection(String name, int x, int y, int width, int height, VideoStreamUI ui) {
-        // Legacy
-    }
-
     public void updateDetections(List<DetectedObject> objects) {
-        // Access the view directly from the binding
-        if (binding != null && binding.overlayView != null) {
+        if (binding != null) {
             binding.overlayView.setDetectedObjects(objects);
         }
     }
