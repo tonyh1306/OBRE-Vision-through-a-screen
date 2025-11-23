@@ -49,12 +49,10 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
 
     }
 
-
     @Override
     public void setListener(Listener listener) {
         this.listener = listener;
     }
-
 
     /**
      * returns the PreviewView used by CameraX.
