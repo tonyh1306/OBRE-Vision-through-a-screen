@@ -10,7 +10,7 @@ public class ImageSource implements MediaSource {
     private Mat image;
     private ArrayList<Mat> frames;
 
-    public ImageSource(String imageAddress) throws FileNotFoundException {
+    public ImageSource(String imageAddress) {
         frames = new ArrayList<>();
         try {
             File file = new File(ResourceUtils.getResourcePath(imageAddress));
@@ -19,7 +19,7 @@ public class ImageSource implements MediaSource {
             }
             image = Imgcodecs.imread(ResourceUtils.getResourcePath(imageAddress));
             frames.add(image);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | FileNotFoundException e) {
             System.out.println(e.getMessage()
                     + "\nImage address: " + imageAddress);
         }

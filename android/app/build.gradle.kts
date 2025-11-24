@@ -60,6 +60,7 @@ android {
 }
 
 dependencies {
+    androidTestImplementation("androidx.test:rules:1.5.0")
     // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
 
@@ -90,6 +91,9 @@ dependencies {
     implementation("io.ktor:ktor-client-serialization:2.3.7")
     implementation("io.ktor:ktor-client-logging:2.3.7")
     implementation(libs.firebase.ai)
+    implementation(libs.espresso.contrib)
+    implementation(libs.espresso.intents)
+    implementation(libs.fragment.testing)
 
     // CameraX
     val cameraxVersion = "1.3.3"
