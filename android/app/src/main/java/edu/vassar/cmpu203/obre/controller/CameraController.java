@@ -53,7 +53,7 @@ public class CameraController {
      * Initializes the camera controller and starts the camera immediately.
      *
      * @param activity The main activity context, used for lifecycle binding.
-     * @param frag The fragment where the camera preview and overlays are displayed.
+     * @param frag     The fragment where the camera preview and overlays are displayed.
      */
     public CameraController(MainActivity activity, VideoStreamFragment frag) {
         this.mainActivity = activity;
@@ -126,43 +126,40 @@ public class CameraController {
             imageProxy.close();
             return;
         }
+
+        Mat frame = null;
         try {
-            // 1. Get the rotation required (usually 90 for back camera portrait)
+            frame = imageProxyToMat(imageProxy);
+
             int rotationDegrees = imageProxy.getImageInfo().getRotationDegrees();
-            Mat frame = imageProxyToMat(imageProxy);
-
-            if (!frame.empty()) {
-                // 2. Rotate the Mat so the AI sees an upright image
-                if (rotationDegrees != 0) {
-                    Mat rotated = new Mat();
-                    if (rotationDegrees == 90) {
-                        Core.rotate(frame, rotated, Core.ROTATE_90_CLOCKWISE);
-                    } else if (rotationDegrees == 180) {
-                        Core.rotate(frame, rotated, Core.ROTATE_180);
-                    } else if (rotationDegrees == 270) {
-                        Core.rotate(frame, rotated, Core.ROTATE_90_COUNTERCLOCKWISE);
-                    } else {
-                        frame.copyTo(rotated);
-                    }
-
-                    // Swap frames
-                    frame.release();
-                    frame = rotated;
+            if (rotationDegrees != 0) {
+                Mat rotated = new Mat();
+                if (rotationDegrees == 90) {
+                    Core.rotate(frame, rotated, Core.ROTATE_90_CLOCKWISE);
+                } else if (rotationDegrees == 180) {
+                    Core.rotate(frame, rotated, Core.ROTATE_180);
+                } else if (rotationDegrees == 270) {
+                    Core.rotate(frame, rotated, Core.ROTATE_90_COUNTERCLOCKWISE);
                 }
-
-                synchronized (latestFrame) {
-                    if (!latestFrame.empty()) {
-                        latestFrame.release();
-                    }
-                    latestFrame = frame; // Ownership transferred
-                }
+                frame.release();
+                frame = rotated;
             }
+
+            synchronized (this) {
+                if (latestFrame != null) {
+                    latestFrame.release();
+                }
+                latestFrame = frame;
+            }
+
         } catch (Exception e) {
             Log.e(TAG, "Error processing image", e);
+            if (frame != null) frame.release();
         } finally {
             imageProxy.close();
         }
     }
+
 
     /**
      * Starts the continuous object detection loop on a background thread.
@@ -177,21 +174,25 @@ public class CameraController {
         detectionExecutor.execute(() -> {
             while (isRunning) {
                 Mat frame = null;
-                synchronized (latestFrame) {
-                    if (!latestFrame.empty()) {
+                synchronized (this) {
+                    if (latestFrame != null && !latestFrame.empty()) {
                         frame = latestFrame.clone();
                     }
                 }
 
                 if (frame != null) {
-                    List<DetectedObject> detections = detector.runOnFrame(frame);
-                    frame.release();
-                    // Pass results back to UI thread to update overlay
-                    mainActivity.runOnUiThread(() -> fragment.updateDetections(detections));
+                    try {
+                        List<DetectedObject> detections = detector.runOnFrame(frame);
+                        mainActivity.runOnUiThread(() -> fragment.updateDetections(detections));
+                    } catch (Exception e) {
+                        Log.e(TAG, "Detection failed", e);
+                    } finally {
+                        frame.release();
+                    }
                 }
 
                 try {
-                    Thread.sleep(30); // Throttle detection to ~30fps
+                    Thread.sleep(30);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     break;
@@ -199,6 +200,7 @@ public class CameraController {
             }
         });
     }
+
 
     /**
      * Converts a CameraX {@link ImageProxy} (YUV_420_888) into an OpenCV {@link Mat} (RGB).
@@ -291,7 +293,7 @@ public class CameraController {
         if (detectionExecutor != null) detectionExecutor.shutdown();
 
         synchronized (latestFrame) {
-            if (!latestFrame.empty()) latestFrame.release();
+            if (latestFrame != null && !latestFrame.empty()) latestFrame.release();
         }
     }
 
