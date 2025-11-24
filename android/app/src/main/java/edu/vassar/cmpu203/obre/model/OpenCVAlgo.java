@@ -11,6 +11,7 @@ import java.util.List;
 import static org.opencv.imgproc.Imgproc.*;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  * Implements object detection using OpenCV and the YOLO neural network model.
@@ -36,15 +37,10 @@ public class OpenCVAlgo implements MediaAlgo {
             net.setPreferableBackend(Dnn.DNN_BACKEND_DEFAULT);
             net.setPreferableTarget(Dnn.DNN_TARGET_CPU);
         } catch (Exception e) {
-            android.util.Log.e("OpenCVAlgo", "Error loading YOLO model", e);
+            Log.e("OpenCVAlgo", "Error loading YOLO model", e);
             net = null;
         }
         detectedObjects = new ArrayList<>();
-    }
-
-    @Override
-    public List<DetectedObject> runAlgorithm() {
-        return new ArrayList<>();
     }
 
     private void processFrame(Mat image, Mat resizedImage, Size netSize) {

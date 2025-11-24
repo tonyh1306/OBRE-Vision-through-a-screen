@@ -18,6 +18,9 @@ common = "0.10.0"
 firebaseAi = "17.6.0"
 generativeai = "0.9.0"
 gamesActivity = "3.0.5"
+espressoContrib = "3.7.0"
+espressoIntents = "3.7.0"
+fragmentTesting = "1.8.9"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -38,6 +41,9 @@ generativeai = { group = "com.google.ai.client.generativeai", name = "generative
 
 common = { group = "com.google.ai.client.generativeai", name = "common", version.ref = "common" }
 games-activity = { group = "androidx.games", name = "games-activity", version.ref = "gamesActivity" }
+espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "espressoContrib" }
+espresso-intents = { group = "androidx.test.espresso", name = "espresso-intents", version.ref = "espressoIntents" }
+fragment-testing = { group = "androidx.fragment", name = "fragment-testing", version.ref = "fragmentTesting" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
