@@ -92,7 +92,7 @@ public class LLMAlgo {
 
         Content content = new Content.Builder()
                 .addImage(bitmap)
-                .addText("what is the object in the picture?")
+                .addText("Describe what is in this image for a visually impaired person. 5 - 20 words")
                 .build();
 
         ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
