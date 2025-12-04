@@ -1,6 +1,8 @@
 package edu.vassar.cmpu203.obre.view;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
+
+import java.util.Locale;
+
 import edu.vassar.cmpu203.obre.R;
 
 public class ResultFragment extends Fragment {
@@ -17,6 +24,7 @@ public class ResultFragment extends Fragment {
     private static final String ARG_RESULT_TEXT = "result_text";
     private String resultText;
 
+    private TextToSpeech tts;
     /**
      * Fragment used to display the textual results returned by the AI model.
      */
@@ -42,11 +50,38 @@ public class ResultFragment extends Fragment {
         }
     }
 
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // Inflate a simple layout for result display
-        return inflater.inflate(R.layout.fragment_result, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_result, container, false);
+
+        Context context = requireContext();  // safer than getContext()
+
+        tts = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage(Locale.US);
+
+                    if (result == TextToSpeech.LANG_MISSING_DATA ||
+                            result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "Language not supported");
+                        return;
+                    }
+
+                    String textToSpeak = (resultText == null || resultText.isEmpty())
+                            ? "Content not available"
+                            : resultText;
+
+                    tts.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, null, "utteranceId");
+                } else {
+                    Log.e("TTS", "Initialization failed");
+                }
+            }
+        });
+
+        return view;
     }
 
     @Override
@@ -56,9 +91,18 @@ public class ResultFragment extends Fragment {
         TextView resultTextView = view.findViewById(R.id.result_text_view);
         resultTextView.setText(resultText != null ? resultText : "No result");
 
-        // Optional: you can add a back button here if you want
         view.findViewById(R.id.back_button).setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager().popBackStack()
         );
+    }
+
+    @Override
+    public void onDestroy() {
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+            tts = null;
+        }
+        super.onDestroy();
     }
 }
