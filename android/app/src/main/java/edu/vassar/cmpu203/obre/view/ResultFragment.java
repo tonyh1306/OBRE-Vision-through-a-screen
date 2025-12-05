@@ -19,7 +19,10 @@ import android.speech.tts.TextToSpeech;
 import java.util.Locale;
 
 import edu.vassar.cmpu203.obre.R;
-
+/**
+ * A Fragment responsible for displaying AI-generated result text to the user and
+ * optionally reading it aloud using Android's {@link TextToSpeech} (TTS) engine.
+ */
 public class ResultFragment extends Fragment {
 
     private static final String ARG_RESULT_TEXT = "result_text";
@@ -37,7 +40,9 @@ public class ResultFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
+    /**
+     * Reads the result text argument passed to the fragment.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,13 +50,20 @@ public class ResultFragment extends Fragment {
             resultText = getArguments().getString(ARG_RESULT_TEXT);
         }
     }
-
+    /**
+     * Inflates the UI layout for the fragment.
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_result, container, false);
     }
-
+    /**
+     * Sets up the UI, displays the result text, initializes TextToSpeech,
+     * and wires the back button listener.
+     * @param view The fragment's root view.
+     * @param savedInstanceState Not used.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         AudioManager am = (AudioManager) requireContext().getSystemService(Context.AUDIO_SERVICE);
@@ -90,7 +102,9 @@ public class ResultFragment extends Fragment {
                 tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "utteranceId");
             });
     }
-
+    /**
+     * Stops and releases the TextToSpeech engine when the fragment is destroyed.
+     */
     @Override
     public void onDestroy() {
         if (tts != null) {

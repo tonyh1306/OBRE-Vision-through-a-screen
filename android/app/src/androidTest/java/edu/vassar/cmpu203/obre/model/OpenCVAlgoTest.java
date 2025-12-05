@@ -44,6 +44,9 @@ public class OpenCVAlgoTest {
     private Context context;
     private OpenCVAlgo algo;
 
+    /**
+     * Sets up the testing environment before each test is run.
+     */
     @Before
     public void setUp() {
         context = getInstrumentation().getTargetContext();
@@ -54,7 +57,10 @@ public class OpenCVAlgoTest {
 
         algo = new OpenCVAlgo(context);
     }
-
+    /**
+     * Tests how {@code runOnFrame()} responds when given a {@code null} frame input.
+     * This ensures the method performs proper defensive null checks.
+     */
     @Test
     public void runOnFrame_null_input_handling() {
         // Verify that passing a null 'frame' parameter returns an empty list immediately
@@ -62,7 +68,12 @@ public class OpenCVAlgoTest {
         assertNotNull(result);
         assertTrue(result.isEmpty());
     }
-
+    /**
+     * Tests how {@code runOnFrame()} behaves when supplied with a valid
+     * but uninitialized (empty) {@link Mat}.
+     * This verifies that the algorithm can handle non-null but invalid/empty
+     * image data
+     */
     @Test
     public void runOnFrame_empty_Mat_handling() {
         // Verify that passing a valid but empty Mat object returns an empty list
@@ -72,7 +83,12 @@ public class OpenCVAlgoTest {
         assertTrue(detectedObjects.isEmpty());
         emptyFrame.release();
     }
-
+    /**
+     * Tests that runOnFrame() properly handles the case where the model
+     * has not been initialized. When 'net' is null, the method should
+     * return a non-empty list containing a single error object with the
+     * name "Error: Model not loaded".
+     */
     @Test
     public void runOnFrame_uninitialized_model_handling() {
         // Verify that if the 'net' object is null, it returns a specific error object
@@ -108,7 +124,12 @@ public class OpenCVAlgoTest {
 //            fail("Could not read image file: " + ex.getMessage());
 //        }
 //    }
-
+    /**
+     * Tests handling of an image where the model returns zero detections.
+     * When no objects are found, the method is expected to return a list
+     * containing one placeholder DetectedObject whose name is
+     * "No objects detected".
+     */
     @Test
     public void runOnFrame_zero_detections_handling() {
         // Verify that when the model runs successfully but finds no objects, it returns "No objects detected"
@@ -122,7 +143,10 @@ public class OpenCVAlgoTest {
 
         blackFrame.release();
     }
-
+    /**
+     * Tests that runOnFrame() filters detections correctly according to
+     * the model's confidence threshold logic.
+     */
     @Test
     public void runOnFrame_confidence_threshold_filtering() {
         Mat noiseFrame = new Mat(640, 640, CvType.CV_8UC3);
@@ -135,7 +159,10 @@ public class OpenCVAlgoTest {
         }
         noiseFrame.release();
     }
-
+    /**
+     * Tests that runOnFrame() can be called repeatedly without causing
+     * memory leaks, OpenCV resource misuse, or unexpected exceptions.
+     */
     @Test
     public void runOnFrame_resource_management__Memory_Leak_() {
         // This test verifies that the code runs without throwing memory exceptions over multiple loops
