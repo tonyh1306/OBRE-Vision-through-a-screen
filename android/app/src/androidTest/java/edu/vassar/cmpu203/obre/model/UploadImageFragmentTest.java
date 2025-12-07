@@ -30,7 +30,10 @@ public class UploadImageFragmentTest {
     public GrantPermissionRule permissionRule = GrantPermissionRule.grant(
             android.Manifest.permission.CAMERA,
             android.Manifest.permission.RECORD_AUDIO);
-
+    /**
+     * Checks that tapping the Upload Image button shows the upload screen
+     * and its main UI elements.
+     */
     @Test
     public void testSwitchScreen() {
         Espresso.onView(ViewMatchers.withId(R.id.uploadImageButton)).perform(ViewActions.click());
@@ -39,7 +42,9 @@ public class UploadImageFragmentTest {
         Espresso.onView(ViewMatchers.withId(R.id.pick_image_button)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
         Espresso.onView(ViewMatchers.withId(R.id.preview_image)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
     }
-
+    /**
+     * Ensures that pressing the Back button returns to the camera screen.
+     */
     @Test
     public void testBackButtonReturnsToStream() {
         onView(withId(R.id.uploadImageButton)).perform(click());
@@ -53,7 +58,10 @@ public class UploadImageFragmentTest {
         Espresso.onView((withId(R.id.backButton))).check(ViewAssertions.doesNotExist());
     }
 
-
+    /**
+     * Verifies that tapping Analyze with no image selected
+     * keeps the button visible and doesn't crash.
+     */
     @Test
     public void testAnalyzeButtonValidation() {
         onView(withId(R.id.uploadImageButton)).perform(click());

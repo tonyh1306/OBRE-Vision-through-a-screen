@@ -94,11 +94,7 @@ public class LLMAlgo {
 
         Content content = new Content.Builder()
                 .addImage(bitmap)
-                .addText("what is the object in the picture? describe in bullet points. be " +
-                        "descriptive but brief for people with low vision. schema should be " +
-                        "a main bullet point of only the name of the object follwed by 3 bullet " +
-                        "points of what the object is which should go up to 3 lines at most. do" +
-                        "not use text decorations in your response.")
+                .addText("Describe what is in this image for a visually impaired person. 5 - 20 words")
                 .build();
 
         ListenableFuture<GenerateContentResponse> response = model.generateContent(content);

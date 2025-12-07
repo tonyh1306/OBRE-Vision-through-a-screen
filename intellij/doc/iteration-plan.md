@@ -1,3 +1,11 @@
+# This Iteration (#4)
+
+## This iteration we added
+- TTS integration: Android's Text-to-Speech API to provide audio descriptions for detected objects.
+- Added a history feature with the results of previous image analyses
+
+
+# Previous Iteration
 ## Risk and priority
 
 1.) Functionality of video stream

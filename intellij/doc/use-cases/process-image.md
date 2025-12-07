@@ -88,6 +88,7 @@ participant ": ImageSource" as imagesource
 participant ": MediaAlgo" as mediaAlgo
 participant ": LLMAlgo" as llm
 
+ui -> User : present image selection form
 User -> ui : select / upload image
 ui -> controller : passImage(file)
 controller -> imagesource : loadImage(file)
@@ -100,7 +101,6 @@ llm --> controller : return description
 
 controller -> ui : displayResults(objects, description)
 ui --> User : show results
-
 @enduml
 
 

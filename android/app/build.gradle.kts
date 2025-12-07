@@ -59,7 +59,10 @@ android {
     }
 }
 
+
+
 dependencies {
+//    implementation(libs.rules)
     androidTestImplementation("androidx.test:rules:1.5.0")
     // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:34.6.0"))

@@ -27,9 +27,13 @@ public class VideoStreamFragmentTest {
             android.Manifest.permission.CAMERA,
             android.Manifest.permission.RECORD_AUDIO);
 
+    /** Launches MainActivity as the host for the fragment under test. */
     @Rule
     public ActivityScenarioRule<MainActivity> activityRule = new ActivityScenarioRule<>(MainActivity.class);
-
+    /**
+     * Verifies that the main video stream UI components are present
+     * when the fragment loads.
+     */
     @Test
     public void testPresent() {
         onView(withId(R.id.previewView)).check(matches(isDisplayed()));
@@ -37,7 +41,10 @@ public class VideoStreamFragmentTest {
         onView(withId(R.id.cameraSwitchButton)).check(matches(isDisplayed()));
         onView(withId(R.id.uploadImageButton)).check(matches(isDisplayed()));
     }
-
+    /**
+     * Ensures that pressing the camera switch button keeps the UI stable
+     * and all expected elements remain visible.
+     */
     @Test
     public void testSwitchCameraButton() {
         Espresso.onView(ViewMatchers.withId(R.id.cameraSwitchButton)).perform(ViewActions.click());

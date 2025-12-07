@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
             @Override
             public void onSuccess(String responseText) {
                 runOnUiThread(() -> {
-                    ResultFragment resultFragment = new ResultFragment(responseText);
+                    ResultFragment resultFragment = ResultFragment.newInstance(responseText);
                     resultFragment.setListener(MainActivity.this);
                     mainUI.displayFragment(resultFragment, true);
                 });

@@ -36,7 +36,7 @@ public class DetectionOverlayView extends View {
         boxPaint.setStrokeWidth(5f);
 
         textPaint.setColor(Color.RED);
-        textPaint.setTextSize(40f);
+        textPaint.setTextSize(60f);
         textPaint.setStyle(Paint.Style.FILL);
     }
 
