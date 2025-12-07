@@ -5,6 +5,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
 import com.google.firebase.ai.type.Content;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -92,7 +94,11 @@ public class LLMAlgo {
 
         Content content = new Content.Builder()
                 .addImage(bitmap)
-                .addText("what is the object in the picture?")
+                .addText("what is the object in the picture? describe in bullet points. be " +
+                        "descriptive but brief for people with low vision. schema should be " +
+                        "a main bullet point of only the name of the object follwed by 3 bullet " +
+                        "points of what the object is which should go up to 3 lines at most. do" +
+                        "not use text decorations in your response.")
                 .build();
 
         ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
@@ -105,7 +111,7 @@ public class LLMAlgo {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(@NonNull Throwable t) {
                 t.printStackTrace();
                 listener.onError((Exception) t);  // Call listener on error
             }

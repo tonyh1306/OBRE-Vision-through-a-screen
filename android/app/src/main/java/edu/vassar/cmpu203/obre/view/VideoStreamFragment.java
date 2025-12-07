@@ -79,6 +79,12 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
         }
     }
 
+    public void updateTextDetections(String text) {
+        if (binding != null) {
+            binding.text.setText(text);
+        }
+    }
+
     /**
      * Displays a short toast message on the main thread.
      *

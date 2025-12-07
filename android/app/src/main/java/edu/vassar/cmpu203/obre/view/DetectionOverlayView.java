@@ -60,11 +60,9 @@ public class DetectionOverlayView extends View {
 
         if (detectedObjects == null || detectedObjects.isEmpty()) return;
 
-        // Hardcoded Model Size (YOLO default)
         float modelWidth = 640f;
         float modelHeight = 640f;
 
-        // Calculate scale to fit screen
         float scaleX = (float) getWidth() / modelWidth;
         float scaleY = (float) getHeight() / modelHeight;
 

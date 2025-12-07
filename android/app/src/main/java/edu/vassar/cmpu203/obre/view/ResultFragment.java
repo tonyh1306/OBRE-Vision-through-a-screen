@@ -1,9 +1,12 @@
 package edu.vassar.cmpu203.obre.view;
 
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,11 +14,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import edu.vassar.cmpu203.obre.R;
+import edu.vassar.cmpu203.obre.databinding.FragmentUploadImageBinding;
+import edu.vassar.cmpu203.obre.databinding.FragmentResultBinding;
 
-public class ResultFragment extends Fragment {
+public class ResultFragment extends Fragment implements ResultUI {
 
     private static final String ARG_RESULT_TEXT = "result_text";
     private String resultText;
+    private Listener listener;
+    private FragmentResultBinding binding;
+
 
     /**
      * Fragment used to display the textual results returned by the AI model.
@@ -53,12 +61,23 @@ public class ResultFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView resultTextView = view.findViewById(R.id.result_text_view);
-        resultTextView.setText(resultText != null ? resultText : "No result");
+        LinearLayout ll = view.findViewById(R.id.scroll_layout);
+
+        TextView tv = new TextView(getContext());
+        tv.setText(resultText != null ? resultText : "No result");
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
+        ll.addView(tv);
 
         // Optional: you can add a back button here if you want
-        view.findViewById(R.id.back_button).setOnClickListener(v ->
-                requireActivity().getSupportFragmentManager().popBackStack()
+        view.findViewById(R.id.back_button).setOnClickListener(v -> {
+                    this.listener.onSwitchToUpload(resultText);
+                    requireActivity().getSupportFragmentManager().popBackStack();
+                }
         );
+    }
+
+    @Override
+    public void setListener(Listener listener) {
+        this.listener = listener;
     }
 }

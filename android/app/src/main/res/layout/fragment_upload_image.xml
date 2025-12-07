@@ -14,14 +14,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="#FF5C5C"
             android:text="Back" />
 
         <Button
             android:id="@+id/pick_image_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Choose Image" />
+            android:text="Choose Image"
+            android:backgroundTint="#993E0097"/>
 
         <ImageView
             android:id="@+id/preview_image"
@@ -29,7 +30,8 @@
             android:layout_height="300dp"
             android:layout_marginTop="16dp"
             android:background="#DDDDDD"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            />
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="wrap_content"
@@ -40,7 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Analyze Image" />
+            android:text="Analyze Image"
+            android:backgroundTint="#993E0097"/>
 
         <ProgressBar
             android:id="@+id/loading_spinner"
@@ -50,12 +53,27 @@
             android:layout_marginTop="12dp"
             android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/result_text"
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
-            android:textSize="24dp" />
+            android:layout_height="300dp">
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:ellipsize="end"
+                    android:maxLines="3" />
+
+            </LinearLayout>
+
+        </ScrollView>
 
     </LinearLayout>
 </ScrollView>

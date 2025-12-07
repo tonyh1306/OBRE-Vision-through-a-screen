@@ -1,5 +1,8 @@
 package edu.vassar.cmpu203.obre.controller;
 
+import static org.opencv.android.Utils.matToBitmap;
+
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -10,10 +13,22 @@ import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.Text;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
+
+import org.opencv.android.Utils;
 import org.opencv.core.Core; // <--- ADD THIS IMPORT
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.android.Utils.*;
 
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -41,13 +56,15 @@ public class CameraController {
     private final MainActivity mainActivity;
     private final ExecutorService cameraExecutor;
     private final ExecutorService detectionExecutor;
+    private final ExecutorService textExecutor;
     private OpenCVAlgo detector;
     private final VideoStreamFragment fragment;
-    private CameraSelector cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA;
+    private CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
     private ProcessCameraProvider cameraProvider;
     private volatile boolean isRunning = false;
     private Mat latestFrame = new Mat();
     private byte[] cachedI420Buffer;
+    TextRecognizer textRecognizer;
 
     /**
      * Initializes the camera controller and starts the camera immediately.
@@ -57,10 +74,12 @@ public class CameraController {
      */
     public CameraController(MainActivity activity, VideoStreamFragment frag) {
         this.mainActivity = activity;
+        this.textExecutor = Executors.newSingleThreadExecutor();
         cameraExecutor = Executors.newSingleThreadExecutor();
         detectionExecutor = Executors.newSingleThreadExecutor();
         this.fragment = frag;
         detector = new OpenCVAlgo(activity);
+        this.textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
 
         startCamera();
     }
@@ -100,16 +119,14 @@ public class CameraController {
         Preview preview = new Preview.Builder().build();
         preview.setSurfaceProvider(fragment.getPreviewView().getSurfaceProvider());
 
-        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_YUV_420_888)
-                .build();
+        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST).setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_YUV_420_888).build();
 
         imageAnalysis.setAnalyzer(cameraExecutor, this::analyzeImage);
         cameraProvider.unbindAll();
         cameraProvider.bindToLifecycle(mainActivity, cameraSelector, preview, imageAnalysis);
         isRunning = true;
         startDetection();
+        startTextRecognition();
 
         Log.d(TAG, "Camera started successfully");
         fragment.presentAllowed("Camera started successfully");
@@ -158,6 +175,56 @@ public class CameraController {
         } finally {
             imageProxy.close();
         }
+    }
+
+    public void startTextRecognition() {
+        textExecutor.execute(() -> {
+            while (isRunning) {
+                Mat frame = null;
+
+                synchronized (this) {
+                    if (latestFrame != null && !latestFrame.empty()) {
+                        frame = latestFrame.clone();
+                    }
+                }
+
+                if (frame != null) {
+                    try {
+                        Bitmap bitmap = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
+                        Utils.matToBitmap(frame, bitmap);
+
+                        InputImage image = InputImage.fromBitmap(bitmap, 0);
+
+
+                        Task<Text> result = textRecognizer.process(image);
+                        Text text = Tasks.await(result);
+                        String textResult = text.getText();
+                        if (textResult != null && !textResult.isEmpty()) {
+                            Log.d(TAG, "Text: " + textResult);
+                            mainActivity.runOnUiThread(() -> {
+                                if (fragment != null) {
+                                    fragment.updateTextDetections(textResult);
+                                }
+                            });
+
+                        }
+                        bitmap.recycle();
+
+                    } catch (Exception e) {
+                        Log.e(TAG, "Text recognition failed", e);
+                    } finally {
+                        frame.release();
+                    }
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    Log.e(TAG, "Text recognition failed", e);
+                }
+
+            }
+        });
     }
 
 
@@ -292,6 +359,8 @@ public class CameraController {
         if (cameraExecutor != null) cameraExecutor.shutdown();
         if (detectionExecutor != null) detectionExecutor.shutdown();
 
+        if (textExecutor != null) textExecutor.shutdown();
+
         synchronized (latestFrame) {
             if (latestFrame != null && !latestFrame.empty()) latestFrame.release();
         }
@@ -301,9 +370,7 @@ public class CameraController {
      * Toggles between the front and back cameras.
      */
     public void switchCamera() {
-        cameraSelector = (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
-                ? CameraSelector.DEFAULT_FRONT_CAMERA
-                : CameraSelector.DEFAULT_BACK_CAMERA;
+        cameraSelector = (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) ? CameraSelector.DEFAULT_FRONT_CAMERA : CameraSelector.DEFAULT_BACK_CAMERA;
         if (cameraProvider != null) {
             bindCameraUseCases();
         }

@@ -2,19 +2,29 @@ package edu.vassar.cmpu203.obre.view;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.vassar.cmpu203.obre.R;
+import edu.vassar.cmpu203.obre.databinding.FragmentUploadImageBinding;
 
 /**
  * Fragment that allows users to pick an image from the gallery and send it for AI analysis.
@@ -26,7 +36,9 @@ public class UploadImageFragment extends Fragment {
      */
     public interface Listener {
         void onPickImageRequested();
+
         void onAnalyzeImageRequested(Bitmap image);
+
         void onSwitchBackToStream();
     }
 
@@ -34,15 +46,31 @@ public class UploadImageFragment extends Fragment {
     private ProgressBar loadingSpinner;
     private Bitmap selectedBitmap;
     private Listener listener;
+    private FragmentUploadImageBinding binding;
+    LinearLayout linearLayout;
+    String pendingDetectionText = null;
+    List<String> history = new ArrayList<>();
+    static final String ARG_RESULT_TEXT = "result_text";
+
+
+
 
     public UploadImageFragment() {
         // Required empty public constructor
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("ARG_RESULT_TEXT", (Serializable) history);
+        setArguments(bundle);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_upload_image, container, false);
+
+        this.binding = FragmentUploadImageBinding.inflate(inflater);
+        linearLayout = binding.scrollView.findViewById(R.id.linearLayout);
+        return this.binding.getRoot();
+
+
     }
 
     @Override
@@ -70,6 +98,7 @@ public class UploadImageFragment extends Fragment {
                 // Show loading state
                 if (loadingSpinner != null) loadingSpinner.setVisibility(View.VISIBLE);
                 listener.onAnalyzeImageRequested(selectedBitmap);
+                selectedBitmap = null;
             }
         });
 
@@ -78,10 +107,15 @@ public class UploadImageFragment extends Fragment {
                 listener.onSwitchBackToStream();
             }
         });
+
+        for (String detection : history) {
+            addSingleTextView(detection);
+        }
     }
 
     /**
      * Sets the listener to handle UI events.
+     *
      * @param listener The listener implementation.
      */
     public void setListener(Listener listener) {
@@ -90,6 +124,7 @@ public class UploadImageFragment extends Fragment {
 
     /**
      * Updates the ImageView with the selected Bitmap.
+     *
      * @param bitmap The image selected by the user.
      */
     public void updateImagePreview(Bitmap bitmap) {
@@ -106,4 +141,31 @@ public class UploadImageFragment extends Fragment {
     public void onAnalysisFailed() {
         if (loadingSpinner != null) loadingSpinner.setVisibility(View.GONE);
     }
+
+    public void updateDetections(String detection) {
+        this.history.add(detection);
+        if (linearLayout != null && getContext() != null) {
+            addSingleTextView(detection);
+        }
+
+    }
+
+    private void addSingleTextView(String text) {
+        TextView textView = new TextView(getContext());
+        String detection = text + "\n\n";
+        textView.setText(detection);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
+        linearLayout.addView(textView);
+    }
+
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+        linearLayout = null;
+    }
+
+
 }

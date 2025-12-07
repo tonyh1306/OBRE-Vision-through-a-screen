@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -19,16 +20,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
+
 import org.opencv.android.OpenCVLoader;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import edu.vassar.cmpu203.obre.model.LLMAlgo;
+import edu.vassar.cmpu203.obre.model.Ledger;
 import edu.vassar.cmpu203.obre.view.MainUI;
 import edu.vassar.cmpu203.obre.view.ResultFragment;
+import edu.vassar.cmpu203.obre.view.ResultUI;
 import edu.vassar.cmpu203.obre.view.UploadImageFragment;
 import edu.vassar.cmpu203.obre.view.VideoStreamFragment;
 import edu.vassar.cmpu203.obre.view.VideoStreamUI;
@@ -43,7 +53,9 @@ import edu.vassar.cmpu203.obre.view.VideoStreamUI;
  *     <li>Coordination between the UI views and the Model logic (LLMAlgo, CameraController).</li>
  * </ul>
  */
-public class MainActivity extends AppCompatActivity implements VideoStreamUI.Listener, UploadImageFragment.Listener {
+public class MainActivity extends AppCompatActivity implements VideoStreamUI.Listener, UploadImageFragment.Listener, ResultUI
+
+        .Listener {
 
     private static final List<String> CAMERAX_PERMISSION = Arrays.asList(
             Manifest.permission.CAMERA,
@@ -56,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
     private CameraController cameraController;
     private MainUI mainUI;
     private UploadImageFragment uploadFragment;
+    private ExecutorService textExecutor;
+    Ledger ledger;
 
     // Image Picker Launcher
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
@@ -111,6 +125,8 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
             return;
         }
         cameraExecutor = Executors.newSingleThreadExecutor();
+        textExecutor = Executors.newSingleThreadExecutor();
+        TextRecognizer textScanner = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
     }
 
     private boolean hasRequiredPermission() {
@@ -208,7 +224,9 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
             @Override
             public void onSuccess(String responseText) {
                 runOnUiThread(() -> {
-                    mainUI.displayFragment(new ResultFragment(responseText), true);
+                    ResultFragment resultFragment = new ResultFragment(responseText);
+                    resultFragment.setListener(MainActivity.this);
+                    mainUI.displayFragment(resultFragment, true);
                 });
             }
 
@@ -251,4 +269,21 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
             cameraExecutor.shutdown();
         }
     }
+
+    @Override
+    public void onSwitchToUpload(String detection) {
+        uploadFragment.updateDetections(detection);
+
+        File outfile = new File(getFilesDir(), "detections.txt");
+        try {
+            FileOutputStream fos = new FileOutputStream(outfile, true);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(this.ledger);
+            fos.close();
+            oos.close();
+        } catch (Exception e) {
+            Log.e(TAG, "Error writing to file", e);
+        }
+    }
+
 }

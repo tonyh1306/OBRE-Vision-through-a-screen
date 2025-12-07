@@ -21,6 +21,7 @@ gamesActivity = "3.0.5"
 espressoContrib = "3.7.0"
 espressoIntents = "3.7.0"
 fragmentTesting = "1.8.9"
+playServicesMlkitTextRecognition = "19.0.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -44,6 +45,7 @@ games-activity = { group = "androidx.games", name = "games-activity", version.re
 espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "espressoContrib" }
 espresso-intents = { group = "androidx.test.espresso", name = "espresso-intents", version.ref = "espressoIntents" }
 fragment-testing = { group = "androidx.fragment", name = "fragment-testing", version.ref = "fragmentTesting" }
+play-services-mlkit-text-recognition = { group = "com.google.android.gms", name = "play-services-mlkit-text-recognition", version.ref = "playServicesMlkitTextRecognition" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
