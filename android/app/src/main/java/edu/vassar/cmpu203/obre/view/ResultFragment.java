@@ -100,7 +100,6 @@ public class ResultFragment extends Fragment implements ResultUI {
         );
 
         tts = new TextToSpeech(requireContext(), status -> {
-            // 2. Check for success first
             if (status != TextToSpeech.SUCCESS) {
                 Log.e("TTS", "Initialization failed");
                 return;

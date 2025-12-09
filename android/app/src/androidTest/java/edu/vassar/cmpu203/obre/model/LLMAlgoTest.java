@@ -84,8 +84,10 @@ public class LLMAlgoTest {
         // Assert we got a response
         assertNotNull("Response should not be null", resultHolder[0]);
         assertFalse("Response should not be empty", resultHolder[0].isEmpty());
+        assertTrue(resultHolder[0].contains("bottle")); //checking to see if it contains the word bottle
 
-        // Optional: print response for debugging
+
+        // print response for debugging
         System.out.println("Gemini Response: " + resultHolder[0]);
     }
 }

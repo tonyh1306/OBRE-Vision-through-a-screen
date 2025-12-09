@@ -42,10 +42,10 @@ public class TextToSpeechTest {
         // Initialize the TextToSpeech engine and set up a listener to capture the init status.
         tts = new TextToSpeech(context, status -> {
             initStatus = status;
-            latch.countDown(); // Signal that initialization is complete.
+            latch.countDown();
         });
 
-        // Wait for a maximum of 10 seconds for the TTS engine to initialize.
+        // Waits for of 10 seconds for the TTS engine to initialize.
         boolean initialized = latch.await(10, TimeUnit.SECONDS);
         if (!initialized) {
             fail("TextToSpeech engine did not initialize within the timeout period.");
@@ -54,8 +54,7 @@ public class TextToSpeechTest {
 
     /**
      * Tests that the TextToSpeech engine is successfully connected and initialized.
-     * <p>
-     * The test fails if the initialization status is not {@link TextToSpeech#SUCCESS}.
+     * The test fails if the initialization status is not a success.
      */
     @Test
     public void testTextToSpeechEngineIsConnected() {

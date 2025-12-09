@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
                         }
                     } catch (Exception e) {
                         Log.e(TAG, "Failed to load image", e);
-                        Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -140,7 +139,8 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (!hasRequiredPermission()) {
-                Toast.makeText(this, "Permission not granted by user.", Toast.LENGTH_LONG).show();
+                VideoStreamFragment fragment = mainUI.getFragment();
+                fragment.showPermissionError();
                 finish();
             }
         }

@@ -15,24 +15,39 @@ import androidx.fragment.app.Fragment;
 
 import java.util.List;
 
+import edu.vassar.cmpu203.obre.R;
 import edu.vassar.cmpu203.obre.databinding.FragmentVideoStreamBinding;
 import edu.vassar.cmpu203.obre.model.DetectedObject;
 
 /**
- * Fragment responsible for displaying the live camera feed and detection overlays.
- * <p>
- * Implements the View component of the video stream feature. It handles user
- * interactions (buttons) and provides access to the camera PreviewView.
+ * A simple {@link Fragment} subclass.
  */
 public class VideoStreamFragment extends Fragment implements VideoStreamUI {
 
     private FragmentVideoStreamBinding binding;
     private Listener listener;
 
+    public VideoStreamFragment() {
+
+    }
+
+    /**
+     * Displays a short toast message on the main thread.
+     *
+     * @param msg The message to display.
+     */
+    public void presentAllowed(String msg) {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (getContext() != null) {
+                Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         this.binding = FragmentVideoStreamBinding.inflate(inflater);
         return this.binding.getRoot();
     }
@@ -40,34 +55,31 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.binding.cameraSwitchButton.setOnClickListener((v) -> {
-            if (this.listener != null) this.listener.onSwitchCamera();
-        });
-        this.binding.uploadImageButton.setOnClickListener(v -> {
-            if (this.listener != null) this.listener.onUploadImageRequested();
-        });
 
+        this.binding.cameraSwitchButton.setOnClickListener(v -> listener.onSwitchCamera());
+        this.binding.uploadImageButton.setOnClickListener(v -> listener.onUploadImageRequested());
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        // listener.onStartStream(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        listener.onStopStream(this);
+    }
+
     public void setListener(Listener listener) {
         this.listener = listener;
     }
 
-    /**
-     * returns the PreviewView used by CameraX.
-     * Safe to call only after onViewCreated.
-     *
-     * @return The PreviewView, or null if the binding is not initialized.
-     */
-    public PreviewView getPreviewView() {
-        if (binding == null) {
-            return null;
-        }
-        return binding.previewView;
+    @Override
+    public void displayError(String msg) {
+        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
     }
-
-
     /**
      * Updates the overlay view with a list of detected objects.
      *
@@ -86,28 +98,20 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
     }
 
     /**
-     * Displays a short toast message on the main thread.
+     * returns the PreviewView used by CameraX.
+     * Safe to call only after onViewCreated.
      *
-     * @param msg The message to display.
+     * @return The PreviewView, or null if the binding is not initialized.
      */
-    public void presentAllowed(String msg) {
-        new Handler(Looper.getMainLooper()).post(() -> {
-            if (getContext() != null) {
-                Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
-            }
-        });
+    public PreviewView getPreviewView() {
+        if (binding == null) {
+            return null;
+        }
+        return binding.previewView;
     }
 
-    /**
-     * Displays a long toast error message on the main thread.
-     *
-     * @param s The error message.
-     */
-    public void displayError(String s) {
-        new Handler(Looper.getMainLooper()).post(() -> {
-            if (getContext() != null) {
-                Toast.makeText(getContext(), s, Toast.LENGTH_LONG).show();
-            }
-        });
+    @Override
+    public void showPermissionError() {
+        Toast.makeText(getContext(), "Camera permissions are required for this feature.", Toast.LENGTH_LONG).show();
     }
 }
