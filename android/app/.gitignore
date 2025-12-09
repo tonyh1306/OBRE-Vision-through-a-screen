@@ -3,6 +3,7 @@
 **/intermediates/
 **/cxx/
 .gradle/
+opencv/
 
 # Local config
 /local.properties
