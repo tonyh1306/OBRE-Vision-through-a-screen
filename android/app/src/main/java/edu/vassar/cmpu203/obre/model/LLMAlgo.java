@@ -18,8 +18,14 @@ import com.google.firebase.ai.java.GenerativeModelFutures;
 import com.google.firebase.ai.type.Content;
 import com.google.firebase.ai.type.GenerateContentResponse;
 import com.google.firebase.ai.type.GenerativeBackend;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+
+import org.opencv.core.Mat;
 
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 import edu.vassar.cmpu203.obre.BuildConfig;
@@ -28,9 +34,14 @@ import kotlinx.serialization.ExperimentalSerializationApi;
 /**
  * A class to handle interactions with the LLM, sending image data and receiving a response.
  */
-public class LLMAlgo {
+public class LLMAlgo implements MediaAlgo{
 
     String apiKey;
+
+    @Override
+    public List<DetectedObject> runOnFrame(Mat frame) {
+        return Collections.emptyList();
+    }
 
     /**
      * An interface for callbacks to handle the asynchronous response from the LLM.
