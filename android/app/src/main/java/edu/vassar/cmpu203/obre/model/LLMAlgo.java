@@ -8,15 +8,17 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
-import com.google.firebase.ai.type.Content;
+
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.ai.FirebaseAI;
 import com.google.firebase.ai.GenerativeModel;
 import com.google.firebase.ai.java.GenerativeModelFutures;
-import com.google.firebase.ai.type.GenerativeBackend;
+import com.google.firebase.ai.type.Content;
 import com.google.firebase.ai.type.GenerateContentResponse;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
+import com.google.firebase.ai.type.GenerativeBackend;
+
 import java.io.InputStream;
 import java.util.concurrent.Executors;
 

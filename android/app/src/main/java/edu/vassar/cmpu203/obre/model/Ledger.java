@@ -24,7 +24,7 @@ public class Ledger implements Serializable {
      * Adds a new sale to the ledger.
      * @param detection the sale to be added to the ledger.
      */
-    public void addSale(String detection){
+    public void addDescription(String detection){
         this.detections.add(detection);
     }
 

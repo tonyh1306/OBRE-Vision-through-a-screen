@@ -1,7 +1,5 @@
 package edu.vassar.cmpu203.obre.controller;
 
-import static org.opencv.android.Utils.matToBitmap;
-
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -13,8 +11,6 @@ import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.mlkit.vision.common.InputImage;
@@ -24,11 +20,10 @@ import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
 import org.opencv.android.Utils;
-import org.opencv.core.Core; // <--- ADD THIS IMPORT
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.android.Utils.*;
 
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -65,6 +60,12 @@ public class CameraController {
     private Mat latestFrame = new Mat();
     private byte[] cachedI420Buffer;
     TextRecognizer textRecognizer;
+
+    enum States {
+        BACK, FRONT
+    }
+
+    States state = States.BACK;
 
     /**
      * Initializes the camera controller and starts the camera immediately.
@@ -370,6 +371,7 @@ public class CameraController {
      * Toggles between the front and back cameras.
      */
     public void switchCamera() {
+        state = (state == States.BACK) ? States.FRONT : States.BACK;
         cameraSelector = (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) ? CameraSelector.DEFAULT_FRONT_CAMERA : CameraSelector.DEFAULT_BACK_CAMERA;
         if (cameraProvider != null) {
             bindCameraUseCases();

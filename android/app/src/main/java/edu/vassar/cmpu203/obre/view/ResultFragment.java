@@ -3,30 +3,23 @@ package edu.vassar.cmpu203.obre.view;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.util.TypedValue;
-import android.os.Handler;
-import android.os.Looper;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import edu.vassar.cmpu203.obre.R;
-import edu.vassar.cmpu203.obre.databinding.FragmentUploadImageBinding;
-import edu.vassar.cmpu203.obre.databinding.FragmentResultBinding;
-
-import android.speech.tts.TextToSpeech;
-
 import java.util.Locale;
 
 import edu.vassar.cmpu203.obre.R;
+import edu.vassar.cmpu203.obre.databinding.FragmentResultBinding;
 
 /**
  * A Fragment responsible for displaying AI-generated result text to the user and
@@ -38,7 +31,6 @@ public class ResultFragment extends Fragment implements ResultUI {
     private String resultText;
     private Listener listener;
     private FragmentResultBinding binding;
-
 
     private TextToSpeech tts;
 
@@ -91,6 +83,7 @@ public class ResultFragment extends Fragment implements ResultUI {
         TextView tv = new TextView(getContext());
         tv.setText(resultText != null ? resultText : "No result");
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
+        tv.setFreezesText(true);
         ll.addView(tv);
 
         view.findViewById(R.id.back_button).setOnClickListener(v -> {
@@ -100,7 +93,6 @@ public class ResultFragment extends Fragment implements ResultUI {
         );
 
         tts = new TextToSpeech(requireContext(), status -> {
-            // 2. Check for success first
             if (status != TextToSpeech.SUCCESS) {
                 Log.e("TTS", "Initialization failed");
                 return;

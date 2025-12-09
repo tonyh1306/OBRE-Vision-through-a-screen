@@ -16,8 +16,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -154,7 +152,7 @@ public class UploadImageFragment extends Fragment {
         TextView textView = new TextView(getContext());
         String detection = text + "\n\n";
         textView.setText(detection);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
         linearLayout.addView(textView);
     }
 

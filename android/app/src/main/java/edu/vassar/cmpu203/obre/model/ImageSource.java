@@ -2,6 +2,7 @@ package edu.vassar.cmpu203.obre.model;
 
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
