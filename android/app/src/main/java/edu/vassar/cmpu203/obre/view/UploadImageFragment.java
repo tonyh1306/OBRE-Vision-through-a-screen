@@ -131,7 +131,7 @@ public class UploadImageFragment extends Fragment {
         TextView textView = new TextView(getContext());
         String detection = text + "\n\n";
         textView.setText(detection);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
         linearLayout.addView(textView);
     }
 

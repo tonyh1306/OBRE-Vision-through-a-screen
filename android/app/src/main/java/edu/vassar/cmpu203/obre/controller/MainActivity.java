@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,9 +25,6 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
 import org.opencv.android.OpenCVLoader;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -36,6 +32,7 @@ import java.util.concurrent.Executors;
 
 import edu.vassar.cmpu203.obre.model.LLMAlgo;
 import edu.vassar.cmpu203.obre.model.Ledger;
+import edu.vassar.cmpu203.obre.persistence.PersistenceFacade;
 import edu.vassar.cmpu203.obre.view.MainUI;
 import edu.vassar.cmpu203.obre.view.ResultFragment;
 import edu.vassar.cmpu203.obre.view.ResultUI;
@@ -53,9 +50,9 @@ import edu.vassar.cmpu203.obre.view.VideoStreamUI;
  *     <li>Coordination between the UI views and the Model logic (LLMAlgo, CameraController).</li>
  * </ul>
  */
-public class MainActivity extends AppCompatActivity implements VideoStreamUI.Listener, UploadImageFragment.Listener, ResultUI
-
-        .Listener {
+public class MainActivity extends AppCompatActivity implements VideoStreamUI.Listener,
+        UploadImageFragment.Listener, ResultUI.Listener,
+        PersistenceFacade.Listener {
 
     private static final List<String> CAMERAX_PERMISSION = Arrays.asList(
             Manifest.permission.CAMERA,
@@ -68,8 +65,8 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
     private CameraController cameraController;
     private MainUI mainUI;
     private UploadImageFragment uploadFragment;
-    private ExecutorService textExecutor;
     Ledger ledger;
+    private static final String CUR_STATE = "curState";
 
     // Image Picker Launcher
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
@@ -88,6 +85,13 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
                 }
             }
     );
+
+    enum States {
+        VIDEO, IMAGE, RESULT
+    }
+
+    States state = States.VIDEO;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,8 +128,6 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
             return;
         }
         cameraExecutor = Executors.newSingleThreadExecutor();
-        textExecutor = Executors.newSingleThreadExecutor();
-        TextRecognizer textScanner = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
     }
 
     private boolean hasRequiredPermission() {
@@ -154,6 +156,8 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
      */
     @Override
     public void onStartStream(VideoStreamUI ui) {
+        state = States.VIDEO;
+
         VideoStreamFragment fragment = (VideoStreamFragment) ui;
         try {
             cameraController = new CameraController(this, fragment);
@@ -165,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
 
     @Override
     public void onStopStream(VideoStreamUI ui) {
+        state = States.IMAGE;
         if (cameraController != null) {
             cameraController.stop();
             cameraController = null;
@@ -176,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
      */
     @Override
     public void onSwitchCamera() {
+        if (state != States.VIDEO) return;
         if (cameraController != null) {
             cameraController.switchCamera();
         } else {
@@ -189,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
      * Stops the live camera and navigates to the UploadImageFragment.
      */
     public void onUploadImageRequested() {
+        state = States.IMAGE;
         if (cameraController != null) {
             cameraController.stop();
             cameraController = null;
@@ -204,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
      */
     @Override
     public void onPickImageRequested() {
+        if (state != States.IMAGE) return;
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
@@ -218,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
      */
     @Override
     public void onAnalyzeImageRequested(Bitmap image) {
+        if (state != States.IMAGE) return;
         LLMAlgo llm = new LLMAlgo();
 
         llm.sendImageToGemini(image, new LLMAlgo.Listener() {
@@ -248,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
      */
     @Override
     public void onSwitchBackToStream() {
+        state = States.VIDEO;
         VideoStreamFragment fragment = new VideoStreamFragment();
         fragment.setListener(this);
         mainUI.displayFragment(fragment);
@@ -272,18 +282,27 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
 
     @Override
     public void onSwitchToUpload(String detection) {
+        state = States.IMAGE;
         uploadFragment.updateDetections(detection);
+    }
 
-        File outfile = new File(getFilesDir(), "detections.txt");
-        try {
-            FileOutputStream fos = new FileOutputStream(outfile, true);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(this.ledger);
-            fos.close();
-            oos.close();
-        } catch (Exception e) {
-            Log.e(TAG, "Error writing to file", e);
-        }
+    @Override
+    public void onLedgerReceived(@NonNull Ledger ledger) {
+
+
+    }
+
+    /**
+     * Called before activity destruction to give it an opportunity to store state to help future
+     * reconstruction.
+     *
+     * @param outState Bundle in which to place your saved state.
+     */
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // save current state before activity stops
+        outState.putString(CUR_STATE, this.state.name());
     }
 
 }

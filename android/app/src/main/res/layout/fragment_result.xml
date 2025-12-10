@@ -4,12 +4,18 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="16dp">
+
+        <LinearLayout
+            android:id="@+id/scroll_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
 
         <ScrollView
             android:id="@+id/result_text_view"
@@ -18,12 +24,6 @@
             android:padding="8dp"
             android:textColor="#000000"
             android:textSize="22sp">
-
-            <LinearLayout
-                android:id="@+id/scroll_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
 
         </ScrollView>
 

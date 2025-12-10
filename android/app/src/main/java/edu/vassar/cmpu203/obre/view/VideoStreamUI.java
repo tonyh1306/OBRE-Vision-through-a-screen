@@ -1,5 +1,4 @@
 package edu.vassar.cmpu203.obre.view;
-
 /**
  * An interface for the view that displays the camera's video stream.
  * It is implemented by {@link VideoStreamFragment}.

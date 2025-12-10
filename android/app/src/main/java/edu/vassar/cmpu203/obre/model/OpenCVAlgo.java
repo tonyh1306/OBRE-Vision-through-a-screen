@@ -1,17 +1,23 @@
 package edu.vassar.cmpu203.obre.model;
 
-import org.opencv.core.*;
-import org.opencv.dnn.Dnn;
-import org.opencv.dnn.Net;
-import org.opencv.imgproc.Imgproc;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.opencv.imgproc.Imgproc.*;
+import static org.opencv.imgproc.Imgproc.resize;
 
 import android.content.Context;
 import android.util.Log;
+
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfFloat;
+import org.opencv.core.MatOfInt;
+import org.opencv.core.MatOfRect2d;
+import org.opencv.core.Rect2d;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.dnn.Dnn;
+import org.opencv.dnn.Net;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implements object detection using OpenCV and the YOLO neural network model.
