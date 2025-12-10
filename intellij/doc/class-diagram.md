@@ -1,112 +1,154 @@
-```plantuml
 @startuml
-skin rose
+set separator none
+skinparam linetype ortho
 hide empty methods
-skinparam Linetype ortho
 
-interface UI <<Interface>> {
-  void setListener(Listener listener)
-  void startDetecting()
-  void startVideoStreaming()
-  void displayDetections(List<String> detections)
-  void displayMessage(String message)
+' Interfaces
+interface MediaSource {
++ getFrame() : Mat
++ getFrameArray() : List<Mat>
 }
 
-interface UI.Listener <<Interface>> {
-  void onUploadImage(String fileName)
+interface MediaAlgo {
++ runOnFrame(frame : Mat) : List<DetectedObject>
 }
 
-class CmdLineUI implements UI {
-  ps : PrintStream
-  in : Scanner
-  listener : UI.Listener
-  --
-  CmdLineUI()
-  void startDetecting()
-  void startVideoStreaming()
-  void setListener(UI.Listener listener)
-  void displayDetections(List<String> detections)
-  void displayMessage(String message)
-  boolean isValidImageFile(String filename)
+interface VideoStreamUI
+interface ResultUI
+
+interface ResultListener {
++ onSwitchToUpload(resultText : String) : void
 }
 
-class Controller implements UI.Listener {
-  ui : UI
-  option : Options
-  --
-  Controller(CmdLineUI ui)
-  void onUploadImage(String filename)
-  void processTextRecognition(String filename)
-  void main(String[] args) {static}
+interface UploadListener {
++ onPickImageRequested() : void
++ onAnalyzeImageRequested(image : Bitmap) : void
++ onSwitchBackToStream() : void
 }
 
-UI <|.. CmdLineUI
-UI.Listener <|.. Controller
-Controller --> UI : ui
-
-interface MediaSource <<Interface>> {
-  Mat getFrame()
-  ArrayList<Mat> getFrameArray()
+interface LLMListener {
++ onSuccess(responseText : String) : void
++ onError(e : Exception) : void
 }
 
-class ImageSource implements MediaSource {
-  image : Mat
-  frames : ArrayList<Mat>
-  --
-  ImageSource(String imageAddress)
-  Mat getFrame()
-  ArrayList<Mat> getFrameArray()
+' Classes
+class CameraController {
+- mainUI : MainUI
+- videoSource : VideoSource
+- imageSource : ImageSource
+- mediaAlgo : MediaAlgo
 }
 
-class VideoSource implements MediaSource {
-  cameraMode : boolean
-  vd : VideoCapture
-  frames : ArrayList<Mat>
-  --
-  Mat getFrame()
-  ArrayList<Mat> getFrameArray()
+class MainUI {
+- currentFragment : Fragment
 }
 
-interface MediaAlgo <<Interface>> {
-  List<String> runAlgorithm()
+class VideoStreamFragment {
+- binding : FragmentVideoStreamBinding
+- listener : VideoStreamFragment.Listener
 }
 
-class OpenCVAlgo implements MediaAlgo {
-  + {static} MODEL_NAME : String
-  + {static} IMG_SIZE : int
-  + {static} COCO_CLASSES : String[]
-  mediaSource : MediaSource
-  net : Net
-  detectedObjects : List<String>
-  --
-  OpenCVAlgo(MediaSource mediaSource)
-  List<String> runAlgorithm()
-  boolean processFrame(Mat image, Mat resizedImage, Size netSize)
-  void drawNoDetectionsOverlay(Mat frame)
+class UploadImageFragment {
+- selectedBitmap : Bitmap
+- listener : UploadListener
+- binding : FragmentUploadImageBinding
+- pendingDetectionText : String
+- history : List<String>
+- static ARG_RESULT_TEXT : String
 }
 
-class TextRecognizer {
-  --
-  String recognizeText(String filename)
+class ResultFragment {
+- resultText : String
+- listener : ResultListener
+- binding : FragmentResultBinding
+- tts : TextToSpeech
+}
+
+class DetectionOverlayView {
+- detectedObjects : List<DetectedObject>
+- boxPaint : Paint
+- textPaint : Paint
++ DetectionOverlayView(context : Context, attrs : AttributeSet)
++ setDetectedObjects(objects : List<DetectedObject>) : void
++ onDraw(canvas : Canvas) : void
+}
+
+class VideoSource {
+- capture : VideoCapture
+}
+
+class ImageSource {
+- image : Mat
+}
+
+class OpenCVAlgo {
+- mediaSource : MediaSource
++ runOnFrame(frame : Mat) : List<DetectedObject>
 }
 
 class LLMAlgo {
-  API_KEY : String
-  --
-  LLMAlgo()
+- apiKey : String
++ LLMAlgo()
++ runOnFrame(frame : Mat) : List<DetectedObject>
++ static bitmapFromUri(context : Context, uri : Uri) : Bitmap
++ sendImageToGemini(bitmap : Bitmap, listener : LLMListener) : void
+}
+
+class TextRecognizer {
++ analyze(imageProxy : ImageProxy) : void
 }
 
 class ResourceUtils {
-  --
-  String getResourcePath(String resourceName) {static}
++ static getResourcePath(fileName : String) : String
++ static copyResourceToFile(context : Context, resId : int, fileName : String) : String
 }
 
-ImageSource --|> MediaSource
-VideoSource --|> MediaSource
-OpenCVAlgo --|> MediaAlgo
+class DetectedObject {
++ DetectedObject(name : String, x : Double, y : Double, w : Double, h : Double)
++ getName() : String
+}
+
+' Inheritance / Implementation
+MediaSource <|.. ImageSource
+MediaSource <|.. VideoSource
+MediaAlgo <|.. OpenCVAlgo
+VideoStreamFragment ..|> VideoStreamUI
+ResultFragment ..|> ResultUI
+DetectionOverlayView ..|> View
+TextRecognizer ..|> ImageAnalysis.Analyzer
+
+' Associations / "has-object-of-type"
+MediaAlgo <|.. OpenCVAlgo
+CameraController --> MediaAlgo : mediaAlgo
 OpenCVAlgo --> MediaSource : mediaSource
-Controller --> ImageSource : creates
-Controller --> OpenCVAlgo : creates
-Controller --> TextRecognizer : uses
+CameraController --> MainUI : mainUI
+CameraController --> ImageSource : imageSource
+CameraController --> VideoSource : videoSource
+CameraController --> MediaAlgo : mediaAlgo
+
+OpenCVAlgo --> MediaSource : mediaSource
+
+UploadImageFragment "1" --> "0..1" UploadListener : listener
+UploadImageFragment "1" --> "0..1" FragmentUploadImageBinding : binding
+UploadImageFragment "1" --> "0..1" Bitmap : selectedBitmap
+
+ResultFragment "1" --> "0..1" ResultListener : listener
+ResultFragment "1" --> "0..1" FragmentResultBinding : binding
+ResultFragment "1" --> "0..1" TextToSpeech : tts
+
+VideoStreamFragment "1" --> "0..1" VideoStreamFragment.Listener : listener
+VideoStreamFragment "1" --> "0..1" FragmentVideoStreamBinding : binding
+VideoStreamFragment "1" --> "0..*" DetectedObject : updateDetections
+VideoStreamFragment "1" --> "0..1" PreviewView : getPreviewView()
+
+DetectionOverlayView "1" --> "0..*" DetectedObject : detectedObjects
+DetectionOverlayView "1" --> "1" Paint : boxPaint
+DetectionOverlayView "1" --> "1" Paint : textPaint
+
+LLMAlgo "1" --> "0..1" LLMListener : listener
+
+MainUI --> UploadImageFragment : displays
+MainUI --> VideoStreamFragment : displays
+MainUI --> ResultFragment : displays
 
 @enduml

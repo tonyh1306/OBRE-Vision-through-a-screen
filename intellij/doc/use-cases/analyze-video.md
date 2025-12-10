@@ -27,17 +27,12 @@ for _analyze-video_:
 
 ```plantuml
 @startuml
-
-skin rose
-
-title Operate Camera (Fully-dressed)
-
-'define the lanes
+skinparam style rose
+title Analyze Video (Fully-dressed)
 |#implementation|User|
 |#technology|System|
 
 |User|
-start
 :Open the app;
 
 |System|
@@ -51,12 +46,40 @@ while (object-detected?) is (no)
 :No object detected sound;
 endwhile(yes)
 :Frame and label object;
-|User|
-if (Toggle sound?) is (on) then
-|System|
-:Speak aloud object;
-else (off)
-endif
 stop
 @enduml
+```
+
+## 5. Sequence Diagram
+```plantuml
+@startuml
+actor User
+
+participant "VideoStreamFragment" as videoFragment
+participant "CameraController" as controller
+participant ": MediaAlgo" as mediaAlgo
+participant "TextRecognizer" as textRecognizer
+participant "DetectionOverlayView" as overlayView
+participant "TextView" as textView
+
+User -> videoFragment : open camera / start stream
+videoFragment -> controller : onStartStream(videoFragment)
+
+loop for each frame
+    videoFragment -> mediaAlgo : runOnFrame(frame)
+    mediaAlgo --> videoFragment : List<DetectedObject>
+
+    videoFragment -> overlayView : setDetectedObjects(detectedObjects)
+    overlayView --> videoFragment : redraw overlay
+
+    videoFragment -> textRecognizer : analyze(frame)
+    textRecognizer --> videoFragment : detectedText
+    videoFragment -> textView : setText(detectedText)
+end
+
+User -> videoFragment : stop stream/turn off the app
+videoFragment -> controller : onStopStream(videoFragment)
+
+@enduml
+
 ```

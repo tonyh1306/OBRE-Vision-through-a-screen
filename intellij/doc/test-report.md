@@ -34,6 +34,12 @@ Test outcome: Success output is as expected
 **Expected Output:**  
 The application should print an error message indicating invalid input and prompt the user again.
 
+**Test 4: TTS test**
+**Feature:** Text-to-speech ResultFragment / TTS functionality
+**Expected Output:**
+The application should initialize the TextToSpeech engine and give a success message back
+No crashes or errors should occur during TTS initialization or playback.
+
 Output:
 The system asks again and again until the input is valid 
 or the user wants the exit the prototype. This is true for the text-recognition as well as the image_recognotion. If the input is 
@@ -42,4 +48,4 @@ Test Outcome: Success output is as expected.
 
 
 ## Conclusion
-All command-line system tests passed successfully.
+All system tests passed successfully.
