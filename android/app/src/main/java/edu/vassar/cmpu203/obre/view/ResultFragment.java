@@ -37,6 +37,10 @@ public class ResultFragment extends Fragment implements ResultUI {
     public ResultFragment() {
     }
 
+    /**
+     * This is a constructer that creates a new bundle and sets arguments
+     */
+
     public static ResultFragment newInstance(String resultText) {
         ResultFragment fragment = new ResultFragment();
         Bundle args = new Bundle();

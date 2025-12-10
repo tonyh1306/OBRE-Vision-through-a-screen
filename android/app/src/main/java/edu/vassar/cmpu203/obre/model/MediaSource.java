@@ -4,7 +4,17 @@ import org.opencv.core.Mat;
 
 import java.util.ArrayList;
 
-public interface MediaSource{
+/**
+ * An interface for classes that provide media frames, such as from a video file or a live camera.
+ */
+public interface MediaSource {
+    /**
+     * Retrieves a single frame from the media source.
+     */
     Mat getFrame();
+
+    /**
+     * Retrieves all frames from the media source
+     */
     ArrayList<Mat> getFrameArray();
 }

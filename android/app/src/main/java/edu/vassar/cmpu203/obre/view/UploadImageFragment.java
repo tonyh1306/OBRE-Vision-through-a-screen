@@ -31,8 +31,21 @@ public class UploadImageFragment extends Fragment {
      * The Controller (Activity) implements this to handle navigation and logic.
      */
     public interface Listener {
+        /**
+         * Called when the user requests to pick an image from the gallery.
+         */
         void onPickImageRequested();
+
+        /**
+         * Called when the user requests to analyze the selected image.
+         *
+         * @param image The bitmap to be analyzed.
+         */
         void onAnalyzeImageRequested(Bitmap image);
+
+        /**
+         * Called when the user requests to switch back to the camera stream view.
+         */
         void onSwitchBackToStream();
     }
 
@@ -44,6 +57,9 @@ public class UploadImageFragment extends Fragment {
     List<String> history = new ArrayList<>();
     static final String ARG_RESULT_TEXT = "result_text";
 
+    /**
+     * Default constructor. Initializes the fragment and prepares the argument bundle for saving history.
+     */
     public UploadImageFragment() {
         // Required empty public constructor
         Bundle bundle = new Bundle();
@@ -51,6 +67,14 @@ public class UploadImageFragment extends Fragment {
         setArguments(bundle);
     }
 
+    /**
+     * Inflates the layout for this fragment and initializes view binding.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return The View for the fragment's UI, or null.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.binding = FragmentUploadImageBinding.inflate(inflater, container, false);
@@ -58,6 +82,12 @@ public class UploadImageFragment extends Fragment {
         return this.binding.getRoot();
     }
 
+    /**
+     * Sets up the view listeners and populates the view with any existing detection history after the view has been created.
+     *
+     * @param view               The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -120,6 +150,11 @@ public class UploadImageFragment extends Fragment {
         if (binding != null) binding.loadingSpinner.setVisibility(View.GONE);
     }
 
+    /**
+     * Adds a new detection result to the history and updates the UI to display it.
+     *
+     * @param detection The new detection string to add.
+     */
     public void updateDetections(String detection) {
         this.history.add(detection);
         if (linearLayout != null && getContext() != null) {
@@ -127,6 +162,11 @@ public class UploadImageFragment extends Fragment {
         }
     }
 
+    /**
+     * Creates and adds a new TextView to the UI for a single detection result.
+     *
+     * @param text The text to display in the TextView.
+     */
     private void addSingleTextView(String text) {
         TextView textView = new TextView(getContext());
         String detection = text + "\n\n";
@@ -135,6 +175,9 @@ public class UploadImageFragment extends Fragment {
         linearLayout.addView(textView);
     }
 
+    /**
+     * Cleans up resources associated with the view, preventing memory leaks.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
