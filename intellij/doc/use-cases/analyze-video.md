@@ -42,9 +42,6 @@ if (Recognition type) is (text) then
 else (default) 
 :Automatically start detecting an object;
 endif 
-while (object-detected?) is (no)
-:No object detected sound;
-endwhile(yes)
 :Frame and label object;
 stop
 @enduml

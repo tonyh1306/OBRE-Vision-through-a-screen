@@ -1,47 +1,23 @@
+```plantuml
 @startuml
 set separator none
 skinparam linetype ortho
 hide empty methods
 
-' Interfaces
-interface MediaSource {
-+ getFrame() : Mat
-+ getFrameArray() : List<Mat>
-}
+title Class-Diagram for UI part
 
-interface MediaAlgo {
-+ runOnFrame(frame : Mat) : List<DetectedObject>
-}
 
 interface VideoStreamUI
 interface ResultUI
 
-interface ResultListener {
-+ onSwitchToUpload(resultText : String) : void
-}
-
-interface UploadListener {
-+ onPickImageRequested() : void
-+ onAnalyzeImageRequested(image : Bitmap) : void
-+ onSwitchBackToStream() : void
-}
-
-interface LLMListener {
-+ onSuccess(responseText : String) : void
-+ onError(e : Exception) : void
-}
-
-
-' Classes
-class CameraController {
-- mainUI : MainUI
-- videoSource : VideoSource
-- imageSource : ImageSource
-- mediaAlgo : MediaAlgo
-}
-
 class MainUI {
-- currentFragment : Fragment
+  - mainBinding : ActivityMainBinding
+  - fragmentManager : FragmentManager
+  + MainUI(factivity : FragmentActivity)
+  + displayFragment(fragment : Fragment) : void
+  + displayFragment(fragment : Fragment, addToBackStack : boolean) : void
+  + getRootView() : View
+  + getFragment<F extends Fragment>() : F
 }
 
 class VideoStreamFragment {
@@ -58,11 +34,82 @@ class UploadImageFragment {
 - static ARG_RESULT_TEXT : String
 }
 
+class FragmentResultBinding {
+- textView : TextView
+- linearLayout : LinearLayout
+- binding : FragmentResultBinding
+- history : List<String>
+- static ARG_RESULT_TEXT : String
+}
+
 class ResultFragment {
 - resultText : String
 - listener : ResultListener
 - binding : FragmentResultBinding
 - tts : TextToSpeech
+}
+
+class TextToSpeech {
+- tts : TextToSpeech
++ TextToSpeech(context : Context)
++ speak(text : String) : void
+}
+
+MainActivity "1" --> "1" MainUI : mainUI
+MainActivity "0..1" --> "0..1" CameraController : cameraController
+MainActivity "0..1" --> "0..1" UploadImageFragment : uploadFragment
+
+MainUI "1" --> "1" FragmentManager : fragmentManager
+MainUI "1" --> "0..*" Fragment : displays
+UploadImageFragment "1" --> "0..1" FragmentUploadImageBinding : binding
+UploadImageFragment "1" --> "0..1" Bitmap : selectedBitmap
+
+ResultFragment "1" --> "0..1" FragmentResultBinding : binding
+ResultFragment "1" --> "0..1" TextToSpeech : tts
+
+VideoStreamFragment "1" --> "0..1" PreviewView : getPreviewView()
+
+VideoStreamFragment ..|> VideoStreamUI
+ResultFragment ..|> ResultUI
+
+VideoStreamFragment --> "0..*" DetectedObject : updateDetections(objects)
+DetectionOverlayView "1" --> "0..*" DetectedObject : detectedObjects
+
+
+MainUI --> UploadImageFragment : displays
+MainUI --> VideoStreamFragment : displays
+MainUI --> ResultFragment : displays
+
+
+@enduml
+```
+
+
+
+```plantuml 
+@startuml
+title Class-Diagram for Model/Controller part
+set separator none
+skinparam linetype ortho
+hide empty methods
+
+
+' Interfaces
+interface MediaSource {
++ getFrame() : Mat
++ getFrameArray() : List<Mat>
+}
+
+interface MediaAlgo {
++ runOnFrame(frame : Mat) : List<DetectedObject>
+}
+
+' Classes
+class CameraController {
+- mainUI : MainUI
+- videoSource : VideoSource
+- imageSource : ImageSource
+- mediaAlgo : MediaAlgo
 }
 
 class DetectionOverlayView {
@@ -99,9 +146,12 @@ class TextRecognizer {
 + analyze(imageProxy : ImageProxy) : void
 }
 
-class ResourceUtils {
-+ static getResourcePath(fileName : String) : String
-+ static copyResourceToFile(context : Context, resId : int, fileName : String) : String
+class LLMService {
++ sendImage(bitmap : Bitmap, listener : LLMListener) : void
+}
+
+class TextRecognitionService {
++ analyze(imageProxy : ImageProxy) : void
 }
 
 class DetectedObject {
@@ -109,47 +159,60 @@ class DetectedObject {
 + getName() : String
 }
 
+class Ledger {
+    - detections : Collection<String>
+    
+    + Ledger()
+    + addDescription(detection : String) : void
+    + toString() : String
+}
+
+class MainActivity {
+  - cameraExecutor : ExecutorService
+  - cameraController : CameraController
+  - mainUI : MainUI
+  - uploadFragment : UploadImageFragment
+  - ledger : Ledger
+  - imagePickerLauncher : ActivityResultLauncher<Intent>
+  
+  + onStartStream(ui : VideoStreamUI)
+  + onUploadImageRequested()
+  + onPickImageRequested()
+  + onAnalyzeImageRequested(image : Bitmap)
+  + onSwitchBackToStream()
+  + onSwitchToUpload(detection : String)
+}
+
+
+
 ' Inheritance / Implementation
 MediaSource <|.. ImageSource
 MediaSource <|.. VideoSource
 MediaAlgo <|.. OpenCVAlgo
-VideoStreamFragment ..|> VideoStreamUI
-ResultFragment ..|> ResultUI
 DetectionOverlayView ..|> View
 TextRecognizer ..|> ImageAnalysis.Analyzer
+LLMAlgo ..|> LLMService
+TextRecognizer ..|> TextRecognitionService
 
 ' Associations / "has-object-of-type"
-MediaAlgo <|.. OpenCVAlgo
 CameraController --> MediaAlgo : mediaAlgo
 OpenCVAlgo --> MediaSource : mediaSource
 CameraController --> MainUI : mainUI
 CameraController --> ImageSource : imageSource
 CameraController --> VideoSource : videoSource
-CameraController --l--> MediaAlgo : mediaAlgo
-
-OpenCVAlgo --> MediaSource : mediaSource
-
-UploadImageFragment "1" --> "0..1" UploadListener : listener
-UploadImageFragment "1" --> "0..1" FragmentUploadImageBinding : binding
-UploadImageFragment "1" --> "0..1" Bitmap : selectedBitmap
-
-ResultFragment "1" --> "0..1" ResultListener : listener
-ResultFragment "1" --> "0..1" FragmentResultBinding : binding
-ResultFragment "1" --> "0..1" TextToSpeech : tts
-
-VideoStreamFragment "1" --> "0..1" VideoStreamFragment.Listener : listener
-VideoStreamFragment "1" -u-> "0..1" FragmentVideoStreamBinding : binding
-VideoStreamFragment "1" --> "0..*" DetectedObject : updateDetections
-VideoStreamFragment "1" --> "0..1" PreviewView : getPreviewView()
+MainActivity --> LLMAlgo : uses
+MainActivity "1" --> "1" MainUI : mainUI
+MainActivity "0..1" --> "0..1" CameraController : cameraController
+MainActivity "0..1" --> "0..1" UploadImageFragment : uploadFragment
+MainActivity "1" --> "1" Ledger : ledger
+CameraController --> TextRecognitionService : uses (could be TextRecognizer)
 
 DetectionOverlayView "1" -u-> "0..*" DetectedObject : detectedObjects
-DetectionOverlayView "1" -r-> "1" Paint : boxPaint
-DetectionOverlayView "1" -r-> "1" Paint : textPaint
+DetectionOverlayView "1" --> "1" Paint : boxPaint
 
-LLMAlgo "1" --> "0..1" LLMListener : listener
-
-MainUI --> UploadImageFragment : displays
-MainUI --> VideoStreamFragment : displays
-MainUI --> ResultFragment : displays
+LLMAlgo "1" --> "0..1" Bitmap : bitmapFromUri(context : Context, uri : Uri)
+MediaAlgo --> DetectedObject : returns
+VideoStreamFragment --> DetectedObject : updateDetections(objects)
 
 @enduml
+```

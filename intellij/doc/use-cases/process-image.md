@@ -30,7 +30,7 @@ What must be true upon successful completion of the use case.
 ```plantuml
 @startuml
 
-title Image Upload (fully-dressed)
+title Process Image (fully-dressed)
 
 'define the lanes
 |#implementation|User|
@@ -38,7 +38,11 @@ title Image Upload (fully-dressed)
 
 |User|
 start
-:Open image upload tab;
+:Click image upload button;
+|System|
+:Present Image selection form;
+
+|User|
 :Select or take an image;
 
 |System|
@@ -53,14 +57,8 @@ endwhile(yes)
 |System|
 if (Output?) is ( yes ) then
     :Display the description;
-    
-    |User|
-    if (Announce description?) is (yes) then
-    |System|
-    :Invoke Toggle text-to-speech;
+    :Invoke text-to-speech;
     :Speak out loud description;
-    else (no)
-    endif
 else ( no )
 |System|
 :Display error;
