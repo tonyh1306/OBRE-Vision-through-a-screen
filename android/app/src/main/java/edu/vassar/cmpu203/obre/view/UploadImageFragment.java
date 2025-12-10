@@ -1,7 +1,14 @@
 package edu.vassar.cmpu203.obre.view;
 
+import static org.opencv.android.NativeCameraView.TAG;
+
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -141,6 +150,37 @@ public class UploadImageFragment extends Fragment {
         if (binding != null) {
             binding.previewImage.setImageBitmap(bitmap);
         }
+    }
+
+
+    // Image Picker Launcher
+    private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Uri uri = result.getData().getData();
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(
+                                requireActivity().getContentResolver(), uri
+                        );
+                        updateImagePreview(bitmap);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Failed to load image", e);
+                    }
+                }
+            }
+    );
+
+
+    /**
+     * Launches the system image picker to allow the user to select a photo.
+     */
+
+    public void launchImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        imagePickerLauncher.launch(intent);
     }
 
     /**
