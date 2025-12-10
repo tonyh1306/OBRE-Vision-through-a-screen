@@ -11,7 +11,6 @@ public interface TextRecognitionService {
         /**
          * Analyze an image frame for text.
          * @param imageProxy The frame to analyze
-         * @return detected text as a String
          */
-        String analyze(ImageProxy imageProxy);
+        void analyze(ImageProxy imageProxy);
 }

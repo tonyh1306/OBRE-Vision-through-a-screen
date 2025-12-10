@@ -6,7 +6,6 @@ import org.opencv.videoio.VideoCapture;
 import java.util.ArrayList;
 
 /**
- * Represents a source of media, which can be a pre-loaded video or a live camera feed.
  * This class handles the initialization of either a VideoCapture object for camera input
  * or pre-loads all frames from a video file.
  */

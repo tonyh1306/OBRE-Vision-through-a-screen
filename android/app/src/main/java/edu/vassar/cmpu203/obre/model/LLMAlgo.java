@@ -39,8 +39,8 @@ public class LLMAlgo implements LLMService{
     String apiKey;
 
     @Override
-    public List<DetectedObject> runOnFrame(Mat frame) {
-        return Collections.emptyList();
+    public void sendImage(Bitmap bitmap, LLMService.Listener listener) {
+
     }
 
     /**
