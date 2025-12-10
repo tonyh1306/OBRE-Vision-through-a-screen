@@ -31,6 +31,7 @@ interface LLMListener {
 + onError(e : Exception) : void
 }
 
+
 ' Classes
 class CameraController {
 - mainUI : MainUI
@@ -124,7 +125,7 @@ OpenCVAlgo --> MediaSource : mediaSource
 CameraController --> MainUI : mainUI
 CameraController --> ImageSource : imageSource
 CameraController --> VideoSource : videoSource
-CameraController --> MediaAlgo : mediaAlgo
+CameraController --l--> MediaAlgo : mediaAlgo
 
 OpenCVAlgo --> MediaSource : mediaSource
 
@@ -137,13 +138,13 @@ ResultFragment "1" --> "0..1" FragmentResultBinding : binding
 ResultFragment "1" --> "0..1" TextToSpeech : tts
 
 VideoStreamFragment "1" --> "0..1" VideoStreamFragment.Listener : listener
-VideoStreamFragment "1" --> "0..1" FragmentVideoStreamBinding : binding
+VideoStreamFragment "1" -u-> "0..1" FragmentVideoStreamBinding : binding
 VideoStreamFragment "1" --> "0..*" DetectedObject : updateDetections
 VideoStreamFragment "1" --> "0..1" PreviewView : getPreviewView()
 
-DetectionOverlayView "1" --> "0..*" DetectedObject : detectedObjects
-DetectionOverlayView "1" --> "1" Paint : boxPaint
-DetectionOverlayView "1" --> "1" Paint : textPaint
+DetectionOverlayView "1" -u-> "0..*" DetectedObject : detectedObjects
+DetectionOverlayView "1" -r-> "1" Paint : boxPaint
+DetectionOverlayView "1" -r-> "1" Paint : textPaint
 
 LLMAlgo "1" --> "0..1" LLMListener : listener
 
