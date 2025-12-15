@@ -73,18 +73,12 @@ public class UploadImageFragment extends Fragment implements UI {
     private Listener listener;
     private FragmentUploadImageBinding binding;
     LinearLayout linearLayout;
-    String pendingDetectionText = null;
     List<String> history = new ArrayList<>();
-    static final String ARG_RESULT_TEXT = "result_text";
 
     /**
      * Default constructor. Initializes the fragment and prepares the argument bundle for saving history.
      */
     public UploadImageFragment() {
-        // Required empty public constructor
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("ARG_RESULT_TEXT", (Serializable) history);
-        setArguments(bundle);
     }
 
     /**
@@ -136,10 +130,6 @@ public class UploadImageFragment extends Fragment implements UI {
                 listener.onSwitchBackToStream();
             }
         });
-
-        for (String detection : history) {
-            addSingleTextView(detection);
-        }
     }
 
     /**
@@ -208,7 +198,6 @@ public class UploadImageFragment extends Fragment implements UI {
      * @param detection The new detection string to add.
      */
     public void updateDetections(String detection) {
-        this.history.add(detection);
         if (linearLayout != null && getContext() != null) {
             addSingleTextView(detection);
         }
