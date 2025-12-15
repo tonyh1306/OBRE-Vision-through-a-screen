@@ -11,7 +11,6 @@
 ## Cutoff
 
 - We were unable to get to Multimodal Feedback System (haptic output), although we were able to have audio output
-- 
 
 # Previous Iteration (#3)
 ## Risk and priority

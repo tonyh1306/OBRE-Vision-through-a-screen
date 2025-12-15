@@ -1,7 +1,6 @@
 ```plantuml
 @startuml
-set separator none
-skinparam linetype ortho
+skin rose
 hide empty methods
 
 title Class-Diagram for UI part
@@ -90,7 +89,7 @@ MainUI --> ResultFragment : displays
 @startuml
 title Class-Diagram for Model/Controller part
 set separator none
-skinparam linetype ortho
+skin rose
 hide empty methods
 
 

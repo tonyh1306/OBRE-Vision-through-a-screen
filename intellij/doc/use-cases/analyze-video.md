@@ -27,7 +27,7 @@ for _analyze-video_:
 
 ```plantuml
 @startuml
-skinparam style rose
+skin rose
 title Analyze Video (Fully-dressed)
 |#implementation|User|
 |#technology|System|
@@ -50,6 +50,7 @@ stop
 ## 5. Sequence Diagram
 ```plantuml
 @startuml
+skin rose
 actor User
 
 participant "VideoStreamFragment" as videoFragment

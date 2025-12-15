@@ -56,6 +56,7 @@ stop
 ## 5 Sequence Diagram
 ```plantuml
 @startuml
+skin rose
 actor CameraSystem
 participant VideoStreamFragment
 participant TextRecognizer

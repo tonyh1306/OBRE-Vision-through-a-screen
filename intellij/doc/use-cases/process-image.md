@@ -29,7 +29,7 @@ What must be true upon successful completion of the use case.
 
 ```plantuml
 @startuml
-
+skin rose
 title Process Image (fully-dressed)
 
 'define the lanes
@@ -72,6 +72,7 @@ stop
 ## 6. Sequence Diagram
 ```plantuml
 @startuml
+skin rose
 actor User
 
 participant "UploadImageFragment" as uploadFragment
