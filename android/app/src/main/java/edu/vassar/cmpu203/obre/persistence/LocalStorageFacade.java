@@ -86,7 +86,7 @@ public class LocalStorageFacade implements PersistenceFacade {
                         Log.e("NextGenPOS", emsg, e);
                     }
                 }
-            } catch (IOException e) { // general IO exception
+            } catch (Exception e) { // general IO exception
                 final String emsg = String.format("Exception while reading ledger: %s", e.getMessage());
                 Log.e("NextGenPOS", emsg, e);
             }

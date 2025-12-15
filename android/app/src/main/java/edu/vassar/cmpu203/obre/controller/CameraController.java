@@ -117,6 +117,11 @@ public class CameraController {
             return;
         }
 
+        if (mainActivity.isDestroyed()) {
+            Log.e(TAG, "Activity is destroyed. Cannot bind camera.");
+            return;
+        }
+
         Preview preview = new Preview.Builder().build();
         preview.setSurfaceProvider(fragment.getPreviewView().getSurfaceProvider());
 
@@ -124,7 +129,7 @@ public class CameraController {
 
         imageAnalysis.setAnalyzer(cameraExecutor, this::analyzeImage);
         cameraProvider.unbindAll();
-        cameraProvider.bindToLifecycle(mainActivity, cameraSelector, preview, imageAnalysis);
+        cameraProvider.bindToLifecycle(fragment.getViewLifecycleOwner(), cameraSelector, preview, imageAnalysis);
         isRunning = true;
         startDetection();
         startTextRecognition();

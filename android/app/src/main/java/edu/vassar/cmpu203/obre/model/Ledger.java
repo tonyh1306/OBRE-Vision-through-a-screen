@@ -28,6 +28,12 @@ public class Ledger implements Serializable {
         this.detections.add(detection);
     }
 
+    public Collection<String> getDescriptions(){
+        return this.detections;
+    }
+
+    /**
+
     /**
      * Creates and returns a textual representation of the ledger.
      *

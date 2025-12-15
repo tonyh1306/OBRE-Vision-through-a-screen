@@ -20,9 +20,10 @@ public class MainUI {
     private final ActivityMainBinding mainBinding;
     private final FragmentManager fragmentManager;
 
-    public MainUI(@NonNull FragmentActivity factivity) {
+    public MainUI(@NonNull FragmentActivity factivity, @NonNull UI.Listener listener) {
         this.mainBinding = ActivityMainBinding.inflate(factivity.getLayoutInflater());
         this.fragmentManager = factivity.getSupportFragmentManager();
+        this.fragmentManager.setFragmentFactory(new NgpFragFactory(listener));
 
         EdgeToEdge.enable(factivity);
         ViewCompat.setOnApplyWindowInsetsListener(this.mainBinding.getRoot(), (v, insets) -> {

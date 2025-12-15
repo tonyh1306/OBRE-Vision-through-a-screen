@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -18,6 +19,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
@@ -32,10 +35,12 @@ import java.util.concurrent.Executors;
 
 import edu.vassar.cmpu203.obre.model.LLMAlgo;
 import edu.vassar.cmpu203.obre.model.Ledger;
+import edu.vassar.cmpu203.obre.persistence.LocalStorageFacade;
 import edu.vassar.cmpu203.obre.persistence.PersistenceFacade;
 import edu.vassar.cmpu203.obre.view.MainUI;
 import edu.vassar.cmpu203.obre.view.ResultFragment;
 import edu.vassar.cmpu203.obre.view.ResultUI;
+import edu.vassar.cmpu203.obre.view.UI;
 import edu.vassar.cmpu203.obre.view.UploadImageFragment;
 import edu.vassar.cmpu203.obre.view.VideoStreamFragment;
 import edu.vassar.cmpu203.obre.view.VideoStreamUI;
@@ -52,12 +57,13 @@ import edu.vassar.cmpu203.obre.view.VideoStreamUI;
  */
 public class MainActivity extends AppCompatActivity implements VideoStreamUI.Listener,
         UploadImageFragment.Listener, ResultUI.Listener,
-        PersistenceFacade.Listener {
+        PersistenceFacade.Listener, UI.Listener {
 
     private static final List<String> CAMERAX_PERMISSION = Arrays.asList(
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO
     );
+    private PersistenceFacade pfacade = null;
     private static final String TAG = "MainActivity";
     private static final int REQUEST_CODE_PERMISSIONS = 10;
 
@@ -95,11 +101,51 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        this.pfacade = new LocalStorageFacade(this);
 
-        mainUI = new MainUI(this);
+        mainUI = new MainUI(this, this);
+        super.onCreate(savedInstanceState);
         setContentView(mainUI.getRootView());
 
+        this.pfacade.loadLedger(this);
+
+        if (savedInstanceState == null) {
+            this.onVideo();
+        } else {
+            this.state = States.valueOf(savedInstanceState.getString(CUR_STATE));
+            Fragment current = mainUI.getFragment();
+
+            if (this.state == States.VIDEO && current instanceof VideoStreamFragment) {
+                getSupportFragmentManager().registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
+                    @Override
+                    public void onFragmentViewCreated(@NonNull FragmentManager fm, @NonNull Fragment f, @NonNull View v, @Nullable Bundle savedInstanceState) {
+                        if (f instanceof VideoStreamFragment) {
+                            VideoStreamFragment fragment = (VideoStreamFragment) f;
+                            onStartStream(fragment);
+                            fm.unregisterFragmentLifecycleCallbacks(this);
+                        }
+                    }
+                }, false);
+
+            }
+
+            if (this.state == States.IMAGE && current instanceof UploadImageFragment) {
+                this.uploadFragment = (UploadImageFragment) current;
+                getSupportFragmentManager().registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
+                    @Override
+                    public void onFragmentViewCreated(@NonNull FragmentManager fm, @NonNull Fragment f, @NonNull View v, @Nullable Bundle savedInstanceState) {
+                        if (f == uploadFragment && ledger != null) {
+                            uploadFragment.updateLedgerDisplay(ledger);
+                            fm.unregisterFragmentLifecycleCallbacks(this);
+                        }
+                    }
+                }, false);
+            }
+        }
+    }
+
+    private void onVideo() {
+        state = States.VIDEO;
         VideoStreamFragment fragment = new VideoStreamFragment();
         fragment.setListener(this);
         mainUI.displayFragment(fragment);
@@ -108,9 +154,9 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
             org.opencv.core.Core.setNumThreads(0);
             Log.i(TAG, "OpenCV loaded successfully");
             if (hasRequiredPermission()) {
-                getSupportFragmentManager().registerFragmentLifecycleCallbacks(new androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks() {
+                getSupportFragmentManager().registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
                     @Override
-                    public void onFragmentViewCreated(@NonNull androidx.fragment.app.FragmentManager fm, @NonNull androidx.fragment.app.Fragment f, @NonNull android.view.View v, @Nullable Bundle savedInstanceState) {
+                    public void onFragmentViewCreated(@NonNull FragmentManager fm, @NonNull Fragment f, @NonNull View v, @Nullable Bundle savedInstanceState) {
                         if (f == fragment) {
                             onStartStream(fragment);
                             fm.unregisterFragmentLifecycleCallbacks(this);
@@ -169,7 +215,6 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
 
     @Override
     public void onStopStream(VideoStreamUI ui) {
-        state = States.IMAGE;
         if (cameraController != null) {
             cameraController.stop();
             cameraController = null;
@@ -195,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
      * Stops the live camera and navigates to the UploadImageFragment.
      */
     public void onUploadImageRequested() {
+        if (state != States.VIDEO) return;
         state = States.IMAGE;
         if (cameraController != null) {
             cameraController.stop();
@@ -203,7 +249,20 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
 
         uploadFragment = new UploadImageFragment();
         uploadFragment.setListener(this);
+
         mainUI.displayFragment(uploadFragment);
+        getSupportFragmentManager().registerFragmentLifecycleCallbacks(new androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks() {
+            @Override
+            public void onFragmentViewCreated(@NonNull androidx.fragment.app.FragmentManager fm, @NonNull androidx.fragment.app.Fragment f, @NonNull android.view.View v, @Nullable Bundle savedInstanceState) {
+                if (f instanceof UploadImageFragment) {
+                    uploadFragment = (UploadImageFragment) f;
+                    uploadFragment.setListener(MainActivity.this);
+                    if (ledger != null) uploadFragment.updateLedgerDisplay(ledger);
+                    fm.unregisterFragmentLifecycleCallbacks(this);
+                }
+            }
+        }, false);
+
     }
 
     /**
@@ -227,6 +286,7 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
     @Override
     public void onAnalyzeImageRequested(Bitmap image) {
         if (state != States.IMAGE) return;
+        state = States.RESULT;
         LLMAlgo llm = new LLMAlgo();
 
         llm.sendImageToGemini(image, new LLMAlgo.Listener() {
@@ -248,6 +308,7 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
                 });
             }
         });
+        state = States.IMAGE;
     }
 
 
@@ -257,6 +318,7 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
      */
     @Override
     public void onSwitchBackToStream() {
+        if (state != States.IMAGE) return;
         state = States.VIDEO;
         VideoStreamFragment fragment = new VideoStreamFragment();
         fragment.setListener(this);
@@ -281,14 +343,41 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
     }
 
     @Override
-    public void onSwitchToUpload(String detection) {
+    public void onSwitchBackToUpload(String detection) {
         state = States.IMAGE;
-        uploadFragment.updateDetections(detection);
+        saveDescription(detection);
+        getSupportFragmentManager().registerFragmentLifecycleCallbacks(new androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks() {
+            @Override
+            public void onFragmentViewCreated(@NonNull androidx.fragment.app.FragmentManager fm, @NonNull androidx.fragment.app.Fragment f, @NonNull android.view.View v, @Nullable Bundle savedInstanceState) {
+                if (f == uploadFragment) {
+                    if (ledger != null) uploadFragment.updateLedgerDisplay(ledger);
+                    fm.unregisterFragmentLifecycleCallbacks(this);
+                }
+            }
+        }, false);
+    }
+
+    public void saveDescription(String detection) {
+        if (this.ledger != null) this.ledger.addDescription(detection);
+        if (this.pfacade != null) this.pfacade.saveDescription(detection);
     }
 
     @Override
     public void onLedgerReceived(@NonNull Ledger ledger) {
+        this.ledger = ledger;
+        if (this.state == States.IMAGE) {
+            if (uploadFragment == null) {
+                Fragment current = mainUI.getFragment();
+                if (current instanceof UploadImageFragment) {
+                    uploadFragment = (UploadImageFragment) current;
+                    uploadFragment.setListener(this);
+                }
+            }
 
+            if (uploadFragment != null) {
+                uploadFragment.updateLedgerDisplay(ledger);
+            }
+        }
 
     }
 
@@ -301,7 +390,6 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        // save current state before activity stops
         outState.putString(CUR_STATE, this.state.name());
     }
 

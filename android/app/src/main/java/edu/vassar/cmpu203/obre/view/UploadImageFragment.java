@@ -20,11 +20,21 @@ import java.util.List;
 
 import edu.vassar.cmpu203.obre.R;
 import edu.vassar.cmpu203.obre.databinding.FragmentUploadImageBinding;
+import edu.vassar.cmpu203.obre.model.Ledger;
 
 /**
  * Fragment that allows users to pick an image from the gallery and send it for AI analysis.
  */
-public class UploadImageFragment extends Fragment {
+public class UploadImageFragment extends Fragment implements UI {
+
+    public void updateLedgerDisplay(Ledger ledger) {
+        if (linearLayout != null && getContext() != null) {
+            linearLayout.removeAllViews();
+            for (String description : ledger.getDescriptions()) {
+                addSingleTextView(description);
+            }
+        }
+    }
 
     /**
      * Interface for handling interactions within the UploadImageFragment.
@@ -34,27 +44,21 @@ public class UploadImageFragment extends Fragment {
         void onPickImageRequested();
         void onAnalyzeImageRequested(Bitmap image);
         void onSwitchBackToStream();
+
     }
 
     private Bitmap selectedBitmap;
     private Listener listener;
     private FragmentUploadImageBinding binding;
     LinearLayout linearLayout;
-    String pendingDetectionText = null;
-    List<String> history = new ArrayList<>();
-    static final String ARG_RESULT_TEXT = "result_text";
 
     public UploadImageFragment() {
-        // Required empty public constructor
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("ARG_RESULT_TEXT", (Serializable) history);
-        setArguments(bundle);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.binding = FragmentUploadImageBinding.inflate(inflater, container, false);
-        linearLayout = binding.scrollView.findViewById(R.id.linearLayout);
+        linearLayout = binding.linearLayout;
         return this.binding.getRoot();
     }
 
@@ -86,10 +90,6 @@ public class UploadImageFragment extends Fragment {
                 listener.onSwitchBackToStream();
             }
         });
-
-        for (String detection : history) {
-            addSingleTextView(detection);
-        }
     }
 
     /**
@@ -97,8 +97,9 @@ public class UploadImageFragment extends Fragment {
      *
      * @param listener The listener implementation.
      */
-    public void setListener(Listener listener) {
-        this.listener = listener;
+    public <L extends UI.Listener> void setListener(@NonNull final L listener) {
+        if (listener instanceof UploadImageFragment.Listener)
+            this.listener = (UploadImageFragment.Listener) listener;
     }
 
     /**
@@ -120,18 +121,12 @@ public class UploadImageFragment extends Fragment {
         if (binding != null) binding.loadingSpinner.setVisibility(View.GONE);
     }
 
-    public void updateDetections(String detection) {
-        this.history.add(detection);
-        if (linearLayout != null && getContext() != null) {
-            addSingleTextView(detection);
-        }
-    }
-
     private void addSingleTextView(String text) {
         TextView textView = new TextView(getContext());
-        String detection = text + "\n\n";
+        String detection = text + "\n";
         textView.setText(detection);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
+        textView.setFreezesText(true);
         linearLayout.addView(textView);
     }
 

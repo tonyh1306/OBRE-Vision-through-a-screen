@@ -87,7 +87,7 @@ public class ResultFragment extends Fragment implements ResultUI {
         ll.addView(tv);
 
         view.findViewById(R.id.back_button).setOnClickListener(v -> {
-                    this.listener.onSwitchToUpload(resultText);
+                    this.listener.onSwitchBackToUpload(resultText);
                     requireActivity().getSupportFragmentManager().popBackStack();
                 }
         );
@@ -127,8 +127,14 @@ public class ResultFragment extends Fragment implements ResultUI {
         super.onDestroy();
     }
 
+//    @Override
+//    public void setListener(Listener listener) {
+//        this.listener = listener;
+//    }
+
     @Override
-    public void setListener(Listener listener) {
-        this.listener = listener;
+    public <L extends UI.Listener> void setListener(@NonNull L listener) {
+        if (listener instanceof ResultUI.Listener)
+            this.listener = (ResultUI.Listener) listener;
     }
 }

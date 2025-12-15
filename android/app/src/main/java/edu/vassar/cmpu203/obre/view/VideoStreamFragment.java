@@ -61,19 +61,14 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        // listener.onStartStream(this);
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         listener.onStopStream(this);
     }
 
-    public void setListener(Listener listener) {
-        this.listener = listener;
+    public <L extends UI.Listener> void setListener(@NonNull final L listener) {
+        if (listener instanceof VideoStreamFragment.Listener)
+            this.listener = (VideoStreamFragment.Listener) listener;
     }
 
     @Override
