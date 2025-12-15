@@ -124,7 +124,6 @@ The app requests the following permissions (handled in `AndroidManifest.xml`):
 - Point camera at objects to detect them
 - Detected objects appear with bounding boxes
 - Audio feedback announces detected objects
-- Toggle text-to-speech on/off for verbosity control
 
 ##### Image Upload
 

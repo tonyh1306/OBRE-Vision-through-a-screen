@@ -27,6 +27,9 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
     private FragmentVideoStreamBinding binding;
     private Listener listener;
 
+    /**
+     * Default constructor for the fragment.
+     */
     public VideoStreamFragment() {
 
     }
@@ -52,6 +55,12 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
         return this.binding.getRoot();
     }
 
+    /**
+     * Sets up the view listeners and populates the view with any existing detection history after the view has been created.
+     *
+     * @param view               The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -66,11 +75,19 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
         listener.onStopStream(this);
     }
 
+    /**
+     * Sets the listener up
+     * @param listener The listener to set.
+     */
     public <L extends UI.Listener> void setListener(@NonNull final L listener) {
         if (listener instanceof VideoStreamFragment.Listener)
             this.listener = (VideoStreamFragment.Listener) listener;
     }
 
+    /**
+     * Displays an error message to the user
+     * @param msg The error message to display.
+     */
     @Override
     public void displayError(String msg) {
         Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
@@ -86,6 +103,11 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
         }
     }
 
+    /**
+     * Updates the text view with recognized text.
+     *
+     * @param text The recognized text to display.
+     */
     public void updateTextDetections(String text) {
         if (binding != null) {
             binding.text.setText(text);
@@ -94,7 +116,6 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
 
     /**
      * returns the PreviewView used by CameraX.
-     * Safe to call only after onViewCreated.
      *
      * @return The PreviewView, or null if the binding is not initialized.
      */
@@ -105,6 +126,9 @@ public class VideoStreamFragment extends Fragment implements VideoStreamUI {
         return binding.previewView;
     }
 
+    /**
+     * Shows a toast message indicating that camera permissions are required.
+     */
     @Override
     public void showPermissionError() {
         Toast.makeText(getContext(), "Camera permissions are required for this feature.", Toast.LENGTH_LONG).show();

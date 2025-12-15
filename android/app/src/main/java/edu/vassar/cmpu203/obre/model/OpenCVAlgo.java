@@ -49,6 +49,14 @@ public class OpenCVAlgo implements MediaAlgo {
         detectedObjects = new ArrayList<>();
     }
 
+    /**
+     * Processes a single frame to detect objects. This involves resizing, blob creation,
+     * running the neural network, and filtering results with non-maximum suppression (NMS).
+     *
+     * @param image The original image frame from the camera.
+     * @param resizedImage A Mat object to store the resized image.
+     * @param netSize The target size for the neural network input.
+     */
     private void processFrame(Mat image, Mat resizedImage, Size netSize) {
         if (net == null || image == null || image.empty()) return;
 

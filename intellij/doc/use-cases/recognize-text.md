@@ -2,7 +2,7 @@
 
 ## 1. Primary actor and goals
 
-__User__: Wants to recognize text in the video stream from the camera and receive real-time audio descriptions of the text.
+__User__: Wants to recognize text in the video stream from the camera and receive real-time descriptions of the text.
 
 ## 2. Other stakeholders and their goals
 
@@ -38,7 +38,6 @@ title Operate Text Detector (Fully-dressed)
 'define the lanes
 |#implementation|User|
 |#technology|System|
-
 |User|
 start
 
@@ -48,15 +47,33 @@ start
 while (Text detected?) is (no)
 :No text detected sound;
 endwhile(yes)
-:Frame text;
-|User|
-if (Toggle sound?) is (on) then
-|User|
-:choose language;
+:Frame text above;
 |System|
-:Speak out loud object in chosen language;
-else (off)
-endif
 stop
+@enduml
+```
+
+## 5 Sequence Diagram
+```plantuml
+@startuml
+actor CameraSystem
+participant VideoStreamFragment
+participant TextRecognizer
+participant ImageProxy
+participant Image
+participant InputImage
+participant MLKitTextRecognizer
+
+CameraSystem -> VideoStreamFragment : new frame
+VideoStreamFragment -> TextRecognizer : analyze(imageProxy)
+TextRecognizer -> ImageProxy : getImage()
+ImageProxy --> TextRecognizer : mediaImage
+TextRecognizer -> InputImage : fromMediaImage(mediaImage, rotation)
+InputImage --> TextRecognizer : convertedImage
+TextRecognizer -> MLKitTextRecognizer : process(convertedImage)
+MLKitTextRecognizer --> TextRecognizer : detectedText
+TextRecognizer --> VideoStreamFragment : return detectedText
+VideoStreamFragment --> CameraSystem : display or overlay results
+
 @enduml
 ```

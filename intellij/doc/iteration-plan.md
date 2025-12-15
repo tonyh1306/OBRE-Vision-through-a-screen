@@ -1,11 +1,19 @@
 # This Iteration (#4)
-
-## This iteration we added
-- TTS integration: Android's Text-to-Speech API to provide audio descriptions for detected objects.
+## For the final iteration we added
+- TTS integration: We added Android's Text-to-Speech API to provide audio descriptions for detected objects.
 - Added a history feature with the results of previous image analyses
+- We also added OCR which can detect text from anything in the video stream and displays it at the top of the page
 
+## Testing
+- We added testing for TTS. 
+- We also have testing for a default bottle.jpg image to test the Gemini call and image analysis
 
-# Previous Iteration
+## Cutoff
+
+- We were unable to get to Multimodal Feedback System (haptic output), although we were able to have audio output
+- 
+
+# Previous Iteration (#3)
 ## Risk and priority
 
 1.) Functionality of video stream

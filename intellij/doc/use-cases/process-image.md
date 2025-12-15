@@ -30,9 +30,7 @@ What must be true upon successful completion of the use case.
 ```plantuml
 @startuml
 
-skin rose
-
-title Image Upload (fully-dressed)
+title Process Image (fully-dressed)
 
 'define the lanes
 |#implementation|User|
@@ -40,7 +38,11 @@ title Image Upload (fully-dressed)
 
 |User|
 start
-:Open image upload tab;
+:Click image upload button;
+|System|
+:Present Image selection form;
+
+|User|
 :Select or take an image;
 
 |System|
@@ -55,14 +57,8 @@ endwhile(yes)
 |System|
 if (Output?) is ( yes ) then
     :Display the description;
-    
-    |User|
-    if (Announce description?) is (yes) then
-    |System|
-    :Invoke Toggle text-to-speech;
+    :Invoke text-to-speech;
     :Speak out loud description;
-    else (no)
-    endif
 else ( no )
 |System|
 :Display error;
@@ -74,35 +70,38 @@ stop
 ```
 
 ## 6. Sequence Diagram
-
 ```plantuml
 @startuml
-skin rose
-hide footbox
-
 actor User
 
-participant "UI" as ui
-participant "Controller" as controller
-participant ": ImageSource" as imagesource
+participant "UploadImageFragment" as uploadFragment
+participant "CameraController" as controller
+participant ": ImageSource" as imageSource
 participant ": MediaAlgo" as mediaAlgo
 participant ": LLMAlgo" as llm
+participant "ResultFragment" as resultFragment
 
-ui -> User : present image selection form
-User -> ui : select / upload image
-ui -> controller : passImage(file)
-controller -> imagesource : loadImage(file)
+User -> uploadFragment : pick / upload image
+uploadFragment -> controller : onAnalyzeImageRequested(bitmap)
 
-imagesource --> controller : return preprocessed image
-controller -> mediaAlgo : runAlgorithm(image)
-mediaAlgo --> controller : return detected objects
-controller -> llm : generateDescription(objects)
-llm --> controller : return description
+controller -> imageSource : loadImage(bitmap)
+imageSource --> controller : preprocessed Bitmap
 
-controller -> ui : displayResults(objects, description)
-ui --> User : show results
+controller -> mediaAlgo : runOnFrame(preprocessed Bitmap)
+mediaAlgo --> controller : List<DetectedObject>
+
+controller -> llm : sendImageToGemini(bitmap, LLMListener)
+
+llm --> controller : onSuccess(description)
+llm --> controller : onError(exception) [optional]
+
+controller -> resultFragment : set fragment arguments / update views
+
+resultFragment -> resultFragment : update TextView with description
+resultFragment -> resultFragment : speak via TTS 
+
+resultFragment --> User : display results
+
 @enduml
-
-
-
+```
 

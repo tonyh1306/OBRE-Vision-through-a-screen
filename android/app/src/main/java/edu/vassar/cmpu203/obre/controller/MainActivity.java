@@ -74,23 +74,6 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
     Ledger ledger;
     private static final String CUR_STATE = "curState";
 
-    // Image Picker Launcher
-    private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    Uri uri = result.getData().getData();
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                        if (uploadFragment != null) {
-                            uploadFragment.updateImagePreview(bitmap);
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, "Failed to load image", e);
-                    }
-                }
-            }
-    );
 
     enum States {
         VIDEO, IMAGE, RESULT
@@ -242,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
     public void onUploadImageRequested() {
         if (state != States.VIDEO) return;
         state = States.IMAGE;
+
         if (cameraController != null) {
             cameraController.stop();
             cameraController = null;
@@ -266,15 +250,13 @@ public class MainActivity extends AppCompatActivity implements VideoStreamUI.Lis
     }
 
     /**
-     * Launches the system image picker to allow the user to select a photo.
+     * Callback triggered when the user requests to pick an image from the gallery.
+     * Launches the system image picker.
      */
     @Override
     public void onPickImageRequested() {
-        if (state != States.IMAGE) return;
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("image/*");
-        imagePickerLauncher.launch(intent);
+        if (state != States.IMAGE || uploadFragment == null) return;
+        uploadFragment.launchImagePicker();
     }
 
     /**

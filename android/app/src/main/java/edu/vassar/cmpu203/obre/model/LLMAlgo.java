@@ -34,13 +34,13 @@ import kotlinx.serialization.ExperimentalSerializationApi;
 /**
  * A class to handle interactions with the LLM, sending image data and receiving a response.
  */
-public class LLMAlgo implements MediaAlgo{
+public class LLMAlgo implements LLMService{
 
     String apiKey;
 
     @Override
-    public List<DetectedObject> runOnFrame(Mat frame) {
-        return Collections.emptyList();
+    public void sendImage(Bitmap bitmap, LLMService.Listener listener) {
+
     }
 
     /**
