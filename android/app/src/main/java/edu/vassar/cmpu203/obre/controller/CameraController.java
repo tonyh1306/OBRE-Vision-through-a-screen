@@ -200,8 +200,7 @@ public class CameraController {
                         Utils.matToBitmap(frame, bitmap);
 
                         InputImage image = InputImage.fromBitmap(bitmap, 0);
-
-
+                        
                         Task<Text> result = textRecognizer.process(image);
                         Text text = Tasks.await(result);
                         String textResult = text.getText();

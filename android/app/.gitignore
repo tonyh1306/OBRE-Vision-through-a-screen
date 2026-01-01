@@ -8,3 +8,4 @@ opencv/
 # Local config
 /local.properties
 *.iml
+google-services.json
