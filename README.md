@@ -1,6 +1,4 @@
-# CMPU-203 F25 - Team C
-
-## OBRE - Object Recognition for Blind and Visually-Impaired Individuals
+# OBRE - Object Recognition for Blind and Visually-Impaired Individuals
 
 OBRE is an Android accessibility application that enables visually-impaired individuals to recognize objects and text in their environment through real-time video analysis and audio feedback.
 
